@@ -1,0 +1,13 @@
+.error {
+  min-height: calc(100vh - 61px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__descr {
+    font-size: 40px;
+    font-weight: 600;
+    transform: translate(0px, -45px);
+  }
+}
+

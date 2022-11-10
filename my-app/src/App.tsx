@@ -1,8 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import TypesafeI18n from './i18n/i18n-react';
 
 function App() {
+  // const { LL } = useI18nContext();
+
   return (
     <BrowserRouter>
       <div className="app">

@@ -25,6 +25,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.0.0",
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
@@ -34,13 +35,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start --parallel start typesafe-i18n",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts",
-    "typesafe-i18n": "typesafe-i18n"
+    "lint:fix": "eslint --fix . --ext .ts"
   },
   "eslintConfig": {
     "extends": [

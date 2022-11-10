@@ -1,4 +1,3 @@
-import './error.scss';
 import React from 'react';
 
 const Start = () => {

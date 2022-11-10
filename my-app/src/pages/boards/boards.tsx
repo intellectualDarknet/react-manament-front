@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Boards = () => {
-  return <>;</>;
+  return <></>;
 };
 
 export default Boards;

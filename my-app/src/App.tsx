@@ -6,7 +6,7 @@ import Boards from './pages/boards/boards';
 import Errorpage from './pages/error/error';
 import Start from './pages/start/start';
 
-function App() {
+function App(): JSX.Element {
   return (
     <BrowserRouter>
       <div className="app">

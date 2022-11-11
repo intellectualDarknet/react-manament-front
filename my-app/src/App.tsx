@@ -7,6 +7,7 @@ import Errorpage from './pages/error/error';
 import Start from './pages/start/start';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './components/Theme';
+import './assets/styles/style.scss';
 
 function App(): JSX.Element {
   return (

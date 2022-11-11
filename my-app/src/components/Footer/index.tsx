@@ -11,12 +11,12 @@ const Footer = () => {
   return (
     <AppBar position="absolute" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
       <Toolbar>
-        <Box sx={{ flexGrow: 2, display: { xs: 'none', md: 'flex' }, justifyContent: 'start' }}>
+        <Box sx={{ flexGrow: 2, display: { md: 'flex' }, justifyContent: 'start' }}>
           <a href="https://rs.school/">
             <Typography textAlign="center">RS SCHOOL</Typography>
           </a>
         </Box>
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'space-between' }}>
+        <Box sx={{ flexGrow: 1, display: { md: 'flex' }, justifyContent: 'space-between' }}>
           <a href="https://github.com/Legat14">
             <Avatar alt="Remy Sharp" src={pictI} />
           </a>
@@ -27,7 +27,7 @@ const Footer = () => {
             <Avatar alt="Remy Sharp" src={pictV} />
           </a>
         </Box>
-        <Box sx={{ flexGrow: 2, display: { xs: 'none', md: 'flex' }, justifyContent: 'end' }}>
+        <Box sx={{ flexGrow: 2, display: { md: 'flex' }, justifyContent: 'end' }}>
           <Typography textAlign="center">2022</Typography>
         </Box>
       </Toolbar>

@@ -1,7 +1,8 @@
 import React from 'react';
+import Header from './../../components/Header';
 
 const Start = () => {
-  return <></>;
+  return <Header />;
 };
 
 export default Start;

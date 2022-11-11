@@ -1,5 +1,5 @@
-import './error.scss';
 import React from 'react';
+import './error.scss';
 import '../../components/translation/translation';
 import { useTranslation, Trans } from 'react-i18next';
 import TestComponent from 'components/testcomponent/testcomponent';
@@ -12,7 +12,6 @@ const lngs = {
 const Errorpage = () => {
   const { t, i18n } = useTranslation();
 
-  console.log(Object.keys(lngs));
   return (
     <>
       {Object.keys(lngs).map((lng) => (

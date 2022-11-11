@@ -30,6 +30,3 @@ i18next
       },
     },
   });
-
-const ret = i18next.t('key');
-console.log(ret);

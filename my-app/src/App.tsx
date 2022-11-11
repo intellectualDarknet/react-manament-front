@@ -5,19 +5,24 @@ import Authorization from './pages/authorization/authorization';
 import Boards from './pages/boards/boards';
 import Errorpage from './pages/error/error';
 import Start from './pages/start/start';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './components/Theme';
 
 function App(): JSX.Element {
   return (
     <BrowserRouter>
-      <div className="app">
-        <Routes>
-          <Route path="Start" element={<Start />} />
-          <Route path="Authorization" element={<Authorization />} />
-          <Route path="Boards" element={<Boards />} />
-          <Route path="404" element={<Errorpage />} />
-          <Route path="*" element={<Errorpage />} />
-        </Routes>
-      </div>
+      <ThemeProvider theme={theme}>
+        <div className="app">
+          <Routes>
+            <Route path="/" element={<Start />} />
+            <Route path="Start" element={<Start />} />
+            <Route path="Authorization" element={<Authorization />} />
+            <Route path="Boards" element={<Boards />} />
+            <Route path="404" element={<Errorpage />} />
+            <Route path="*" element={<Errorpage />} />
+          </Routes>
+        </div>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

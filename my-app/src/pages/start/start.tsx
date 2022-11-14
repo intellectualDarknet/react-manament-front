@@ -14,7 +14,7 @@ const Start = () => {
       columns={15}
       sx={{ display: 'flex', justifyContent: 'space-evenly', width: '100%', height: '100%', paddingTop: '5%' }}
     >
-      <Grid xs={5} sx={{ paddingTop: '2%' }}>
+      <Grid item xs={5} sx={{ paddingTop: '2%' }}>
         <Typography variant="h4" gutterBottom>
           PROJECT MANAGER APPLICATION
         </Typography>
@@ -23,7 +23,7 @@ const Start = () => {
           automate and customize your workflow and avoid unnecessary meetings as communicating to your team members are
           easier with project manager application .
         </Typography>
-        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'space-between', paddingLeft: 5, paddingTop: 2 }}>
+        <Box sx={{ width: '70%', display: 'flex', justifyContent: 'space-between', paddingLeft: 5, paddingTop: 2 }}>
           <Button variant="contained" endIcon={<PersonIcon />}>
             Sign in
           </Button>
@@ -32,7 +32,7 @@ const Start = () => {
           </Button>
         </Box>
       </Grid>
-      <Grid xs={4} sx={{ height: '100%' }}>
+      <Grid item xs={4} sx={{ height: '100%' }}>
         <img src={mainPict} alt="main picture" height="100%" />
       </Grid>
     </Grid>

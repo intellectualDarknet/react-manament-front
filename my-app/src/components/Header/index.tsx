@@ -15,7 +15,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Link } from 'react-router-dom';
 
 const settings = [
-  { name: 'Sign In', link: 'Authorization' },
+  { name: 'Sign In', link: 'SignIn' },
   { name: 'Sign Up', link: 'Authorization' },
 ];
 

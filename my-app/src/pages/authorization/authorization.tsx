@@ -68,7 +68,7 @@ const Authorization = () => {
           value={password}
         />
         <Button type="submit" fullWidth variant="contained" color="primary" sx={{ marginBottom: '10px' }}>
-          Войти
+          Submit
         </Button>
         <Grid container>
           <Grid item xs></Grid>

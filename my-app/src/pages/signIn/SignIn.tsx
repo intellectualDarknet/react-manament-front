@@ -2,6 +2,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -27,6 +28,9 @@ const SignIn = () => {
       square
     >
       <form onSubmit={onSigninSubmit} onChange={onEmailChange} noValidate>
+        <Typography variant="h5" component="h2">
+          Sign in
+        </Typography>
         <TextField
           variant="outlined"
           margin="normal"

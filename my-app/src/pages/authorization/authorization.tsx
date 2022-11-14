@@ -2,6 +2,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,6 +10,8 @@ const Authorization = () => {
   const [name, SetName] = useState<string>('');
   const [login, SetLogin] = useState<string>('');
   const [password, SetPassword] = useState<string>('');
+  const [repeat, SetRepeat] = useState<string>('');
+
   const onSigninSubmit = () => {
     console.log('hi');
   };
@@ -22,6 +25,9 @@ const Authorization = () => {
     if ((e.target as HTMLInputElement).id === 'password') {
       SetPassword((e.target as HTMLInputElement).value);
     }
+    if ((e.target as HTMLInputElement).id === 'repeat') {
+      SetRepeat((e.target as HTMLInputElement).value);
+    }
   }
   return (
     <Grid
@@ -31,6 +37,9 @@ const Authorization = () => {
       square
     >
       <form onSubmit={onSigninSubmit} onChange={onEmailChange} noValidate>
+        <Typography variant="h5" component="h2">
+          Sign up
+        </Typography>
         <TextField
           variant="outlined"
           margin="normal"
@@ -64,8 +73,18 @@ const Authorization = () => {
           label="Password"
           type="password"
           id="password"
-          autoComplete="current-password"
           value={password}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="repeat"
+          label="Repeat password"
+          type="repeat"
+          id="repeat"
+          value={repeat}
         />
         <Button type="submit" fullWidth variant="contained" color="primary" sx={{ marginBottom: '10px' }}>
           Submit

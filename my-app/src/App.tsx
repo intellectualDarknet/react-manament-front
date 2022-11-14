@@ -10,6 +10,7 @@ import theme from './components/Theme';
 import './assets/styles/style.scss';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import SignIn from 'pages/signIn/SignIn';
 
 function App(): JSX.Element {
   return (
@@ -22,6 +23,7 @@ function App(): JSX.Element {
               <Route path="/" element={<Start />} />
               <Route path="Start" element={<Start />} />
               <Route path="Authorization" element={<Authorization />} />
+              <Route path="SignIn" element={<SignIn />} />
               <Route path="Boards" element={<Boards />} />
               <Route path="404" element={<Errorpage />} />
               <Route path="*" element={<Errorpage />} />

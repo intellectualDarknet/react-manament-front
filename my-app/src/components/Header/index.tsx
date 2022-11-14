@@ -12,11 +12,14 @@ import MenuItem from '@mui/material/MenuItem';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Link } from 'react-router-dom';
 
-const settings = ['Sign In', 'Sign Out'];
+const settings = [
+  { name: 'Sign In', link: 'Authorization' },
+  { name: 'Sign Up', link: 'Authorization' },
+];
 
 function Header() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [alignment, setAlignment] = React.useState('web');
 
@@ -24,15 +27,8 @@ function Header() {
     setAlignment(newAlignment);
   };
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -61,16 +57,6 @@ function Header() {
           >
             PROJECT MANAGMENT APP
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            ></IconButton>
-          </Box>
 
           <AssessmentIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
@@ -117,8 +103,10 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <Link to={setting.link}>
+                    <Typography textAlign="center">{setting.name}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import mainPict from './../../assets/img/mainPicture1.jpg';
+import { Link } from 'react-router-dom';
 
 const Start = () => {
   return (
@@ -24,12 +25,16 @@ const Start = () => {
           easier with project manager application .
         </Typography>
         <Box sx={{ width: '70%', display: 'flex', justifyContent: 'space-between', paddingLeft: 5, paddingTop: 2 }}>
-          <Button variant="contained" endIcon={<PersonIcon />}>
-            Sign in
-          </Button>
-          <Button variant="contained" endIcon={<PersonAddIcon />}>
-            Sign up
-          </Button>
+          <Link to="/SignIn">
+            <Button variant="contained" endIcon={<PersonIcon />}>
+              Sign in
+            </Button>
+          </Link>
+          <Link to="/Authorization">
+            <Button variant="contained" endIcon={<PersonAddIcon />}>
+              Sign up
+            </Button>
+          </Link>
         </Box>
       </Grid>
       <Grid item xs={4} sx={{ height: '100%' }}>

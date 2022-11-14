@@ -10,4 +10,7 @@ a:hover {
 main {
   padding-top: 1px;
   height: calc(100vh - 135px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

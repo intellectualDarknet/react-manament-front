@@ -13,8 +13,12 @@ import MenuItem from '@mui/material/MenuItem';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Link } from 'react-router-dom';
 
-const settings = ['Sign In', 'Sign Out'];
+const settings = [
+  { name: 'Sign In', link: 'Authorization' },
+  { name: 'Sign Up', link: 'Authorization' },
+];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -138,8 +142,10 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <Link to={setting.link}>
+                    <Typography textAlign="center">{setting.name}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

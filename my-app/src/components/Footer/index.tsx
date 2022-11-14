@@ -14,7 +14,7 @@ const pictures = [
 ];
 const Footer = () => {
   return (
-    <AppBar position="absolute" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
+    <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
       <Toolbar>
         <Box sx={{ flexGrow: 2, display: { md: 'flex' }, justifyContent: 'start' }}>
           <a href="https://rs.school/" target="_blank" rel="noreferrer">

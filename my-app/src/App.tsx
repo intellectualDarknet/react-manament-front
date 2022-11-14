@@ -17,14 +17,16 @@ function App(): JSX.Element {
       <ThemeProvider theme={theme}>
         <div className="app">
           <Header />
-          <Routes>
-            <Route path="/" element={<Start />} />
-            <Route path="Start" element={<Start />} />
-            <Route path="Authorization" element={<Authorization />} />
-            <Route path="Boards" element={<Boards />} />
-            <Route path="404" element={<Errorpage />} />
-            <Route path="*" element={<Errorpage />} />
-          </Routes>
+          <main>
+            <Routes>
+              <Route path="/" element={<Start />} />
+              <Route path="Start" element={<Start />} />
+              <Route path="Authorization" element={<Authorization />} />
+              <Route path="Boards" element={<Boards />} />
+              <Route path="404" element={<Errorpage />} />
+              <Route path="*" element={<Errorpage />} />
+            </Routes>
+          </main>
           <Footer />
         </div>
       </ThemeProvider>

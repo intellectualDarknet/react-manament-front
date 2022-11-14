@@ -25,7 +25,7 @@ export const CreateBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardReque
   }
 );
 
-export const getBoardById = createAsyncThunk<ICreateBoardResponse, string>(
+export const getBoardById = createAsyncThunk<IBoardResponse, string>(
   'boards',
   async function (request, { rejectWithValue }) {
     try {
@@ -37,7 +37,7 @@ export const getBoardById = createAsyncThunk<ICreateBoardResponse, string>(
   }
 );
 
-export const UpdateBoardById = createAsyncThunk<ICreateBoardResponse, IUpdateBoardByIdRequest>(
+export const UpdateBoardById = createAsyncThunk<IBoardResponse, IUpdateBoardByIdRequest>(
   'boards',
   async function ({ boardId, ...rest }, { rejectWithValue }) {
     try {
@@ -49,7 +49,7 @@ export const UpdateBoardById = createAsyncThunk<ICreateBoardResponse, IUpdateBoa
   }
 );
 
-export const DeleteBoardById = createAsyncThunk<ICreateBoardResponse, string>(
+export const DeleteBoardById = createAsyncThunk<IBoardResponse, string>(
   'boards',
   async function (boardId, { rejectWithValue }) {
     try {
@@ -63,11 +63,11 @@ export const DeleteBoardById = createAsyncThunk<ICreateBoardResponse, string>(
 
 // TODO GetBoardsById
 
-export const GetUserU = createAsyncThunk<ICreateBoardResponse, string>(
+export const GetBoardsSet = createAsyncThunk<IBoardResponse, string>(
   'boards',
-  async function (boardId, { rejectWithValue }) {
+  async function (userId, { rejectWithValue }) {
     try {
-      const data: Response = await api.get(`boards/${boardId}`);
+      const data: Response = await api.get(`boards/${userId}`);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);

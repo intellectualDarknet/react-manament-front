@@ -66,8 +66,8 @@ const Authorization = () => {
           validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
           errorMessages={[
             'this field is required',
-            'login should be more than 3 symbols and less than 12',
-            'login should be more than 3 symbols and less than 12',
+            'login should be more than 2 symbols and less than 12',
+            'login should be more than 2 symbols and less than 12',
             'login should contain only letters',
           ]}
         />

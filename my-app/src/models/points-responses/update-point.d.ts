@@ -1,4 +1,4 @@
-declare interface IColumnResponse {
+declare interface IUpdatedPointResponse {
   _id: string;
   title: string;
   order: number;

@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { authInterceptor } from 'api/auth-interceptor';
 import App from './App';
-import store from './store/store';
+import { setupStore } from './store/store';
 import './i18n';
+
+export const store = setupStore();
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 authInterceptor(store);

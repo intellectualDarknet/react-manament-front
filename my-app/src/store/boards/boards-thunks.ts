@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from 'api/api';
 
-export const GetBoards = createAsyncThunk<IGetBoardResponse, void>(
+export const getBoards = createAsyncThunk<IGetBoardResponse[], void>(
   'boards',
   async function (request, { rejectWithValue }) {
     try {
@@ -13,11 +13,11 @@ export const GetBoards = createAsyncThunk<IGetBoardResponse, void>(
   }
 );
 
-export const CreateBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardRequest>(
+export const createBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardRequest>(
   'boards',
   async function (request, { rejectWithValue }) {
     try {
-      const data: Response = await api.post('boards');
+      const data: Response = await api.post('boards', request);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -25,11 +25,11 @@ export const CreateBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardReque
   }
 );
 
-export const getBoardById = createAsyncThunk<IBoardResponse, string>(
+export const getBoardById = createAsyncThunk<IGetBoardResponse, string>(
   'boards',
-  async function (request, { rejectWithValue }) {
+  async function (boardId, { rejectWithValue }) {
     try {
-      const data: Response = await api.get(`boards/${request}`);
+      const data: Response = await api.get(`boards/${boardId}`);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -37,7 +37,7 @@ export const getBoardById = createAsyncThunk<IBoardResponse, string>(
   }
 );
 
-export const UpdateBoardById = createAsyncThunk<IBoardResponse, IUpdateBoardByIdRequest>(
+export const updateBoardById = createAsyncThunk<IGetBoardResponse, IUpdateBoardByIdRequest>(
   'boards',
   async function ({ boardId, ...rest }, { rejectWithValue }) {
     try {
@@ -49,7 +49,7 @@ export const UpdateBoardById = createAsyncThunk<IBoardResponse, IUpdateBoardById
   }
 );
 
-export const DeleteBoardById = createAsyncThunk<IBoardResponse, string>(
+export const deleteBoardById = createAsyncThunk<IGetBoardResponse, string>(
   'boards',
   async function (boardId, { rejectWithValue }) {
     try {
@@ -63,7 +63,7 @@ export const DeleteBoardById = createAsyncThunk<IBoardResponse, string>(
 
 // TODO GetBoardsById
 
-export const GetBoardsSet = createAsyncThunk<IBoardResponse, string>(
+export const getBoardsByUserId = createAsyncThunk<IGetBoardResponse, string>(
   'boards',
   async function (userId, { rejectWithValue }) {
     try {

@@ -63,11 +63,11 @@ const Authorization = () => {
           autoComplete="login"
           autoFocus
           value={login}
-          validators={['required', 'minStringLength:2', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+          validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
           errorMessages={[
             'this field is required',
-            'login should be more than 2 symbols and less than 12',
-            'login should be more than 2 symbols and less than 12',
+            'login should be more than 3 symbols and less than 12',
+            'login should be more than 3 symbols and less than 12',
             'login should contain only letters',
           ]}
         />
@@ -98,8 +98,8 @@ const Authorization = () => {
           validators={['required', 'minStringLength:8', 'maxStringLength:15']}
           errorMessages={[
             'this field is required',
-            'login should be more than 8 symbols and less than 15',
-            'login should be more than 8 symbols and less than 15',
+            'password should be more than 8 symbols and less than 15',
+            'paswword should be more than 8 symbols and less than 15',
           ]}
         />
         <TextValidator

@@ -12,13 +12,23 @@ import {
   getBoardById,
   getBoardsByUserId,
 } from '../../store/boards/boards-thunks';
+import {
+  createColumn,
+  createSetOfColumns,
+  deleteColumn,
+  getColumnById,
+  getColumnsByColumnId,
+  getColumnsInBoard,
+  updateColumnById,
+  updateSetOfColumns,
+} from 'store/columns/columns-thunks';
 
 const lngs = {
   en: { nativeName: 'English' },
   ru: { nativeName: 'Russia' },
 };
 
-const Errorpage = () => {
+const ErrorPage = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
 
@@ -29,22 +39,22 @@ const Errorpage = () => {
   const points: unknown = useAppSelector((state: RootState) => state.rootReducer.pointsReducer);
   const tasks: unknown = useAppSelector((state: RootState) => state.rootReducer.tasksReducer);
 
-  useEffect(() => {
-    // dispatch(
-    //   signUp({
-    //     name: 'lackylu',
-    //     login: 'lackylu',
-    //     password: '4057321qwe',
-    //   })
-    // );
-    // dispatch(signIn({ login: 'lackylu', password: '4057321qwe' }));
-    // localStorage.setItem('token', auths.token);
-    // dispatch(createBoard({ _id: 'sdfkz133', title: 'hello2', owner: 'string2', users: ['loserz'] }));
-    dispatch(getBoards());
-    // dispatch(getBoardById('sdfkz131'));
-  }, [dispatch]);
+  // TODO: remove example
+  // useEffect(() => {
+  //   dispatch(
+  //     createSetOfColumns([
+  //       { boardId: '6373bf5c0f3c2d3f5e561f61', title: 'res', order: 77 },
+  //       { boardId: '6373bf5c0f3c2d3f5e561f61', title: 'resss', order: 144 },
+  //     ])
+  //   );
+  //   dispatch(
+  //     updateSetOfColumns([
+  //       { _id: '6373bf5c0f3c2d3f5e561f61', order: 1 },
+  //       { _id: '6373bf5c0f3c2d3f5e561f61', order: 2 },
+  //     ])
+  //   );
+  // }, [dispatch]);
 
-  console.log('boards', boards);
   return (
     <>
       {Object.keys(lngs).map((lng) => (
@@ -69,4 +79,4 @@ const Errorpage = () => {
   );
 };
 
-export default Errorpage;
+export default ErrorPage;

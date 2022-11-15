@@ -82,6 +82,7 @@ export const boardsSlice = createSlice({
         state.boardsLoading = false;
         state.boardsError = action.error as IResponseError;
       })
+
       .addCase(createBoard.pending, (state) => {
         state.createBoardLoading = true;
         state.createBoardError = initialState.createBoardError;

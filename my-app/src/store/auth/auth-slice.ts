@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signIn, signUp } from './auth-thunks';
+import { signIn, signUp } from '../auth/auth-thunks';
 
 interface IAuthState {
   userId: string;
@@ -23,11 +23,23 @@ const initialState: IAuthState = {
   signUpError: void 0,
 };
 
+const actualState: IAuthState = {
+  token: localStorage.getItem('token'),
+  userId: void 0,
+  name: void 0,
+  login: void 0,
+  signInLoading: false,
+  signInError: void 0,
+  signUpLoading: false,
+  signUpError: void 0,
+};
+
 export const authSlice = createSlice({
-  initialState: initialState,
+  initialState: actualState,
   name: 'auth',
   reducers: {
     logout: () => {
+      localStorage.removeItem('token');
       return initialState;
     },
   },
@@ -39,6 +51,7 @@ export const authSlice = createSlice({
       .addCase(signIn.fulfilled, (state, action) => {
         state.signInLoading = false;
         state.token = action.payload.token;
+        localStorage.setItem('token', action.payload.token);
       })
       .addCase(signIn.rejected, (state, action) => {
         state.signInError = action.error as IResponseError;

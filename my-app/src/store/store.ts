@@ -1,27 +1,31 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authReducer from './auth/auth-slice';
-import BoardsReducer from './boards/boards-slice';
-import AuthReducer from './columns/columns-slice';
-import PointsReducer from './points/points-slice';
+import boardsReducer from './boards/boards-slice';
+import pointsReducer from './points/points-slice';
+import tasksReducer from './tasks/tasks-slice';
+import columnsReducer from './columns/columns-slice';
+import { AppStore } from './storeRe';
 
 export const rootReducer = combineReducers({
   authReducer,
-  BoardsReducer,
-  AuthReducer,
-  PointsReducer,
+  boardsReducer,
+  pointsReducer,
+  tasksReducer,
+  columnsReducer,
 });
 
-export const setupStore = () => {
-  return configureStore({
-    reducer: rootReducer,
-  });
-};
+export const store = configureStore({
+  reducer: {
+    rootReducer,
+  },
+});
 
-export type RootState = ReturnType<typeof rootReducer>;
-export type AppStore = ReturnType<typeof setupStore>;
+export type RootState = ReturnType<typeof store.getState>;
+export type StoreType = typeof store;
+// export type AppDispatch = typeof store.dispatch;
 export type AppDispatch = AppStore['dispatch'];
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const useAppDispatch: () => AppDispatch = useDispatch;
 
-export const store = setupStore();
+export default store;

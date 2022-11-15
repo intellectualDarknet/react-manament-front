@@ -54,7 +54,7 @@ const initialState: IPointsState = {
 
 export const PointsSlice = createSlice({
   initialState: initialState,
-  name: 'columns',
+  name: 'points',
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -74,7 +74,6 @@ export const PointsSlice = createSlice({
 
       .addCase(createPoint.pending, (state) => {
         state.createPointLoading = true;
-        state.points = initialState.points;
         state.createPointError = initialState.createPointError;
       })
       .addCase(createPoint.fulfilled, (state, action) => {
@@ -88,7 +87,6 @@ export const PointsSlice = createSlice({
 
       .addCase(updateSetOfPoints.pending, (state) => {
         state.updatePointsByIdLoading = true;
-        state.points = initialState.points;
         state.createPointError = initialState.createPointError;
       })
       .addCase(updateSetOfPoints.fulfilled, (state, action) => {

@@ -4,6 +4,7 @@ declare interface IUpdateTaskRequest {
   description: string;
   columnId: string;
   boardId: string;
+  taskId: string;
   userId: number;
   users: string[];
 }

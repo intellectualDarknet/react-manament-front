@@ -2,10 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from 'api/api';
 
 export const getTasksInColumn = createAsyncThunk<ITask[], IGetTasks>(
-  'boards',
+  'getTasksInColumn',
   async function ({ boardId, columnId }, { rejectWithValue }) {
     try {
-      const data: Response = await api.get(`/${boardId}/columns/${columnId}/tasks`);
+      const data: Response = await api.get(`${boardId}/columns/${columnId}/tasks`);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -14,10 +14,10 @@ export const getTasksInColumn = createAsyncThunk<ITask[], IGetTasks>(
 );
 
 export const createTask = createAsyncThunk<ITask, ICreateTaskRequest>(
-  'boards',
+  'createTask',
   async function ({ boardId, columnId, ...rest }, { rejectWithValue }) {
     try {
-      const data: Response = await api.post(`/${boardId}/columns/${columnId}/tasks`, rest);
+      const data: Response = await api.post(`${boardId}/columns/${columnId}/tasks`, rest);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -26,10 +26,10 @@ export const createTask = createAsyncThunk<ITask, ICreateTaskRequest>(
 );
 
 export const getTaskById = createAsyncThunk<ITask, IGetTasksRequest>(
-  'boards',
+  'getTaskById',
   async function ({ boardId, columnId, taskId }, { rejectWithValue }) {
     try {
-      const data: Response = await api.get(`/${boardId}/columns/${columnId}/tasks/${taskId}`);
+      const data: Response = await api.get(`${boardId}/columns/${columnId}/tasks/${taskId}`);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -37,11 +37,11 @@ export const getTaskById = createAsyncThunk<ITask, IGetTasksRequest>(
   }
 );
 
-export const updateTasknById = createAsyncThunk<ITask, IUpdateTaskRequest>(
-  'boards',
+export const updateTaskById = createAsyncThunk<ITask, IUpdateTaskRequest>(
+  'updateTaskById',
   async function ({ boardId, columnId, taskId, ...rest }, { rejectWithValue }) {
     try {
-      const data: Response = await api.put(`/${boardId}/columns/${columnId}/tasks/${taskId}`, rest);
+      const data: Response = await api.put(`${boardId}/columns/${columnId}/tasks/${taskId}`, rest);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -49,11 +49,11 @@ export const updateTasknById = createAsyncThunk<ITask, IUpdateTaskRequest>(
   }
 );
 
-export const deleteColumn = createAsyncThunk<ITask, IGetTasksRequest>(
-  'boards',
+export const deleteTask = createAsyncThunk<ITask, IGetTasksRequest>(
+  'deleteTask',
   async function ({ boardId, columnId, taskId }, { rejectWithValue }) {
     try {
-      const data: Response = await api.delete(`/${boardId}/columns/${columnId}/tasks/${taskId}`);
+      const data: Response = await api.delete(`${boardId}/columns/${columnId}/tasks/${taskId}`);
       return await data.json();
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -61,9 +61,8 @@ export const deleteColumn = createAsyncThunk<ITask, IGetTasksRequest>(
   }
 );
 
-// not string request is an object!
 export const getUsersTasksBySearch = createAsyncThunk<ITask[], ITasksSetRequest>(
-  'tasksSet',
+  'getUsersTasksBySearch',
   async function (request, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`tasksSet`, { params: request });
@@ -74,8 +73,8 @@ export const getUsersTasksBySearch = createAsyncThunk<ITask[], ITasksSetRequest>
   }
 );
 
-export const updateSetOfColumns = createAsyncThunk<ITask[], IUpdateSetOfTasks[]>(
-  'tasksSet',
+export const updateSetOfTasks = createAsyncThunk<ITask[], IUpdateSetOfTasks[]>(
+  'updateSetOfTasks',
   async function (array, { rejectWithValue }) {
     try {
       const data: Response = await api.patch(`tasksSet`, array);
@@ -86,8 +85,8 @@ export const updateSetOfColumns = createAsyncThunk<ITask[], IUpdateSetOfTasks[]>
   }
 );
 
-export const getTasksByBoardId = createAsyncThunk<IColumnResponse[], string>(
-  'columnsSet',
+export const getTasksByBoardId = createAsyncThunk<ITask[], string>(
+  'getTasksByBoardId',
   async function (boardId, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`tasksSet/${boardId}`);

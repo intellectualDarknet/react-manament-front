@@ -5,11 +5,13 @@ import api from './api';
 export const authInterceptor = (store: StoreType) => {
   api.interceptors.request.use(
     (conf) => {
+      console.log('interseptor works!');
       // you can add some information before send it.
-      conf.headers['Authorization'] = `Bearer ${store.getState().authReducer.token}`;
+      conf.headers['Authorization'] = `Bearer ${store.getState().rootReducer.authReducer.token}`;
       return conf;
     },
     (error) => {
+      console.log('interseptor error');
       return Promise.reject(error);
     }
   );
@@ -18,6 +20,7 @@ export const authInterceptor = (store: StoreType) => {
       return Promise.resolve(next);
     },
     (error) => {
+      // TODO: add 401 error handle
       store.dispatch(logout());
       return Promise.reject(error);
     }

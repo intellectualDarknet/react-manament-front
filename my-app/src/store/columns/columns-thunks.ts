@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from 'api/api';
 
 export const getColumnsInBoard = createAsyncThunk<IColumnResponse[], void>(
-  'boards',
+  'getColumnsInBoard',
   async function (BoardId, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`${BoardId}/columns`);
@@ -14,7 +14,7 @@ export const getColumnsInBoard = createAsyncThunk<IColumnResponse[], void>(
 );
 
 export const createColumn = createAsyncThunk<IColumnResponse, INewColumn>(
-  'boards',
+  'createColumn',
   async function ({ boardId, ...rest }, { rejectWithValue }) {
     try {
       const data: Response = await api.post(`${boardId}/columns`, rest);
@@ -26,7 +26,7 @@ export const createColumn = createAsyncThunk<IColumnResponse, INewColumn>(
 );
 
 export const getColumnById = createAsyncThunk<IColumnResponse, IGetColumn>(
-  'boards',
+  'getColumnById',
   async function ({ boardId, columnId }, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`${boardId}/columns/${columnId}`);
@@ -38,7 +38,7 @@ export const getColumnById = createAsyncThunk<IColumnResponse, IGetColumn>(
 );
 
 export const updateColumnById = createAsyncThunk<IColumnResponse, IUpdateColumn>(
-  'boards',
+  'updateColumnById',
   async function ({ boardId, columnId, ...rest }, { rejectWithValue }) {
     try {
       const data: Response = await api.put(`${boardId}/columns/${columnId}`, rest);
@@ -50,7 +50,7 @@ export const updateColumnById = createAsyncThunk<IColumnResponse, IUpdateColumn>
 );
 
 export const deleteColumn = createAsyncThunk<IColumnResponse, IDeleteColumn>(
-  'boards',
+  'deleteColumn',
   async function ({ boardId, columnId }, { rejectWithValue }) {
     try {
       const data: Response = await api.delete(`${boardId}/columns/${columnId}`);
@@ -63,7 +63,7 @@ export const deleteColumn = createAsyncThunk<IColumnResponse, IDeleteColumn>(
 
 // check it out
 export const getColumnsByColumnId = createAsyncThunk<IColumnResponse[], string>(
-  'columnsSet',
+  'getColumnsByColumnId',
   async function (userId, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`columnsSet`, { params: userId });
@@ -75,7 +75,7 @@ export const getColumnsByColumnId = createAsyncThunk<IColumnResponse[], string>(
 );
 
 export const updateSetOfColumns = createAsyncThunk<IColumnResponse[], IColumnRequest[]>(
-  'columnsSet',
+  'updateSetOfColumns',
   async function (array, { rejectWithValue }) {
     try {
       const data: Response = await api.patch(`columnsSet`, array);
@@ -87,7 +87,7 @@ export const updateSetOfColumns = createAsyncThunk<IColumnResponse[], IColumnReq
 );
 // rewrite
 export const createSetOfColumns = createAsyncThunk<IColumnResponse[], IColumnRequest[]>(
-  'columnsSet',
+  'createSetOfColumns',
   async function (array, { rejectWithValue }) {
     try {
       const data: Response = await api.patch(`columnsSet`, array);

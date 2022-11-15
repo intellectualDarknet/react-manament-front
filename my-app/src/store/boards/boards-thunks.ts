@@ -1,12 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from 'api/api';
+import { AxiosResponse } from 'axios';
 
 export const getBoards = createAsyncThunk<IGetBoardResponse[], void>(
-  'boards',
+  'getBoards',
   async function (request, { rejectWithValue }) {
     try {
-      const data: Response = await api.get('boards');
-      return await data.json();
+      const data: AxiosResponse = await api.get('boards');
+      console.log('getBoards', data);
+      return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
     }
@@ -14,11 +16,12 @@ export const getBoards = createAsyncThunk<IGetBoardResponse[], void>(
 );
 
 export const createBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardRequest>(
-  'boards',
+  'createBoard',
   async function (request, { rejectWithValue }) {
     try {
-      const data: Response = await api.post('boards', request);
-      return await data.json();
+      const data: AxiosResponse = await api.post('boards', request);
+      console.log('createBoard', data);
+      return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
     }
@@ -26,11 +29,12 @@ export const createBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardReque
 );
 
 export const getBoardById = createAsyncThunk<IGetBoardResponse, string>(
-  'boards',
+  'getBoardById',
   async function (boardId, { rejectWithValue }) {
     try {
-      const data: Response = await api.get(`boards/${boardId}`);
-      return await data.json();
+      const data: AxiosResponse = await api.get(`boards/${boardId}`);
+      console.log('getBoardById', data);
+      return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
     }
@@ -38,11 +42,12 @@ export const getBoardById = createAsyncThunk<IGetBoardResponse, string>(
 );
 
 export const updateBoardById = createAsyncThunk<IGetBoardResponse, IUpdateBoardByIdRequest>(
-  'boards',
+  'updateBoardById',
   async function ({ boardId, ...rest }, { rejectWithValue }) {
     try {
-      const data: Response = await api.put(`boards/${boardId}`, rest);
-      return await data.json();
+      const data: AxiosResponse = await api.put(`boards/${boardId}`, rest);
+      console.log('updateBoardById', data);
+      return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
     }
@@ -50,25 +55,38 @@ export const updateBoardById = createAsyncThunk<IGetBoardResponse, IUpdateBoardB
 );
 
 export const deleteBoardById = createAsyncThunk<IGetBoardResponse, string>(
-  'boards',
+  'deleteBoardById',
   async function (boardId, { rejectWithValue }) {
     try {
-      const data: Response = await api.delete(`boards/${boardId}`);
-      return await data.json();
+      const data: AxiosResponse = await api.delete(`boards/${boardId}`);
+      console.log('deleteBoardById', data);
+      return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
     }
   }
 );
 
-// TODO GetBoardsById
+// TODO test
 
-export const getBoardsByUserId = createAsyncThunk<IGetBoardResponse, string>(
-  'boards',
+export const getBoardsByIds = createAsyncThunk<IGetBoardResponse[], IGetBoardsByIds>(
+  'getBoardsByIds',
   async function (userId, { rejectWithValue }) {
     try {
-      const data: Response = await api.get(`boards/${userId}`);
-      return await data.json();
+      const data: AxiosResponse = await api.get(`boards/${userId}`);
+      return await data.data;
+    } catch (e: unknown) {
+      return rejectWithValue(e as IResponseError);
+    }
+  }
+);
+
+export const getBoardsByUserId = createAsyncThunk<IGetBoardResponse, string>(
+  'getBoardsByUserId',
+  async function (userId, { rejectWithValue }) {
+    try {
+      const data: AxiosResponse = await api.get(`boards/${userId}`);
+      return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
     }

@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from 'api/api';
 
 export const getPointsByIds = createAsyncThunk<IPointResponse[], IGetPointsIdsRequest>(
-  'points',
+  'getPointsByIds',
   async function (request, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`points`, { params: request });
@@ -14,7 +14,7 @@ export const getPointsByIds = createAsyncThunk<IPointResponse[], IGetPointsIdsRe
 );
 
 export const createPoint = createAsyncThunk<IPointResponse, ICreatePointRequest>(
-  'points',
+  'createPoint',
   async function (request, { rejectWithValue }) {
     try {
       const data: Response = await api.post(`points`, request);
@@ -27,7 +27,7 @@ export const createPoint = createAsyncThunk<IPointResponse, ICreatePointRequest>
 
 // check request by idea it returns array but return object
 export const updateSetOfPoints = createAsyncThunk<IPointResponse, IUpdateSetOfPoints[]>(
-  'points',
+  'updateSetOfPoints',
   async function (array, { rejectWithValue }) {
     try {
       const data: Response = await api.patch(`points`, array);
@@ -39,7 +39,7 @@ export const updateSetOfPoints = createAsyncThunk<IPointResponse, IUpdateSetOfPo
 );
 
 export const getPointsByTaskId = createAsyncThunk<IPointResponse[], string>(
-  'boards',
+  'getPointsByTaskId',
   async function (path, { rejectWithValue }) {
     try {
       const data: Response = await api.get(`points/${path}`);
@@ -51,7 +51,7 @@ export const getPointsByTaskId = createAsyncThunk<IPointResponse[], string>(
 );
 
 export const updatePoint = createAsyncThunk<IUpdatedPointResponse, IUpdatePoint>(
-  'columnsSet',
+  'updatePoint',
   async function ({ pointId, ...array }, { rejectWithValue }) {
     try {
       const data: Response = await api.patch(`points/${pointId}`, array);
@@ -63,7 +63,7 @@ export const updatePoint = createAsyncThunk<IUpdatedPointResponse, IUpdatePoint>
 );
 
 export const deletePointById = createAsyncThunk<IDeletedPointResponse, string>(
-  'boards',
+  'deletePointById',
   async function (pointId, { rejectWithValue }) {
     try {
       const data: Response = await api.delete(`points/${pointId}`);

@@ -2,9 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   getBoards,
   createBoard,
+  getBoardById,
   updateBoardById,
   deleteBoardById,
-  getBoardById,
+  getBoardsByIds,
   getBoardsByUserId,
 } from './boards-thunks';
 
@@ -25,6 +26,10 @@ interface IBoardsState {
   boardById: IGetBoardResponse;
   boardByIdLoading: boolean;
   boardByIdError: IResponseError;
+
+  boardsByIds: IGetBoardResponse[];
+  boardsByIdsLoading: boolean;
+  boardsByIdsError: IResponseError;
 
   userBoard: IGetBoardResponse;
   userBoardLoading: boolean;
@@ -48,6 +53,10 @@ const initialState: IBoardsState = {
   boardById: void 0,
   boardByIdLoading: void 0,
   boardByIdError: void 0,
+
+  boardsByIds: void 0,
+  boardsByIdsLoading: void 0,
+  boardsByIdsError: void 0,
 
   userBoard: void 0,
   userBoardLoading: void 0,
@@ -125,6 +134,20 @@ export const boardsSlice = createSlice({
       .addCase(getBoardById.rejected, (state, action) => {
         state.boardByIdLoading = false;
         state.boardByIdError = action.error as IResponseError;
+      })
+
+      .addCase(getBoardsByIds.pending, (state) => {
+        state.boardsByIdsLoading = true;
+        state.boardsByIdsError = initialState.updateBoardError;
+      })
+      .addCase(getBoardsByIds.fulfilled, (state, action) => {
+        state.boardsByIdsLoading = false;
+        // TODO this equation can be changed according to logic
+        state.boardsByIds = action.payload;
+      })
+      .addCase(getBoardsByIds.rejected, (state, action) => {
+        state.boardsByIdsLoading = false;
+        state.boardsByIdsError = action.error as IResponseError;
       })
 
       .addCase(getBoardsByUserId.pending, (state) => {

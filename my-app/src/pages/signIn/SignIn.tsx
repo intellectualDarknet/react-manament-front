@@ -1,20 +1,20 @@
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 const SignIn = () => {
-  const [name, SetName] = useState<string>('');
+  const [email, SetEmail] = useState<string>('');
   const [password, SetPassword] = useState<string>('');
   const onSigninSubmit = () => {
     console.log('hi');
   };
   function onEmailChange(e: FormEvent<HTMLFormElement>) {
-    if ((e.target as HTMLInputElement).id === 'name') {
-      SetName((e.target as HTMLInputElement).value);
+    if ((e.target as HTMLInputElement).id === 'email') {
+      SetEmail((e.target as HTMLInputElement).value);
     }
     if ((e.target as HTMLInputElement).id === 'password') {
       SetPassword((e.target as HTMLInputElement).value);
@@ -27,23 +27,31 @@ const SignIn = () => {
       component={Paper}
       square
     >
-      <form onSubmit={onSigninSubmit} onChange={onEmailChange} noValidate>
+      <ValidatorForm
+        onError={(errors) => console.log(errors)}
+        onSubmit={onSigninSubmit}
+        onChange={onEmailChange}
+        noValidate
+        sx={{ width: '80%' }}
+      >
         <Typography variant="h5" component="h2">
           Sign in
         </Typography>
-        <TextField
+        <TextValidator
           variant="outlined"
           margin="normal"
           required
           fullWidth
-          id="name"
-          label="Name"
-          name="name"
-          autoComplete="name"
+          id="email"
+          label="Email"
+          name="email"
+          autoComplete="email"
           autoFocus
-          value={name}
+          value={email}
+          validators={['required', 'isEmail']}
+          errorMessages={['this field is required', 'email is not valid']}
         />
-        <TextField
+        <TextValidator
           variant="outlined"
           margin="normal"
           required
@@ -54,6 +62,8 @@ const SignIn = () => {
           id="password"
           autoComplete="current-password"
           value={password}
+          validators={['required']}
+          errorMessages={['this field is required']}
         />
         <Button type="submit" fullWidth variant="contained" color="primary" sx={{ marginBottom: '10px' }}>
           Submit
@@ -64,7 +74,7 @@ const SignIn = () => {
             <Link to="/Authorization">Not registered? Sign up</Link>
           </Grid>
         </Grid>
-      </form>
+      </ValidatorForm>{' '}
     </Grid>
   );
 };

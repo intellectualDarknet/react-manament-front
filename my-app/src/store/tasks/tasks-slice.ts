@@ -13,61 +13,61 @@ import {
 interface ITasksState {
   tasksInColumns: ITask[];
   tasksInColumnsLoading: boolean;
-  tasksInColumnsError: IResponseError;
+  tasksInColumnsError: IResponseError | null;
 
   createTaskLoading: boolean;
-  createTaskError: IResponseError;
+  createTaskError: IResponseError | null;
 
-  getTaskById: ITask;
+  getTaskById: ITask | null;
   getTaskByIdLoading: boolean;
-  getTaskByIdError: IResponseError;
+  getTaskByIdError: IResponseError | null;
 
   updateTasksByIdLoading: boolean;
-  updateTasksByIdError: IResponseError;
+  updateTasksByIdError: IResponseError | null;
 
   deleteTasksLoading: boolean;
-  deleteTasksError: IResponseError;
+  deleteTasksError: IResponseError | null;
 
   getTasksByIds: ITask[];
   getTasksByIdsLoading: boolean;
-  getTasksByIdsError: IResponseError;
+  getTasksByIdsError: IResponseError | null;
 
   updateTasksByIdsLoading: boolean;
-  updateTasksByIdsError: IResponseError;
+  updateTasksByIdsError: IResponseError | null;
 
   getTasksByBoardId: ITask[];
   getTasksByBoardIdLoading: boolean;
-  getTasksByBoardIdError: IResponseError;
+  getTasksByBoardIdError: IResponseError | null;
 }
 
 const initialState: ITasksState = {
-  tasksInColumns: void 0,
-  tasksInColumnsLoading: void 0,
-  tasksInColumnsError: void 0,
+  tasksInColumns: [],
+  tasksInColumnsLoading: false,
+  tasksInColumnsError: null,
 
-  createTaskLoading: void 0,
-  createTaskError: void 0,
+  createTaskLoading: false,
+  createTaskError: null,
 
-  getTaskById: void 0,
-  getTaskByIdLoading: void 0,
-  getTaskByIdError: void 0,
+  getTaskById: null,
+  getTaskByIdLoading: false,
+  getTaskByIdError: null,
 
-  updateTasksByIdLoading: void 0,
-  updateTasksByIdError: void 0,
+  updateTasksByIdLoading: false,
+  updateTasksByIdError: null,
 
-  deleteTasksLoading: void 0,
-  deleteTasksError: void 0,
+  deleteTasksLoading: false,
+  deleteTasksError: null,
 
-  getTasksByIds: void 0,
-  getTasksByIdsLoading: void 0,
-  getTasksByIdsError: void 0,
+  getTasksByIds: [],
+  getTasksByIdsLoading: false,
+  getTasksByIdsError: null,
 
-  updateTasksByIdsLoading: void 0,
-  updateTasksByIdsError: void 0,
+  updateTasksByIdsLoading: false,
+  updateTasksByIdsError: null,
 
-  getTasksByBoardId: void 0,
-  getTasksByBoardIdLoading: void 0,
-  getTasksByBoardIdError: void 0,
+  getTasksByBoardId: [],
+  getTasksByBoardIdLoading: false,
+  getTasksByBoardIdError: null,
 };
 
 export const tasksSlice = createSlice({
@@ -123,7 +123,9 @@ export const tasksSlice = createSlice({
       })
       .addCase(updateTaskById.fulfilled, (state, action) => {
         state.updateTasksByIdLoading = false;
-        const index = state.tasksInColumns.indexOf(state.tasksInColumns.find((elem) => elem._id == action.payload._id));
+        const index = state.tasksInColumns.indexOf(
+          state.tasksInColumns.find((elem) => elem._id == action.payload._id) as ITask
+        );
         state.tasksInColumns[index] = { ...state.tasksInColumns[index], ...action.payload };
       })
       .addCase(updateTaskById.rejected, (state, action) => {

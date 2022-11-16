@@ -2,7 +2,12 @@ import React from 'react';
 import { Grid, Paper, Typography, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function Task(): JSX.Element {
+function Task(props: {
+  boardId: string,
+  columnId: string,
+  taskId: string,
+}): JSX.Element {
+
   return (
     <Paper elevation={2} className="column__task">
     <Grid container item className="task__description-conteiner" xl={10} xs={10}>

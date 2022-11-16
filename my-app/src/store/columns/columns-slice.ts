@@ -10,7 +10,7 @@ import {
   createSetOfColumns,
 } from './columns-thunks';
 
-interface IColumnsState {
+export interface IColumnsState {
   columns: IColumnResponse[];
   columnsLoading: boolean;
   columnsError: IResponseError;

@@ -9,7 +9,7 @@ import {
   getBoardsByUserId,
 } from './boards-thunks';
 
-interface IBoardsState {
+export interface IBoardsState {
   boards: IGetBoardResponse[];
   boardsLoading: boolean;
   boardsError: IResponseError;

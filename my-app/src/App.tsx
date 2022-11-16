@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
-import Authorization from './pages/authorization/authorization';
 import Boards from './pages/boards';
 import Errorpage from './pages/error/error';
 import Start from './pages/start/start';
@@ -10,11 +9,15 @@ import theme from './components/Theme';
 import './assets/styles/style.scss';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import SignIn from 'pages/signIn/SignIn';
 import Board from 'pages/board/board';
+import SignUpPage from 'pages/signUpPage/signUpPage';
+import SignInPage from 'pages/signInPage/signInPage';
+import { RootState, useAppSelector } from 'store/store';
 import User from 'pages/userPage';
 
 function App(): JSX.Element {
+  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -23,14 +26,13 @@ function App(): JSX.Element {
           <main>
             <Routes>
               <Route path="/" element={<Start />} />
-              <Route path="Start" element={<Start />} />
-              <Route path="Authorization" element={<Authorization />} />
-              <Route path="UserPage" element={<User />} />
-              <Route path="SignIn" element={<SignIn />} />
-              <Route path="Boards" element={<Boards />} />
-              <Route path="Board" element={<Board />} />
+              <Route path="sign-up" element={!userId ? <SignUpPage /> : <Navigate to="/" replace />} />
+              <Route path="sign-in" element={!userId ? <SignInPage /> : <Navigate to="/" replace />} />
+              <Route path="boards" element={userId ? <Boards /> : <Navigate to="sign-in" replace />} />
+              <Route path="board" element={userId ? <Board /> : <Navigate to="sign-in" replace />} />
+              <Route path="UserPage" element={userId ? <User /> : <Navigate to="sign-in" replace />} />
               <Route path="404" element={<Errorpage />} />
-              <Route path="*" element={<Errorpage />} />
+              <Route path="*" element={<Navigate to="404" replace />} />
             </Routes>
           </main>
           <Footer />

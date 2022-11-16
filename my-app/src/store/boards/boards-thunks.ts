@@ -7,7 +7,6 @@ export const getBoards = createAsyncThunk<IGetBoardResponse[], void>(
   async function (request, { rejectWithValue }) {
     try {
       const data: AxiosResponse = await api.get('boards');
-      console.log('getBoards', data);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -20,7 +19,6 @@ export const createBoard = createAsyncThunk<IGetBoardResponse, ICreateBoardReque
   async function (request, { rejectWithValue }) {
     try {
       const data: AxiosResponse = await api.post('boards', request);
-      console.log('createBoard', data);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -33,7 +31,6 @@ export const getBoardById = createAsyncThunk<IGetBoardResponse, string>(
   async function (boardId, { rejectWithValue }) {
     try {
       const data: AxiosResponse = await api.get(`boards/${boardId}`);
-      console.log('getBoardById', data);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -46,7 +43,6 @@ export const updateBoardById = createAsyncThunk<IGetBoardResponse, IUpdateBoardB
   async function ({ boardId, ...rest }, { rejectWithValue }) {
     try {
       const data: AxiosResponse = await api.put(`boards/${boardId}`, rest);
-      console.log('updateBoardById', data);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);
@@ -59,7 +55,6 @@ export const deleteBoardById = createAsyncThunk<IGetBoardResponse, string>(
   async function (boardId, { rejectWithValue }) {
     try {
       const data: AxiosResponse = await api.delete(`boards/${boardId}`);
-      console.log('deleteBoardById', data);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);

@@ -1,11 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import AddIcon from '@mui/icons-material/Add';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Grid, Paper, Typography, Button } from '@mui/material';
+import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 const Board = () => {
   return (
@@ -30,7 +26,7 @@ const Board = () => {
               First column
             </Typography>
             <Grid container className="column__tasks-conteiner">
-              <Grid container className="column__task">
+              <Paper elevation={2} className="column__task">
                 <Grid container item className="task__description-conteiner" xl={10} xs={10}>
                   <Typography className="task__description" variant="body1">
                     First task
@@ -44,7 +40,7 @@ const Board = () => {
                     startIcon={<DeleteIcon />}
                   ></Button>
                 </Grid>
-              </Grid>
+              </Paper>
               <Grid container className="column__task">
                 <Grid item className="task__description-conteiner" xl={10} xs={10}>
                   <Typography className="task__description" variant="body1">

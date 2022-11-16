@@ -20,12 +20,8 @@ const Item = styled(Paper)(({ theme }) => ({
 const Boards = () => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    setOpen((open) => !open);
   };
   return (
     <Box
@@ -51,7 +47,7 @@ const Boards = () => {
               justifyContent: 'center',
               alignSelf: 'center',
             }}
-            onClick={handleClickOpen}
+            onClick={handleClose}
           >
             <Typography variant="h4" gutterBottom>
               + Add new board

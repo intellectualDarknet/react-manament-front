@@ -20,12 +20,9 @@ const Board = () => {
   const [name, setName] = useState<string>('New Board');
   const [input, setInput] = useState<string>('');
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    setOpen((open) => !open);
+    setInput('');
   };
   const handleRename = () => {
     setName(input);
@@ -48,7 +45,7 @@ const Board = () => {
         <Button sx={{ width: '80px', height: '30px', fontSize: '10px' }} variant="contained">
           Delete
         </Button>
-        <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClickOpen}>
+        <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClose}>
           Edit board name
         </Button>
         <Dialog open={open} onClose={handleClose}>

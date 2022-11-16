@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import Board from './../../components/Board';
+import Board from './components/Board/board';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,

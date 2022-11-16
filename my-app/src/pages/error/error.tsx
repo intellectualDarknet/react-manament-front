@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import './error.scss';
 import { useTranslation, Trans } from 'react-i18next';
-import TestComponent from 'components/testcomponent/testcomponent';
 import { signIn, signUp } from 'store/auth/auth-thunks';
 import { AppDispatch, RootState, useAppDispatch, useAppSelector } from 'store/store';
 import {
@@ -74,7 +73,6 @@ const ErrorPage = () => {
       <div className="error">
         <div className="error__descr">The page was not found</div>
       </div>
-      <TestComponent />;
     </>
   );
 };

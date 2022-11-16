@@ -25,12 +25,12 @@ const Start = () => {
           easier with project manager application .
         </Typography>
         <Box sx={{ width: '70%', display: 'flex', justifyContent: 'space-between', paddingLeft: 5, paddingTop: 2 }}>
-          <Link to="/SignIn">
+          <Link to="/Sign-in">
             <Button variant="contained" endIcon={<PersonIcon />}>
               Sign in
             </Button>
           </Link>
-          <Link to="/Authorization">
+          <Link to="/sign-up">
             <Button variant="contained" endIcon={<PersonAddIcon />}>
               Sign up
             </Button>

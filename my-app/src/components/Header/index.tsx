@@ -13,13 +13,18 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Link } from 'react-router-dom';
+import { useAppSelector, RootState, useAppDispatch } from 'store/store';
+import { Button } from '@mui/material';
+import { logout } from 'store/auth/auth-slice';
 
 const settings = [
-  { name: 'Sign In', link: 'SignIn' },
-  { name: 'Sign Up', link: 'Authorization' },
+  { name: 'Sign In', link: 'sign-in' },
+  { name: 'Sign Up', link: 'sign-up' },
 ];
 
 function Header() {
+  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const dispatch = useAppDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [alignment, setAlignment] = React.useState('web');
 
@@ -102,13 +107,17 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Link to={setting.link}>
-                    <Typography textAlign="center">{setting.name}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
+              {userId ? (
+                <Button onClick={() => dispatch(logout())}>Log out</Button>
+              ) : (
+                settings.map((setting) => (
+                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                    <Link to={setting.link}>
+                      <Typography textAlign="center">{setting.name}</Typography>
+                    </Link>
+                  </MenuItem>
+                ))
+              )}
             </Menu>
           </Box>
           <ToggleButtonGroup

@@ -8,7 +8,7 @@ import {
   deletePointById,
 } from './points-thunks';
 
-interface IPointsState {
+export interface IPointsState {
   points: IPointResponse[];
   pointsLoading: boolean;
   pointsError: IResponseError;

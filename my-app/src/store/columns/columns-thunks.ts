@@ -7,7 +7,6 @@ export const getColumnsInBoard = createAsyncThunk<IColumnResponse[], string>(
   async function (BoardId, { rejectWithValue }) {
     try {
       const data: AxiosResponse = await api.get(`boards/${BoardId}/columns`);
-      console.log('getColumnsInBoard', data);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);

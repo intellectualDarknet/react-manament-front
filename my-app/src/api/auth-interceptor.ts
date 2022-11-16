@@ -21,6 +21,7 @@ export const authInterceptor = (store: StoreType) => {
     (error) => {
       if (error.status === 401) {
         store.dispatch(logout());
+        localStorage.clear();
       }
       return Promise.reject(error);
     }

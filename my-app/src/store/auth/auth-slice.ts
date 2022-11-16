@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { parseJwt } from 'utils/parseJwt';
 import { signIn, signUp } from '../auth/auth-thunks';
 
-interface IAuthState {
+export interface IAuthState {
   userId: string;
   token: string;
-  name: string;
-  login: string;
   signInLoading: boolean;
   signInError: IResponseError;
   signUpLoading: boolean;
@@ -15,8 +14,6 @@ interface IAuthState {
 const initialState: IAuthState = {
   token: void 0,
   userId: void 0,
-  name: void 0,
-  login: void 0,
   signInLoading: false,
   signInError: void 0,
   signUpLoading: false,
@@ -25,9 +22,7 @@ const initialState: IAuthState = {
 
 const actualState: IAuthState = {
   token: localStorage.getItem('token'),
-  userId: void 0,
-  name: void 0,
-  login: void 0,
+  userId: parseJwt(localStorage.getItem('token'))?.id ?? void 0,
   signInLoading: false,
   signInError: void 0,
   signUpLoading: false,
@@ -52,6 +47,8 @@ export const authSlice = createSlice({
         state.signInLoading = false;
         state.token = action.payload.token;
         localStorage.setItem('token', action.payload.token);
+        const { id } = parseJwt(action.payload.token);
+        state.userId = id;
       })
       .addCase(signIn.rejected, (state, action) => {
         state.signInError = action.error as IResponseError;
@@ -63,8 +60,6 @@ export const authSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.signUpLoading = false;
-        state.name = action.payload.name;
-        state.login = action.payload.login;
         state.userId = action.payload._id;
       })
       .addCase(signUp.rejected, (state, action) => {

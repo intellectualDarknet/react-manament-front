@@ -4,12 +4,11 @@ a:visited,
 a:focus,
 a:hover {
   text-decoration: none;
-  color: inherit;
   padding: 0;
 }
 main {
   padding-top: 1px;
-  height: calc(100vh - 135px);
+  height: calc(100vh - 129px);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import Authorization from './pages/authorization/authorization';
-import Boards from './pages/boards/boards';
+import Boards from './pages/boards';
 import Errorpage from './pages/error/error';
 import Start from './pages/start/start';
 import { ThemeProvider } from '@mui/material/styles';

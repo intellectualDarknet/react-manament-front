@@ -11,6 +11,7 @@ import './assets/styles/style.scss';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SignIn from 'pages/signIn/SignIn';
+import Board from 'pages/board/board';
 
 function App(): JSX.Element {
   return (
@@ -25,6 +26,7 @@ function App(): JSX.Element {
               <Route path="Authorization" element={<Authorization />} />
               <Route path="SignIn" element={<SignIn />} />
               <Route path="Boards" element={<Boards />} />
+              <Route path="Board" element={<Board />} />
               <Route path="404" element={<Errorpage />} />
               <Route path="*" element={<Errorpage />} />
             </Routes>

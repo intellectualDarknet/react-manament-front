@@ -12,6 +12,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import SignIn from 'pages/signIn/SignIn';
 import Board from 'pages/board/board';
+import User from 'pages/userPage';
 
 function App(): JSX.Element {
   return (
@@ -24,6 +25,7 @@ function App(): JSX.Element {
               <Route path="/" element={<Start />} />
               <Route path="Start" element={<Start />} />
               <Route path="Authorization" element={<Authorization />} />
+              <Route path="UserPage" element={<User />} />
               <Route path="SignIn" element={<SignIn />} />
               <Route path="Boards" element={<Boards />} />
               <Route path="Board" element={<Board />} />

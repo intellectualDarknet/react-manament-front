@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, styled, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import background from './../../assets/img/background2.jpg';
+import background from './../../../../assets/img/background2.jpg';
 import { useState } from 'react';
 
 const Item = styled(Paper)(({ theme }) => ({

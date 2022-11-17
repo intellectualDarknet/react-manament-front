@@ -37,29 +37,29 @@ export interface IBoardsState {
 }
 
 const initialState: IBoardsState = {
-  boards: void 0,
-  boardsLoading: void 0,
+  boards: [],
+  boardsLoading: false,
   boardsError: void 0,
 
-  createBoardLoading: void 0,
+  createBoardLoading: false,
   createBoardError: void 0,
 
-  updateBoardLoading: void 0,
+  updateBoardLoading: false,
   updateBoardError: void 0,
 
-  deleteBoardLoading: void 0,
+  deleteBoardLoading: false,
   deleteBoardError: void 0,
 
   boardById: void 0,
-  boardByIdLoading: void 0,
+  boardByIdLoading: false,
   boardByIdError: void 0,
 
-  boardsByIds: void 0,
-  boardsByIdsLoading: void 0,
+  boardsByIds: [],
+  boardsByIdsLoading: false,
   boardsByIdsError: void 0,
 
   userBoard: void 0,
-  userBoardLoading: void 0,
+  userBoardLoading: false,
   userBoardError: void 0,
 };
 

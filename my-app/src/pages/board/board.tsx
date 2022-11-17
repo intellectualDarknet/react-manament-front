@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Grid, Paper, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { getBoardById, getBoards } from 'store/boards/boards-thunks';
+import { createBoard, getBoardById, getBoards } from 'store/boards/boards-thunks';
 import store from 'store/store';
-import { getColumnsInBoard } from 'store/columns/columns-thunks';
+import { createColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
 import { getTasksInColumn } from 'store/tasks/tasks-thunk';
 import { signIn, signUp } from 'store/auth/auth-thunks';
@@ -13,6 +13,7 @@ import { signIn, signUp } from 'store/auth/auth-thunks';
 const Board = (): JSX.Element => {
   // const Board = (props: {boardId: string}): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
+  let boardId: string;
 
   // This is the test example. TODO: Delete this later
   async function enterUser() {
@@ -21,16 +22,40 @@ const Board = (): JSX.Element => {
     const password = 'ImDaBatman123';
     // const creation = await dispatch(signUp({ name, login, password })).unwrap();
     // console.log('User creates: ', creation);
-    const entrance = await dispatch(signIn({ login, password })).unwrap();
-    console.log('User enters: ', entrance);
-    const allBoards = await dispatch(getBoards()).unwrap();
-    console.log('All boards: ', allBoards);
+    await dispatch(signIn({ login, password })).unwrap();
+    const userId = store.getState().rootReducer.authReducer.userId;
+    console.log('User ID: ', userId);
+    console.log('All Boards: ', store.getState().rootReducer.boardsReducer.boards);
+    const newBoard = await dispatch(
+      createBoard({
+        title: 'Test board',
+        owner: userId,
+        users: [userId],
+      })
+    );
+    console.log('newBoard: ', newBoard);
+    boardId = (newBoard.payload as IBoardResponse)._id;
+    const column1 = await dispatch(
+      createColumn({
+        boardId,
+        title: 'First column',
+        order: 0,
+      })
+    );
+    const column2 = await dispatch(
+      createColumn({
+        boardId,
+        title: 'Second column',
+        order: 1,
+      })
+    );
+    console.log('New columns:', column1, column2);
   }
 
   enterUser();
   // The end of example.
 
-  // const boardData = dispatch(getBoardById(props.boardId)); // TODO: Получить boardId из state
+  // const boardData = dispatch(getBoardById(props.boardId)); // TODO: Получить boardId из store
   // const columnsData = dispatch(getColumnsInBoard(props.boardId));
 
   // const renderAllColumns = (): JSX.Element => columnsData.map((column): JSX.Element => {

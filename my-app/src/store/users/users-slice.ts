@@ -5,7 +5,7 @@ export interface IUsersState {
   users: IGetUserResponse[];
   usersLoading: boolean;
   usersError: IResponseError;
-  
+
   userById: IGetUserResponse;
   userByIdLoading: boolean;
   userByIdError: IResponseError;
@@ -72,8 +72,7 @@ export const UsersSlice = createSlice({
       })
       .addCase(updateUserById.fulfilled, (state, action) => {
         state.updateUserLoading = false;
-        state.users[state.users.indexOf(state.users.find((elem) => elem._id === action.payload._id))] =
-          action.payload;
+        state.users[state.users.indexOf(state.users.find((elem) => elem._id === action.payload._id))] = action.payload;
       })
       .addCase(updateUserById.rejected, (state, action) => {
         state.updateUserLoading = false;
@@ -91,7 +90,7 @@ export const UsersSlice = createSlice({
       .addCase(deleteUserById.rejected, (state, action) => {
         state.deleteUserLoading = false;
         state.deleteUserError = action.error as IResponseError;
-      })
+      });
   },
 });
 

@@ -66,9 +66,9 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
 
   const renderAllColumns = (): JSX.Element[] =>
-    currentBoardColumns.map((column): JSX.Element => {
+    currentBoardColumns.map((column, index): JSX.Element => {
       // const tasksData = [];
-      return Column({ column: column, tasks: [] });
+      return Column({ column: column, tasks: [], key: index });
     });
 
   // console.log('Board: ', boardData);

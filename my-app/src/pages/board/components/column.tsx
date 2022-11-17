@@ -3,7 +3,7 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
 
-function Column(props: { column: IColumnResponse; tasks: ITask[] | [] }): JSX.Element {
+function Column(props: { column: IColumnResponse; tasks: ITask[] | []; key: number }): JSX.Element {
   const sortTask = (tasks: ITask[]): ITask[] => {
     const sortedTasks = tasks.sort((a, b) => b.order - a.order);
     return sortedTasks;
@@ -12,7 +12,7 @@ function Column(props: { column: IColumnResponse; tasks: ITask[] | [] }): JSX.El
   const sortedTasks = sortTask(props.tasks);
 
   return (
-    <Grid container item className="board__column" xl={3} xs={3}>
+    <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
       <Typography variant="h5" className="column__title">
         {props.column.title}
       </Typography>

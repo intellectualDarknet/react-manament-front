@@ -147,5 +147,3 @@ export const PointsSlice = createSlice({
 });
 
 export default PointsSlice.reducer;
-
-// export const { logout } = authSlice.actions;

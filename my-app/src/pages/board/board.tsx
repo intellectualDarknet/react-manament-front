@@ -52,8 +52,10 @@ const Board = (): JSX.Element => {
     );
     console.log('New columns:', column1, column2);
 
-    const boardData = await dispatch(getBoardById(boardId));
-    console.log('boardData: ', boardData);
+    await dispatch(getBoardById(boardId));
+    console.log('Current board: ', store.getState().rootReducer.boardsReducer.boardById);
+    await dispatch(getColumnsInBoard(store.getState().rootReducer.boardsReducer.boardById._id));
+    console.log('Columnt of the board: ', store.getState().rootReducer.columnsReducer.columns);
   }
 
   useEffect(() => {
@@ -61,12 +63,13 @@ const Board = (): JSX.Element => {
   }, []);
 
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
-  // const columnsData = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
+  const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
 
-  // const renderAllColumns = (): JSX.Element => columnsData.map((column): JSX.Element => {
-  //   const tasksData = dispatch(getTasksInColumn({ boardId: boardData._id, columnId: column._id }));
-  //   return Column({ column: column, tasks: tasksData });
-  // });
+  const renderAllColumns = (): JSX.Element[] =>
+    currentBoardColumns.map((column): JSX.Element => {
+      // const tasksData = [];
+      return Column({ column: column, tasks: [] });
+    });
 
   // console.log('Board: ', boardData);
   // console.log('Columns: ', columnsData);
@@ -88,7 +91,7 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>
         <Grid container className="board__columns-layout">
-          {/* {renderAllColumns()} */}
+          {renderAllColumns()}
         </Grid>
       </Grid>
     </Grid>

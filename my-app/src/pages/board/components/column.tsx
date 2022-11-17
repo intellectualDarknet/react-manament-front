@@ -3,15 +3,11 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
 
-function Column(props: {
-  column: IColumnResponse,
-  tasks: ITask[],
-}): JSX.Element {
-
+function Column(props: { column: IColumnResponse; tasks: ITask[] | [] }): JSX.Element {
   const sortTask = (tasks: ITask[]): ITask[] => {
     const sortedTasks = tasks.sort((a, b) => b.order - a.order);
     return sortedTasks;
-  }
+  };
 
   const sortedTasks = sortTask(props.tasks);
 
@@ -30,7 +26,7 @@ function Column(props: {
         Delete column
       </Button>
     </Grid>
-  )
+  );
 }
 
 export default Column;

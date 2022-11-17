@@ -3,25 +3,43 @@ import { Link } from 'react-router-dom';
 import { Grid, Paper, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import { getBoardById } from 'store/boards/boards-thunks';
+import { getBoardById, getBoards } from 'store/boards/boards-thunks';
 import store from 'store/store';
 import { getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
 import { getTasksInColumn } from 'store/tasks/tasks-thunk';
+import { signIn, signUp } from 'store/auth/auth-thunks';
 
-const Board = (props: {boardId: string}): JSX.Element => {
-  const dispatch = useDispatch<typeof store.dispatch>(); 
+const Board = (): JSX.Element => {
+  // const Board = (props: {boardId: string}): JSX.Element => {
+  const dispatch = useDispatch<typeof store.dispatch>();
 
-  const boardData = dispatch(getBoardById(props.boardId)); // TODO: Получить boardId из state
-  const columnsData = dispatch(getColumnsInBoard(props.boardId));
+  // This is the test example. TODO: Delete this later
+  async function enterUser() {
+    const name = 'Batman';
+    const login = 'BW';
+    const password = 'ImDaBatman123';
+    // const creation = await dispatch(signUp({ name, login, password })).unwrap();
+    // console.log('User creates: ', creation);
+    const entrance = await dispatch(signIn({ login, password })).unwrap();
+    console.log('User enters: ', entrance);
+    const allBoards = await dispatch(getBoards()).unwrap();
+    console.log('All boards: ', allBoards);
+  }
 
-  const renderAllColumns = (): JSX.Element => columnsData.map((column): JSX.Element => {
-    const tasksData = dispatch(getTasksInColumn({ boardId: boardData._id, columnId: column._id }));
-    return Column({ column: column, tasks: tasksData });
-  });
+  enterUser();
+  // The end of example.
 
-  console.log('Board: ', boardData);
-  console.log('Columns: ', columnsData);
+  // const boardData = dispatch(getBoardById(props.boardId)); // TODO: Получить boardId из state
+  // const columnsData = dispatch(getColumnsInBoard(props.boardId));
+
+  // const renderAllColumns = (): JSX.Element => columnsData.map((column): JSX.Element => {
+  //   const tasksData = dispatch(getTasksInColumn({ boardId: boardData._id, columnId: column._id }));
+  //   return Column({ column: column, tasks: tasksData });
+  // });
+
+  // console.log('Board: ', boardData);
+  // console.log('Columns: ', columnsData);
 
   return (
     <Grid container className="board__conteiner">
@@ -37,10 +55,10 @@ const Board = (props: {boardId: string}): JSX.Element => {
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>
         <Typography className="board__title" variant="h4">
-          {boardData.title}
+          {/* {boardData.title} */}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns()}
+          {/* {renderAllColumns()} */}
         </Grid>
       </Grid>
     </Grid>

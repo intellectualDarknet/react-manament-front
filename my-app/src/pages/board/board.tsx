@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Paper, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createBoard, getBoardById, getBoards } from 'store/boards/boards-thunks';
-import store from 'store/store';
+import store, { RootState } from 'store/store';
 import { createColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
 import { getTasksInColumn } from 'store/tasks/tasks-thunk';
@@ -25,6 +25,7 @@ const Board = (): JSX.Element => {
     await dispatch(signIn({ login, password })).unwrap();
     const userId = store.getState().rootReducer.authReducer.userId;
     console.log('User ID: ', userId);
+    await dispatch(getBoards());
     console.log('All Boards: ', store.getState().rootReducer.boardsReducer.boards);
     const newBoard = await dispatch(
       createBoard({
@@ -50,13 +51,17 @@ const Board = (): JSX.Element => {
       })
     );
     console.log('New columns:', column1, column2);
+
+    const boardData = await dispatch(getBoardById(boardId));
+    console.log('boardData: ', boardData);
   }
 
-  enterUser();
-  // The end of example.
+  useEffect(() => {
+    enterUser();
+  }, []);
 
-  // const boardData = dispatch(getBoardById(props.boardId)); // TODO: Получить boardId из store
-  // const columnsData = dispatch(getColumnsInBoard(props.boardId));
+  const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
+  // const columnsData = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
 
   // const renderAllColumns = (): JSX.Element => columnsData.map((column): JSX.Element => {
   //   const tasksData = dispatch(getTasksInColumn({ boardId: boardData._id, columnId: column._id }));
@@ -80,7 +85,7 @@ const Board = (): JSX.Element => {
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>
         <Typography className="board__title" variant="h4">
-          {/* {boardData.title} */}
+          {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>
         <Grid container className="board__columns-layout">
           {/* {renderAllColumns()} */}

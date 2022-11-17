@@ -129,7 +129,7 @@ export const boardsSlice = createSlice({
       })
       .addCase(getBoardById.fulfilled, (state, action) => {
         state.boardByIdLoading = false;
-        // TODO this equation can be changed according to logic
+        state.boardById = state.boardById; // boardById - is current board
         state.boardById = action.payload;
       })
       .addCase(getBoardById.rejected, (state, action) => {

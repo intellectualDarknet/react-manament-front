@@ -5,7 +5,7 @@ import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon, Delete as DeleteIcon 
 import { useDispatch, useSelector } from 'react-redux';
 import { createBoard, getBoardById, getBoards } from 'store/boards/boards-thunks';
 import store, { RootState } from 'store/store';
-import { createColumn, getColumnById, getColumnsInBoard } from 'store/columns/columns-thunks';
+import { createColumn, deleteColumn, getColumnById, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
 import { createTask, getTasksByBoardId, getTasksInColumn } from 'store/tasks/tasks-thunk';
 import { signIn, signUp } from 'store/auth/auth-thunks';
@@ -90,13 +90,31 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
+  const deleteColumnByButtonPress = (columnId: string): void => {
+    dispatch(deleteColumn({ boardId, columnId }));
+  };
+
   const renderAllColumns = (): JSX.Element[] =>
     currentBoardColumns.map((column, index): JSX.Element => {
-      return Column({ board: currentBoard, column: column, tasks: currentBoardTasks, key: index });
+      return Column({
+        board: currentBoard,
+        column,
+        tasks: currentBoardTasks,
+        key: index,
+        deleteColumnByButtonPress,
+      });
     });
 
-  // console.log('Board: ', boardData);
-  // console.log('Columns: ', columnsData);
+  // TODO: Добавить запрос названия колонки в модальном окне
+  const addColumn = (): void => {
+    dispatch(
+      createColumn({
+        boardId,
+        title: 'First column',
+        order: 0,
+      })
+    );
+  };
 
   return (
     <Grid container className="board__conteiner">
@@ -106,7 +124,13 @@ const Board = (): JSX.Element => {
             Back
           </Button>
         </Link>
-        <Button className="board__create-board-btn" variant="contained" color="secondary" startIcon={<AddIcon />}>
+        <Button
+          className="board__create-board-btn"
+          onClick={addColumn}
+          variant="contained"
+          color="secondary"
+          startIcon={<AddIcon />}
+        >
           Add column
         </Button>
       </Grid>
@@ -120,346 +144,6 @@ const Board = (): JSX.Element => {
       </Grid>
     </Grid>
   );
-
-  // return (
-  //   <Grid container className="board__conteiner">
-  //     <Grid item className="board__btn-conteiner" xl={0.8} xs={0.8}>
-  //       <Link to="/">
-  //         <Button className="board__back-btn" variant="contained" color="primary" startIcon={<ArrowBackIosIcon />}>
-  //           Back
-  //         </Button>
-  //       </Link>
-  //       <Button className="board__create-board-btn" variant="contained" color="secondary" startIcon={<AddIcon />}>
-  //         Add column
-  //       </Button>
-  //     </Grid>
-  //     <Grid container item className="column-conteiner" xl={11} xs={11}>
-  //       <Typography className="board__title" variant="h4">
-  //         {boardData.title}
-  //       </Typography>
-  //       <Grid container className="board__columns-layout">
-  //         <Grid container item className="board__column" xl={3} xs={3}>
-  //           <Typography variant="h5" className="column__title">
-  //             First column
-  //           </Typography>
-  //           <Grid container className="column__tasks-conteiner">
-  //             <Paper elevation={2} className="column__task">
-  //               <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   First task
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Paper>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
-  //               Create task
-  //             </Button>
-  //           </Grid>
-  //           <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
-  //             Delete column
-  //           </Button>
-  //         </Grid>
-  //         <Grid container item className="board__column" xl={3} xs={3} justifyContent="space-between">
-  //           <Typography variant="h5" className="column__title">
-  //             Second column
-  //           </Typography>
-  //           <Grid container className="column__tasks-conteiner">
-  //             <Grid container className="column__task">
-  //               <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   First task
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
-  //               Create task
-  //             </Button>
-  //           </Grid>
-  //           <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
-  //             Delete column
-  //           </Button>
-  //         </Grid>
-  //         <Grid container item className="board__column" xl={3} xs={3} justifyContent="space-between">
-  //           <Typography variant="h5" className="column__title">
-  //             More column
-  //           </Typography>
-  //           <Grid container className="column__tasks-conteiner">
-  //             <Grid container className="column__task">
-  //               <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   First task
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
-  //               Create task
-  //             </Button>
-  //           </Grid>
-  //           <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
-  //             Delete column
-  //           </Button>
-  //         </Grid>
-  //         <Grid container item className="board__column" xl={3} xs={3} justifyContent="space-between">
-  //           <Typography variant="h5" className="column__title">
-  //             More column
-  //           </Typography>
-  //           <Grid container className="column__tasks-conteiner">
-  //             <Grid container className="column__task">
-  //               <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   First task
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
-  //               Create task
-  //             </Button>
-  //           </Grid>
-  //           <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
-  //             Delete column
-  //           </Button>
-  //         </Grid>
-  //         <Grid container item className="board__column" xl={3} xs={3} justifyContent="space-between">
-  //           <Typography variant="h5" className="column__title">
-  //             More column
-  //           </Typography>
-  //           <Grid container className="column__tasks-conteiner">
-  //             <Grid container className="column__task">
-  //               <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   First task
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
-  //               Create task
-  //             </Button>
-  //           </Grid>
-  //           <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
-  //             Delete column
-  //           </Button>
-  //         </Grid>
-  //         <Grid container item className="board__column" xl={3} xs={3} justifyContent="space-between">
-  //           <Typography variant="h5" className="column__title">
-  //             More column
-  //           </Typography>
-  //           <Grid container className="column__tasks-conteiner">
-  //             <Grid container className="column__task">
-  //               <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   First task
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Grid container className="column__task">
-  //               <Grid item className="task__description-conteiner" xl={10} xs={10}>
-  //                 <Typography className="task__description" variant="body1">
-  //                   Second task is bigger than first to show it&apos;s move to the next string
-  //                 </Typography>
-  //               </Grid>
-  //               <Grid item className="task__btn-conteiner" xl={1.8} xs={1.8}>
-  //                 <Button
-  //                   className="task__delete-btn"
-  //                   variant="contained"
-  //                   color="error"
-  //                   startIcon={<DeleteIcon />}
-  //                 ></Button>
-  //               </Grid>
-  //             </Grid>
-  //             <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
-  //               Create task
-  //             </Button>
-  //           </Grid>
-  //           <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
-  //             Delete column
-  //           </Button>
-  //         </Grid>
-  //       </Grid>
-  //     </Grid>
-  //   </Grid>
-  // );
 };
 
 export default Board;

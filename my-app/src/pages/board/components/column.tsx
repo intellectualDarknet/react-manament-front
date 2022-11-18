@@ -3,7 +3,13 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
 
-function Column(props: { board: IBoardResponse; column: IColumnResponse; tasks: ITask[]; key: number }): JSX.Element {
+function Column(props: {
+  board: IBoardResponse;
+  column: IColumnResponse;
+  tasks: ITask[];
+  key: number;
+  deleteColumnByButtonPress: (columnId: string) => void;
+}): JSX.Element {
   // TODO: Вернуть эту функцию, если в ней появится необходимость. Пока она вызывает ошибку
   // const sortTask = (tasks: ITask[]): ITask[] => {
   //   const sortedTasks = tasks.sort((a, b) => b.order - a.order);
@@ -19,6 +25,10 @@ function Column(props: { board: IBoardResponse; column: IColumnResponse; tasks: 
 
   const filteredTasks = filterTask(props.tasks);
 
+  const deleteThisColumn = () => {
+    props.deleteColumnByButtonPress(props.column._id);
+  };
+
   return (
     <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
       <Typography variant="h5" className="column__title">
@@ -30,7 +40,13 @@ function Column(props: { board: IBoardResponse; column: IColumnResponse; tasks: 
           Create task
         </Button>
       </Grid>
-      <Button className="column__delete-btn" variant="contained" color="error" endIcon={<DeleteIcon />}>
+      <Button
+        className="column__delete-btn"
+        onClick={deleteThisColumn}
+        variant="contained"
+        color="error"
+        endIcon={<DeleteIcon />}
+      >
         Delete column
       </Button>
     </Grid>

@@ -7,8 +7,15 @@ import { createBoard, getBoardById, getBoards } from 'store/boards/boards-thunks
 import store, { RootState } from 'store/store';
 import { createColumn, deleteColumn, getColumnById, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
-import { createTask, getTasksByBoardId, getTasksInColumn } from 'store/tasks/tasks-thunk';
+import { createTask, deleteTask, getTasksByBoardId, getTasksInColumn } from 'store/tasks/tasks-thunk';
 import { signIn, signUp } from 'store/auth/auth-thunks';
+import { getUserById } from 'store/users/users-thunks';
+
+export interface ICreateTaskData {
+  userId: string;
+  boardId: string;
+  columnId: string;
+}
 
 const Board = (): JSX.Element => {
   // const Board = (props: {boardId: string}): JSX.Element => {
@@ -27,6 +34,7 @@ const Board = (): JSX.Element => {
     const token = store.getState().rootReducer.authReducer.token;
     console.log('User ID: ', userId);
     console.log('Token: ', token);
+    await dispatch(getUserById(userId));
     await dispatch(getBoards());
     console.log('All Boards: ', store.getState().rootReducer.boardsReducer.boards);
     const newBoard = await dispatch(
@@ -78,14 +86,27 @@ const Board = (): JSX.Element => {
       })
     );
     console.log('NewTask: ', newTask);
+    await dispatch(
+      createTask({
+        boardId: store.getState().rootReducer.boardsReducer.boardById._id,
+        columnId: store.getState().rootReducer.columnsReducer.getColumnById._id,
+        title: 'One more task!',
+        order: 1,
+        description: 'Just another test task',
+        userId: 0,
+        users: [userId],
+      })
+    );
     await dispatch(getTasksByBoardId(boardId));
     console.log('All tasks of the board: ', store.getState().rootReducer.tasksReducer.getTasksByBoardId);
   }
 
   useEffect(() => {
     enterUser();
-  }, []);
+    console.log('rerander!!!');
+  }, [store.getState().rootReducer.tasksReducer.getTaskById]);
 
+  const currentUser = useSelector((state: RootState) => state.rootReducer.usersReducer.userById);
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
@@ -94,14 +115,39 @@ const Board = (): JSX.Element => {
     dispatch(deleteColumn({ boardId, columnId }));
   };
 
+  const createTaskByButtonPress = async ({ userId, boardId, columnId }: ICreateTaskData): Promise<void> => {
+    await dispatch(
+      createTask({
+        boardId,
+        columnId,
+        title: 'It is the task!',
+        order: 0,
+        description: 'Just a simple test task',
+        userId: 0,
+        users: [userId],
+      })
+    );
+    console.log('Create task: ', userId, boardId, columnId);
+    await dispatch(getTasksByBoardId(boardId));
+  };
+
+  const deleteTaskByButtonPress = async ({ boardId, columnId, taskId }: IGetTasksRequest): Promise<void> => {
+    await dispatch(deleteTask({ boardId, columnId, taskId }));
+    console.log('Delete task: ', boardId, columnId, taskId);
+    await dispatch(getTasksByBoardId(boardId));
+  };
+
   const renderAllColumns = (): JSX.Element[] =>
     currentBoardColumns.map((column, index): JSX.Element => {
       return Column({
+        user: currentUser,
         board: currentBoard,
         column,
         tasks: currentBoardTasks,
         key: index,
         deleteColumnByButtonPress,
+        createTaskByButtonPress,
+        deleteTaskByButtonPress,
       });
     });
 

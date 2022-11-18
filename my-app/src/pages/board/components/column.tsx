@@ -3,11 +3,12 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
 
-function Column(props: { board: IBoardResponse; column: IColumnResponse; key: number }): JSX.Element {
-  const sortTask = (tasks: ITask[]): ITask[] => {
-    const sortedTasks = tasks.sort((a, b) => b.order - a.order);
-    return sortedTasks;
-  };
+function Column(props: { board: IBoardResponse; column: IColumnResponse; tasks: ITask[]; key: number }): JSX.Element {
+  // TODO: Вернуть эту функцию, если в ней появится необходимость. Пока она вызывает ошибку
+  // const sortTask = (tasks: ITask[]): ITask[] => {
+  //   const sortedTasks = tasks.sort((a, b) => b.order - a.order);
+  //   return sortedTasks;
+  // };
 
   // const sortedTasks = sortTask(props.tasks);
 
@@ -17,7 +18,7 @@ function Column(props: { board: IBoardResponse; column: IColumnResponse; key: nu
         {props.column.title}
       </Typography>
       <Grid container className="column__tasks-conteiner">
-        {/* {sortedTasks.map((elem) => Task({ task: elem }))} */}
+        {props.tasks.map((elem, index) => Task({ task: elem, key: index }))}
         <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
           Create task
         </Button>

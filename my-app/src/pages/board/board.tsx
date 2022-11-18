@@ -7,7 +7,7 @@ import { createBoard, getBoardById, getBoards } from 'store/boards/boards-thunks
 import store, { RootState } from 'store/store';
 import { createColumn, getColumnById, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
-import { createTask, getTasksInColumn } from 'store/tasks/tasks-thunk';
+import { createTask, getTasksByBoardId, getTasksInColumn } from 'store/tasks/tasks-thunk';
 import { signIn, signUp } from 'store/auth/auth-thunks';
 
 const Board = (): JSX.Element => {
@@ -78,6 +78,8 @@ const Board = (): JSX.Element => {
       })
     );
     console.log('NewTask: ', newTask);
+    await dispatch(getTasksByBoardId(boardId));
+    console.log('All tasks of the board: ', store.getState().rootReducer.tasksReducer.getTasksByBoardId);
   }
 
   useEffect(() => {
@@ -86,10 +88,11 @@ const Board = (): JSX.Element => {
 
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
+  const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
   const renderAllColumns = (): JSX.Element[] =>
     currentBoardColumns.map((column, index): JSX.Element => {
-      return Column({ board: currentBoard, column: column, key: index });
+      return Column({ board: currentBoard, column: column, tasks: currentBoardTasks, key: index });
     });
 
   // console.log('Board: ', boardData);

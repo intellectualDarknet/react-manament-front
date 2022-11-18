@@ -62,7 +62,7 @@ function Header() {
           >
             PROJECT MANAGMENT APP
           </Typography>
-
+          {userId ? <Link to="/boards">Boards</Link> : <></>}
           <AssessmentIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
           <Typography

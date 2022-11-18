@@ -1,15 +1,13 @@
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { getIcon } from 'components/icon/icon';
 import { signUp } from 'store/auth/auth-thunks';
 import { FormEvent, useState } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { Link, useNavigate } from 'react-router-dom';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import './signUpPage.scss';
-import { IAuthState } from 'store/auth/auth-slice';
+import { IAuthState } from './../../store/auth/auth-slice';
 import LoadingButton from '@mui/lab/LoadingButton';
 interface ISignUpForm {
   name: string;

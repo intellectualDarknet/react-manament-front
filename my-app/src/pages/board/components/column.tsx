@@ -1,8 +1,7 @@
-import React from 'react';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
-import { ICreateTaskData } from '../board';
+import { ICreateTaskData } from '../boards-types';
 
 function Column(props: {
   user: IGetUserResponse;

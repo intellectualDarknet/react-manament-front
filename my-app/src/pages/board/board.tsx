@@ -1,110 +1,38 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Paper, Typography, Button } from '@mui/material';
-import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Grid, Typography, Button } from '@mui/material';
+import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBoard, getBoardById, getBoards } from 'store/boards/boards-thunks';
 import store, { RootState } from 'store/store';
 import { createColumn, deleteColumn, getColumnById, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
-import { createTask, deleteTask, getTasksByBoardId, getTasksInColumn } from 'store/tasks/tasks-thunk';
-import { signIn, signUp } from 'store/auth/auth-thunks';
+import { createTask, deleteTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
+import { signIn } from 'store/auth/auth-thunks';
 import { getUserById } from 'store/users/users-thunks';
-
-export interface ICreateTaskData {
-  userId: string;
-  boardId: string;
-  columnId: string;
-}
+import { ICreateTaskData } from './boards-types';
 
 const Board = (): JSX.Element => {
-  // const Board = (props: {boardId: string}): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
-  let boardId: string;
+  // TODO: Состыковать эту борду со страницей выбора бордов
+  // Общие функции типа getBoard и getUser будут запустаться на
+  // Общей странице бородов
+  // Здесь нужно будет только получить борду и пользователя
+  // Из стореджа
+  // Но все нужно проверять уже совместно
 
-  // This is the test example. TODO: Delete this later
+  let boardId: string; // TODO: Получить ключ из базы данных
+
   async function enterUser() {
-    const name = 'Batman';
-    const login = 'BW';
-    const password = 'ImDaBatman123';
-    // const creation = await dispatch(signUp({ name, login, password })).unwrap();
-    // console.log('User creates: ', creation);
-    await dispatch(signIn({ login, password })).unwrap();
-    const userId = store.getState().rootReducer.authReducer.userId;
-    const token = store.getState().rootReducer.authReducer.token;
-    console.log('User ID: ', userId);
-    console.log('Token: ', token);
-    await dispatch(getUserById(userId));
-    await dispatch(getBoards());
-    console.log('All Boards: ', store.getState().rootReducer.boardsReducer.boards);
-    const newBoard = await dispatch(
-      createBoard({
-        title: 'Test board',
-        owner: userId,
-        users: [userId],
-      })
-    );
-    console.log('newBoard: ', newBoard);
-    boardId = (newBoard.payload as IBoardResponse)._id;
-    const column1 = await dispatch(
-      createColumn({
-        boardId,
-        title: 'First column',
-        order: 0,
-      })
-    );
-    const column2 = await dispatch(
-      createColumn({
-        boardId,
-        title: 'Second column',
-        order: 1,
-      })
-    );
-    console.log('New columns:', column1, column2);
-
-    await dispatch(getBoardById(boardId));
-    console.log('Current board: ', store.getState().rootReducer.boardsReducer.boardById);
+    await dispatch(getUserById());
+    await dispatch(getBoardById(store.getState().rootReducer.boardsReducer.));
     await dispatch(getColumnsInBoard(store.getState().rootReducer.boardsReducer.boardById._id));
-    console.log('Columns of the board: ', store.getState().rootReducer.columnsReducer.columns);
-
-    await dispatch(
-      getColumnById({
-        boardId: store.getState().rootReducer.boardsReducer.boardById._id,
-        columnId: (column2.payload as IColumnResponse)._id,
-      })
-    );
-    console.log('Current column: ', store.getState().rootReducer.columnsReducer.getColumnById);
-    const newTask = await dispatch(
-      createTask({
-        boardId: store.getState().rootReducer.boardsReducer.boardById._id,
-        columnId: store.getState().rootReducer.columnsReducer.getColumnById._id,
-        title: 'It is the task!',
-        order: 0,
-        description: 'Just a simple test task',
-        userId: 0,
-        users: [userId],
-      })
-    );
-    console.log('NewTask: ', newTask);
-    await dispatch(
-      createTask({
-        boardId: store.getState().rootReducer.boardsReducer.boardById._id,
-        columnId: store.getState().rootReducer.columnsReducer.getColumnById._id,
-        title: 'One more task!',
-        order: 1,
-        description: 'Just another test task',
-        userId: 0,
-        users: [userId],
-      })
-    );
     await dispatch(getTasksByBoardId(boardId));
-    console.log('All tasks of the board: ', store.getState().rootReducer.tasksReducer.getTasksByBoardId);
   }
 
   useEffect(() => {
     enterUser();
-    console.log('rerander!!!');
-  }, [store.getState().rootReducer.tasksReducer.getTaskById]);
+  }, []);
 
   const currentUser = useSelector((state: RootState) => state.rootReducer.usersReducer.userById);
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);

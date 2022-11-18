@@ -50,8 +50,8 @@ const Board = (props: { title: string; id: string }) => {
         justifyContent: 'space-between',
         flexDirection: 'column',
       }}
-      onClick={() => {
-        dispatch(getBoardById(props.id));
+      onClick={async () => {
+        await dispatch(getBoardById(props.id));
         navigate('/board', { replace: true });
       }}
     >

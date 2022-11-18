@@ -4,7 +4,7 @@ import Task from './task';
 import { ICreateTaskData } from '../boards-types';
 
 function Column(props: {
-  user: IGetUserResponse;
+  userId: string;
   board: IBoardResponse;
   column: IColumnResponse;
   tasks: ITask[];
@@ -34,7 +34,7 @@ function Column(props: {
 
   const createNewTask = () => {
     props.createTaskByButtonPress({
-      userId: props.user._id,
+      userId: props.userId,
       boardId: props.board._id,
       columnId: props.column._id,
     });

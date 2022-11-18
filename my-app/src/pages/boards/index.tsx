@@ -20,12 +20,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-interface IBoard {
-  id: string;
-  title: string;
-  owner: string;
-  users: [string];
-}
 const Boards = () => {
   const [open, setOpen] = useState<boolean>(false);
   const boardsResp: IBoardsState = useAppSelector((state: RootState) => state.rootReducer.boardsReducer);

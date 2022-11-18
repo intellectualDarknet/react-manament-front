@@ -152,8 +152,12 @@ const SignUpPage = () => {
 
           <div className="signup__bottom">
             <div className="signup__bottom-reg">Already registered?</div>
-            <Link className="signup__bottom-link" to="/SignIn">
+            <Link className="signup__bottom-link" to="/sign-in">
               Sign in
+            </Link>
+            <div className="signin__bottom-reg">Back to main page</div>
+            <Link className="signin__bottom-link" to="/">
+              Main page
             </Link>
           </div>
         </ValidatorForm>

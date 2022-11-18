@@ -12,13 +12,20 @@ function Column(props: { board: IBoardResponse; column: IColumnResponse; tasks: 
 
   // const sortedTasks = sortTask(props.tasks);
 
+  const filterTask = (tasks: ITask[]): ITask[] => {
+    const filteredTasks = tasks.filter((elem) => elem.columnId === props.column._id);
+    return filteredTasks;
+  };
+
+  const filteredTasks = filterTask(props.tasks);
+
   return (
     <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
       <Typography variant="h5" className="column__title">
         {props.column.title}
       </Typography>
       <Grid container className="column__tasks-conteiner">
-        {props.tasks.map((elem, index) => Task({ task: elem, key: index }))}
+        {filteredTasks.map((elem, index) => Task({ task: elem, key: index }))}
         <Button className="task__create-btn" variant="contained" color="secondary" endIcon={<AddIcon />}>
           Create task
         </Button>

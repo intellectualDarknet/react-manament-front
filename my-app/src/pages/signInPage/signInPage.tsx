@@ -22,7 +22,6 @@ const SignInPage = () => {
   const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   const dispatch = useAppDispatch();
   const [formValues, setFormValues] = useState<ISignInForm>({ login: '', password: '' });
-
   const onSigninSubmit = () => {
     dispatch(signIn(formValues))
       .unwrap()

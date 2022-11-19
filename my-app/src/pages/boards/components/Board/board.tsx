@@ -39,7 +39,7 @@ const Board = (props: { title: string; id: string }) => {
   };
   const deleteCard = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
-    dispatch(deleteBoardById(boardById._id));
+    dispatch(deleteBoardById(props.id));
   };
   return (
     <Item

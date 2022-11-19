@@ -4,10 +4,11 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import store, { RootState } from 'store/store';
-import { createColumn, deleteColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
+import { deleteColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
 import { createTask, deleteTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
 import { ICreateTaskData } from './boards-types';
+import CreateColumnForm from './components/create-column-form';
 
 const Board = (): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -67,13 +68,7 @@ const Board = (): JSX.Element => {
 
   // TODO: Добавить запрос названия колонки в модальном окне
   const addColumn = (): void => {
-    dispatch(
-      createColumn({
-        boardId: currentBoard._id,
-        title: 'First column',
-        order: 0,
-      })
-    );
+    console.log('Open column create form!');
   };
 
   return (
@@ -95,6 +90,9 @@ const Board = (): JSX.Element => {
         </Button>
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>
+        <Grid container item className="board__form" xl={2.2} xs={2.2}>
+          <CreateColumnForm board={currentBoard} />
+        </Grid>
         <Typography className="board__title" variant="h4">
           {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>

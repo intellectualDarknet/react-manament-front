@@ -68,7 +68,7 @@ function Column(props: {
       <Button
         className="column__delete-btn"
         onClick={deleteThisColumn}
-        variant="contained"
+        variant="outlined"
         color="error"
         endIcon={<DeleteIcon />}
       >

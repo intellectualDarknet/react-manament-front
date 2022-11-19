@@ -1,6 +1,5 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { FormEvent, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
@@ -12,7 +11,7 @@ interface IColumnTitle {
   title: string;
 }
 
-const CreateColumnForm = (props: { board: IGetBoardResponse }): JSX.Element => {
+const CreateColumnForm = (props: { board: IGetBoardResponse; toggleForm: () => void }): JSX.Element => {
   const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   const dispatch = useAppDispatch();
   const [columnTitle, setColumnTitle] = useState<IColumnTitle>({ title: '' });
@@ -27,6 +26,7 @@ const CreateColumnForm = (props: { board: IGetBoardResponse }): JSX.Element => {
     setColumnTitle(() => {
       return { title: '' };
     });
+    props.toggleForm();
   };
 
   function onFormChange(e: FormEvent<HTMLFormElement>) {
@@ -49,8 +49,6 @@ const CreateColumnForm = (props: { board: IGetBoardResponse }): JSX.Element => {
         alignItems: 'center',
         borderRadius: '0 20px 20px 0',
       }}
-      component={Paper}
-      square
     >
       <ValidatorForm
         onError={(errors) => console.log(errors)}

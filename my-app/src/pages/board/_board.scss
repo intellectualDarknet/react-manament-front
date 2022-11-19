@@ -130,10 +130,22 @@ $shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0p
 
 .board__form {
   position: absolute;
-  top: 115px;
+  top: calc((100vh - 200px) / 2);
   min-width: 280px;
-  height: calc(100vh - 64px - 64px - 40px);
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
   z-index: 1000;
+}
+
+.board__form_hidden {
+  display: none !important;
+}
+
+.board-form__close-btn {
+  width: 40px;
+  min-width: 0 !important;
+
+  span {
+    margin: 0;
+  }
 }

@@ -1,4 +1,4 @@
-import react, { useEffect } from 'react';
+import react, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
@@ -9,6 +9,8 @@ import Column from './components/column';
 import { createTask, deleteTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
 import { ICreateTaskData } from './boards-types';
 import CreateColumnForm from './components/create-column-form';
+import CloseIcon from '@mui/icons-material/Close';
+import Paper from '@mui/material/Paper';
 
 const Board = (): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -27,6 +29,8 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
+
+  const [formIsShown, setFormIsShown] = useState(false);
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -66,9 +70,12 @@ const Board = (): JSX.Element => {
       });
     });
 
-  // TODO: Добавить запрос названия колонки в модальном окне
-  const addColumn = (): void => {
-    console.log('Open column create form!');
+  const toggleForm = (): void => {
+    if (formIsShown) {
+      setFormIsShown(false);
+    } else {
+      setFormIsShown(true);
+    }
   };
 
   return (
@@ -81,7 +88,7 @@ const Board = (): JSX.Element => {
         </Link>
         <Button
           className="board__create-board-btn"
-          onClick={addColumn}
+          onClick={toggleForm}
           variant="contained"
           color="secondary"
           startIcon={<AddIcon />}
@@ -90,8 +97,22 @@ const Board = (): JSX.Element => {
         </Button>
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>
-        <Grid container item className="board__form" xl={2.2} xs={2.2}>
-          <CreateColumnForm board={currentBoard} />
+        <Grid
+          container
+          item
+          className={formIsShown ? 'board__form' : 'board__form board__form_hidden'}
+          xl={2.2}
+          xs={2.2}
+          component={Paper}
+        >
+          <Button
+            className="board-form__close-btn"
+            onClick={toggleForm}
+            variant="outlined"
+            color="error"
+            startIcon={<CloseIcon />}
+          ></Button>
+          <CreateColumnForm board={currentBoard} toggleForm={toggleForm} />
         </Grid>
         <Typography className="board__title" variant="h4">
           {currentBoard ? currentBoard.title : 'No board chosen'}

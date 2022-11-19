@@ -27,7 +27,7 @@ function Task(props: {
         <Button
           className="task__delete-btn"
           onClick={deleteThisTask}
-          variant="contained"
+          variant="outlined"
           color="error"
           startIcon={<DeleteIcon />}
         ></Button>

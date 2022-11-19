@@ -11,14 +11,14 @@ import {
 } from './tasks-thunk';
 
 interface ITasksState {
-  tasksInColumns: ITask[];
-  tasksInColumnsLoading: boolean;
-  tasksInColumnsError: IResponseError;
+  tasksInColumn: ITask[];
+  tasksInColumnLoading: boolean;
+  tasksInColumnError: IResponseError;
 
   createTaskLoading: boolean;
   createTaskError: IResponseError;
 
-  getTaskById: ITask;
+  getTaskById: ITask | null;
   getTaskByIdLoading: boolean;
   getTaskByIdError: IResponseError;
 
@@ -41,33 +41,33 @@ interface ITasksState {
 }
 
 const initialState: ITasksState = {
-  tasksInColumns: void 0,
-  tasksInColumnsLoading: void 0,
-  tasksInColumnsError: void 0,
+  tasksInColumn: [],
+  tasksInColumnLoading: false,
+  tasksInColumnError: null,
 
-  createTaskLoading: void 0,
-  createTaskError: void 0,
+  createTaskLoading: false,
+  createTaskError: null,
 
-  getTaskById: void 0,
-  getTaskByIdLoading: void 0,
-  getTaskByIdError: void 0,
+  getTaskById: null,
+  getTaskByIdLoading: false,
+  getTaskByIdError: null,
 
-  updateTasksByIdLoading: void 0,
-  updateTasksByIdError: void 0,
+  updateTasksByIdLoading: false,
+  updateTasksByIdError: null,
 
-  deleteTasksLoading: void 0,
-  deleteTasksError: void 0,
+  deleteTasksLoading: false,
+  deleteTasksError: null,
 
-  getTasksByIds: void 0,
-  getTasksByIdsLoading: void 0,
-  getTasksByIdsError: void 0,
+  getTasksByIds: [],
+  getTasksByIdsLoading: false,
+  getTasksByIdsError: null,
 
-  updateTasksByIdsLoading: void 0,
-  updateTasksByIdsError: void 0,
+  updateTasksByIdsLoading: false,
+  updateTasksByIdsError: null,
 
-  getTasksByBoardId: void 0,
-  getTasksByBoardIdLoading: void 0,
-  getTasksByBoardIdError: void 0,
+  getTasksByBoardId: [],
+  getTasksByBoardIdLoading: false,
+  getTasksByBoardIdError: null,
 };
 
 export const tasksSlice = createSlice({
@@ -77,17 +77,17 @@ export const tasksSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getTasksInColumn.pending, (state) => {
-        state.tasksInColumnsLoading = true;
-        state.tasksInColumns = initialState.tasksInColumns;
-        state.tasksInColumnsError = initialState.tasksInColumnsError;
+        state.tasksInColumnLoading = true;
+        state.tasksInColumn = initialState.tasksInColumn;
+        state.tasksInColumnError = initialState.tasksInColumnError;
       })
       .addCase(getTasksInColumn.fulfilled, (state, action) => {
-        state.tasksInColumnsLoading = false;
-        state.tasksInColumns = action.payload;
+        state.tasksInColumnLoading = false;
+        state.tasksInColumn = action.payload;
       })
       .addCase(getTasksInColumn.rejected, (state, action) => {
-        state.tasksInColumnsLoading = false;
-        state.tasksInColumnsError = action.error as IResponseError;
+        state.tasksInColumnLoading = false;
+        state.tasksInColumnError = action.error as IResponseError;
       })
 
       .addCase(createTask.pending, (state) => {
@@ -96,7 +96,7 @@ export const tasksSlice = createSlice({
       })
       .addCase(createTask.fulfilled, (state, action) => {
         state.createTaskLoading = false;
-        state.tasksInColumns.push(action.payload);
+        state.tasksInColumn.push(action.payload);
       })
       .addCase(createTask.rejected, (state, action) => {
         state.createTaskLoading = false;
@@ -123,8 +123,10 @@ export const tasksSlice = createSlice({
       })
       .addCase(updateTaskById.fulfilled, (state, action) => {
         state.updateTasksByIdLoading = false;
-        const index = state.tasksInColumns.indexOf(state.tasksInColumns.find((elem) => elem._id == action.payload._id));
-        state.tasksInColumns[index] = { ...state.tasksInColumns[index], ...action.payload };
+        const index = state.tasksInColumn.indexOf(
+          state.tasksInColumn.find((elem) => elem._id == action.payload._id) as ITask
+        );
+        state.tasksInColumn[index] = { ...state.tasksInColumn[index], ...action.payload };
       })
       .addCase(updateTaskById.rejected, (state, action) => {
         state.updateTasksByIdLoading = false;
@@ -137,7 +139,7 @@ export const tasksSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.deleteTasksLoading = false;
-        state.tasksInColumns = state.tasksInColumns.filter((elem) => elem._id != action.payload._id);
+        state.tasksInColumn = state.tasksInColumn.filter((elem) => elem._id != action.payload._id);
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.deleteTasksLoading = false;

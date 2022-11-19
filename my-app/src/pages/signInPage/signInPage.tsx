@@ -22,7 +22,6 @@ const SignInPage = () => {
   const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   const dispatch = useAppDispatch();
   const [formValues, setFormValues] = useState<ISignInForm>({ login: '', password: '' });
-
   const onSigninSubmit = () => {
     dispatch(signIn(formValues))
       .unwrap()
@@ -106,8 +105,12 @@ const SignInPage = () => {
         </LoadingButton>
         <div className="signin__bottom">
           <div className="signin__bottom-reg">Not registered?</div>
-          <Link className="signin__bottom-link" to="/SignUp">
+          <Link className="signin__bottom-link" to="/sign-up">
             Sign up
+          </Link>
+          <div className="signin__bottom-reg">Back to main page</div>
+          <Link className="signin__bottom-link" to="/">
+            Main page
           </Link>
         </div>
       </ValidatorForm>{' '}

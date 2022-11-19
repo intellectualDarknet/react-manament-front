@@ -14,6 +14,7 @@ import SignUpPage from 'pages/signUpPage/signUpPage';
 import SignInPage from 'pages/signInPage/signInPage';
 import { RootState, useAppSelector } from 'store/store';
 import User from 'pages/userPage';
+import SnackBar from 'components/snackbar/snackbar';
 
 function App(): JSX.Element {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
@@ -23,6 +24,8 @@ function App(): JSX.Element {
       <ThemeProvider theme={theme}>
         <div className="app">
           <Header />
+          <SnackBar />
+
           <main>
             <Routes>
               <Route path="/" element={<Start />} />
@@ -30,6 +33,7 @@ function App(): JSX.Element {
               <Route path="sign-in" element={!userId ? <SignInPage /> : <Navigate to="/" replace />} />
               <Route path="boards" element={userId ? <Boards /> : <Navigate to="sign-in" replace />} />
               <Route path="board" element={userId ? <Board /> : <Navigate to="sign-in" replace />} />
+              <Route path="board" element={<Board />} />
               <Route path="UserPage" element={userId ? <User /> : <Navigate to="sign-in" replace />} />
               <Route path="404" element={<Errorpage />} />
               <Route path="*" element={<Navigate to="404" replace />} />

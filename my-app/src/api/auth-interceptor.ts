@@ -1,10 +1,12 @@
 import { logout } from 'store/auth/auth-slice';
+import { hideMessage, showMessage } from 'store/snackbar/snackbar-slice';
 import { StoreType } from 'store/store';
 import api from './api';
 
 export const authInterceptor = (store: StoreType) => {
   api.interceptors.request.use(
     (conf) => {
+      store.dispatch(hideMessage());
       if (store.getState().rootReducer.authReducer.token) {
         conf.headers['Authorization'] = `Bearer ${store.getState().rootReducer.authReducer.token}`;
       }
@@ -16,9 +18,14 @@ export const authInterceptor = (store: StoreType) => {
   );
   api.interceptors.response.use(
     (next) => {
+      store.dispatch(showMessage({ open: true, message: next.statusText, severity: 'success' }));
       return Promise.resolve(next);
     },
     (error) => {
+      store.dispatch(showMessage({ open: true, message: error.message, severity: 'error' }));
+      setTimeout(() => {
+        store.dispatch(hideMessage());
+      }, 5000);
       if (error.status === 401) {
         store.dispatch(logout());
         localStorage.clear();

@@ -5,6 +5,10 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, s
 import Typography from '@mui/material/Typography';
 import background from './../../../../assets/img/background2.jpg';
 import { useState } from 'react';
+import { RootState, useAppDispatch, useAppSelector } from 'store/store';
+import { Link, useNavigate } from 'react-router-dom';
+import { updateBoardById, deleteBoardById, getBoardById } from 'store/boards/boards-thunks';
+import { IBoardsState } from 'store/boards/boards-slice';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -15,18 +19,27 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const Board = () => {
+const Board = (props: { title: string; id: string }) => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
-  const [name, setName] = useState<string>('New Board');
   const [input, setInput] = useState<string>('');
+  const boardById: IGetBoardResponse = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
+  const boardsResp: IBoardsState = useAppSelector((state: RootState) => state.rootReducer.boardsReducer);
+  const dispatch = useAppDispatch();
 
-  const handleClose = () => {
+  const handleClose = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     setOpen((open) => !open);
     setInput('');
   };
   const handleRename = () => {
-    setName(input);
+    /*     console.log(boardById);
+    dispatch(updateBoardById({ boardId: boardById._id, title: input, ...boardById })); */
     setOpen(false);
+  };
+  const deleteCard = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    dispatch(deleteBoardById(boardById._id));
   };
   return (
     <Item
@@ -37,12 +50,16 @@ const Board = () => {
         justifyContent: 'space-between',
         flexDirection: 'column',
       }}
+      onClick={async () => {
+        await dispatch(getBoardById(props.id));
+        navigate('/board', { replace: true });
+      }}
     >
       <Typography variant="h4" gutterBottom>
-        {name}
+        {props.title}
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button sx={{ width: '80px', height: '30px', fontSize: '10px' }} variant="contained">
+        <Button sx={{ width: '80px', height: '30px', fontSize: '10px' }} variant="contained" onClick={deleteCard}>
           Delete
         </Button>
         <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClose}>

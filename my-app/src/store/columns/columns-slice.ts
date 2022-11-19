@@ -40,31 +40,31 @@ export interface IColumnsState {
 }
 
 const initialState: IColumnsState = {
-  columns: void 0,
-  columnsLoading: void 0,
+  columns: [],
+  columnsLoading: false,
   columnsError: void 0,
 
-  createColumnLoading: void 0,
+  createColumnLoading: false,
   createColumnError: void 0,
 
   getColumnById: void 0,
   getColumnByIdLoading: void 0,
   getColumnByIdError: void 0,
 
-  updateColumnByIdLoading: void 0,
+  updateColumnByIdLoading: false,
   updateColumnByIdError: void 0,
 
-  deleteColumnLoading: void 0,
+  deleteColumnLoading: false,
   deleteColumnError: void 0,
 
-  getColumnsByColumnId: void 0,
-  getColumnsByColumnIdLoading: void 0,
+  getColumnsByColumnId: [],
+  getColumnsByColumnIdLoading: false,
   getColumnsByColumnIdError: void 0,
 
-  updateSetOfColumnsLoading: void 0,
+  updateSetOfColumnsLoading: false,
   updateSetOfColumnsError: void 0,
 
-  createSetOfColumnsLoading: void 0,
+  createSetOfColumnsLoading: false,
   createSetOfColumnsError: void 0,
 };
 

@@ -5,10 +5,9 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, s
 import Typography from '@mui/material/Typography';
 import background from './../../../../assets/img/background2.jpg';
 import { useState } from 'react';
-import { RootState, useAppDispatch, useAppSelector } from 'store/store';
-import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from 'store/store';
+import { useNavigate } from 'react-router-dom';
 import { updateBoardById, deleteBoardById, getBoardById } from 'store/boards/boards-thunks';
-import { IBoardsState } from 'store/boards/boards-slice';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -22,24 +21,24 @@ const Item = styled(Paper)(({ theme }) => ({
 const Board = (props: { title: string; id: string }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
-  const [input, setInput] = useState<string>('');
-  const boardById: IGetBoardResponse = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
-  const boardsResp: IBoardsState = useAppSelector((state: RootState) => state.rootReducer.boardsReducer);
+  const [openDeleteMessage, setOpenDeleteMessage] = useState<boolean>(false);
+  const [input, setInput] = useState<string>(' ');
   const dispatch = useAppDispatch();
 
-  const handleClose = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
+  const handleClose = () => {
     setOpen((open) => !open);
     setInput('');
   };
+  const handleCloseDelete = () => {
+    setOpenDeleteMessage((openDeleteMessage) => !openDeleteMessage);
+  };
   const handleRename = () => {
-    /*     console.log(boardById);
-    dispatch(updateBoardById({ boardId: boardById._id, title: input, ...boardById })); */
+    dispatch(updateBoardById({ boardId: props.id, title: input, owner: 'string', users: ['string'] }));
     setOpen(false);
   };
-  const deleteCard = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
+  const deleteCard = () => {
     dispatch(deleteBoardById(props.id));
+    setOpenDeleteMessage(false);
   };
   return (
     <Item
@@ -58,10 +57,30 @@ const Board = (props: { title: string; id: string }) => {
       <Typography variant="h4" gutterBottom>
         {props.title}
       </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button sx={{ width: '80px', height: '30px', fontSize: '10px' }} variant="contained" onClick={deleteCard}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'space-between' }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Button
+          sx={{ width: '80px', height: '30px', fontSize: '10px' }}
+          variant="contained"
+          onClick={handleCloseDelete}
+        >
           Delete
         </Button>
+        <Dialog open={openDeleteMessage} onClose={handleCloseDelete}>
+          <DialogTitle>This board will be deleted. Are you sure?</DialogTitle>
+          <DialogActions>
+            <Button sx={{ color: 'black' }} onClick={handleCloseDelete}>
+              No
+            </Button>
+            <Button sx={{ color: 'black' }} onClick={deleteCard}>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClose}>
           Edit board name
         </Button>

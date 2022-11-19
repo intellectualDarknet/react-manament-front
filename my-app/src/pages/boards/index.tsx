@@ -22,6 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Boards = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const [input, setInput] = useState<string>(' ');
   const boardsResp: IBoardsState = useAppSelector((state: RootState) => state.rootReducer.boardsReducer);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -29,6 +30,17 @@ const Boards = () => {
   }, [dispatch]);
   const handleClose = () => {
     setOpen((open) => !open);
+    setInput(' ');
+  };
+  const addBoard = () => {
+    dispatch(
+      createBoard({
+        title: input,
+        owner: 'string',
+        users: ['string'],
+      })
+    );
+    handleClose();
   };
   return (
     <Box
@@ -64,13 +76,22 @@ const Boards = () => {
             <DialogTitle>Add new board</DialogTitle>
             <DialogContent>
               <DialogContentText>Please enter name of the board.</DialogContentText>
-              <TextField autoFocus id="name" type="text" fullWidth />
+              <TextField
+                autoFocus
+                id="name"
+                type="text"
+                fullWidth
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                }}
+              />
             </DialogContent>
             <DialogActions>
               <Button sx={{ color: 'black' }} onClick={handleClose}>
                 Cancel
               </Button>
-              <Button sx={{ color: 'black' }} onClick={handleClose}>
+              <Button sx={{ color: 'black' }} onClick={addBoard}>
                 Add
               </Button>
             </DialogActions>

@@ -18,17 +18,17 @@ const CreateColumnForm = (props: {
   // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   // TODO: Заменить на переменную загрузки колонки
   const dispatch = useAppDispatch();
-  const [columnTitle, setColumnTitle] = useState<IColumnTitle>({ title: '' });
+  const [newColumnTitle, setNewColumnTitle] = useState<IColumnTitle>({ title: '' });
   const onColumnTitleSubmit = async () => {
     await dispatch(
       createColumn({
         boardId: props.board._id,
-        title: columnTitle.title,
+        title: newColumnTitle.title,
         order: props.currentBoardColumnsCount,
       })
     );
     console.log(props.currentBoardColumnsCount);
-    setColumnTitle(() => {
+    setNewColumnTitle(() => {
       return { title: '' };
     });
     props.toggleForm();
@@ -36,7 +36,7 @@ const CreateColumnForm = (props: {
 
   function onFormChange(e: FormEvent<HTMLFormElement>) {
     const value = (e.target as HTMLInputElement).value;
-    setColumnTitle(() => {
+    setNewColumnTitle(() => {
       return { title: value };
     });
   }
@@ -71,11 +71,11 @@ const CreateColumnForm = (props: {
           margin="normal"
           required
           fullWidth
-          id="column-title"
-          label="columnTitle"
-          name="column-title"
+          id="new-column-title"
+          label="newColumnTitle"
+          name="new-column-title"
           autoFocus
-          value={columnTitle.title}
+          value={newColumnTitle.title}
           validators={['required']}
           errorMessages={['this field is required', 'column title is not valid']}
         />

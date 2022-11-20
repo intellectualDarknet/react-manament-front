@@ -5,9 +5,8 @@ import store, { RootState } from 'store/store';
 import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
-import { deleteColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
+import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
 import { getTasksByBoardId, createTask, deleteTask } from 'store/tasks/tasks-thunk';
-import { ICreateTaskData } from './boards-types';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,7 +35,9 @@ const Board = (): JSX.Element => {
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
-  const [clickedColumnId, setClickedColumnId] = useState('');
+  const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
+  const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
+  const [currentColumnTitle, setCurrentColumnTitle] = useState('');
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -60,19 +61,52 @@ const Board = (): JSX.Element => {
     toggleForm();
   };
 
+  const showColumnTitleInput = (columnId: string): void => {
+    setClickedEditTitleColumnId((): string => {
+      return columnId;
+    });
+  };
+
+  const changeColumnTitleState = (inputValue: string): void => {
+    setCurrentColumnTitle((): string => {
+      return inputValue;
+    });
+  };
+
+  const changeColumnTitle = async (column: IColumnResponse): Promise<void> => {
+    await dispatch(
+      updateColumnById({
+        boardId: currentBoard._id,
+        columnId: column._id,
+        title: currentColumnTitle,
+        order: column.order,
+      })
+    );
+    changeColumnTitleState('');
+  };
+
   const renderAllColumns = (): JSX.Element[] =>
     currentBoardColumns.map((column, index): JSX.Element => {
+      let isChosenColumnTitle = false;
+      if (clickedEditTitleColumnId === column._id) {
+        isChosenColumnTitle = true;
+      }
       return Column({
         userId,
         board: currentBoard,
         column,
         tasks: currentBoardTasks,
         key: index,
+        isChosenColumnTitle,
+        currentColumnTitle,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
         setTaskIsChosen,
-        setClickedColumnId,
+        setClickedAddTaskColumnId,
+        showColumnTitleInput,
+        changeColumnTitleState,
+        changeColumnTitle,
       });
     });
 
@@ -111,7 +145,12 @@ const Board = (): JSX.Element => {
             startIcon={<CloseIcon />}
           ></Button>
           {taskIsChosen ? (
-            <CreateTaskForm userId={userId} columnId={clickedColumnId} board={currentBoard} toggleForm={toggleForm} />
+            <CreateTaskForm
+              userId={userId}
+              columnId={clickedAddTaskColumnId}
+              board={currentBoard}
+              toggleForm={toggleForm}
+            />
           ) : (
             <CreateColumnForm
               board={currentBoard}

@@ -1,13 +1,17 @@
-import react, { useEffect } from 'react';
+import react, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Typography, Button } from '@mui/material';
-import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import store, { RootState } from 'store/store';
-import { createColumn, deleteColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
 import Column from './components/column';
-import { createTask, deleteTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
+import CreateColumnForm from './components/create-column-form';
+import CreateTaskForm from './components/create-task-form';
+import { deleteColumn, getColumnsInBoard } from 'store/columns/columns-thunks';
+import { getTasksByBoardId, createTask, deleteTask } from 'store/tasks/tasks-thunk';
 import { ICreateTaskData } from './boards-types';
+import { Grid, Typography, Button } from '@mui/material';
+import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import Paper from '@mui/material/Paper';
 
 const Board = (): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -27,28 +31,30 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
+  const [formIsShown, setFormIsShown] = useState(false);
+  const [taskIsChosen, setTaskIsChosen] = useState(false);
+  const [clickedColumnId, setClickedColumnId] = useState('');
+
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
-  };
-
-  const createTaskByButtonPress = async ({ userId, boardId, columnId }: ICreateTaskData): Promise<void> => {
-    await dispatch(
-      createTask({
-        boardId,
-        columnId,
-        title: 'It is the task!',
-        order: 0,
-        description: 'Just a simple test task',
-        userId: 0,
-        users: [userId],
-      })
-    );
-    await dispatch(getTasksByBoardId(boardId));
   };
 
   const deleteTaskByButtonPress = async ({ boardId, columnId, taskId }: IGetTasksRequest): Promise<void> => {
     await dispatch(deleteTask({ boardId, columnId, taskId }));
     await dispatch(getTasksByBoardId(boardId));
+  };
+
+  const toggleForm = (): void => {
+    if (formIsShown) {
+      setFormIsShown(false);
+    } else {
+      setFormIsShown(true);
+    }
+  };
+
+  const handleAddColumn = (): void => {
+    setTaskIsChosen((): boolean => false);
+    toggleForm();
   };
 
   const renderAllColumns = (): JSX.Element[] =>
@@ -60,21 +66,12 @@ const Board = (): JSX.Element => {
         tasks: currentBoardTasks,
         key: index,
         deleteColumnByButtonPress,
-        createTaskByButtonPress,
         deleteTaskByButtonPress,
+        toggleForm,
+        setTaskIsChosen,
+        setClickedColumnId,
       });
     });
-
-  // TODO: Добавить запрос названия колонки в модальном окне
-  const addColumn = (): void => {
-    dispatch(
-      createColumn({
-        boardId: currentBoard._id,
-        title: 'First column',
-        order: 0,
-      })
-    );
-  };
 
   return (
     <Grid container className="board__conteiner">
@@ -86,7 +83,7 @@ const Board = (): JSX.Element => {
         </Link>
         <Button
           className="board__create-board-btn"
-          onClick={addColumn}
+          onClick={handleAddColumn}
           variant="contained"
           color="secondary"
           startIcon={<AddIcon />}
@@ -95,6 +92,27 @@ const Board = (): JSX.Element => {
         </Button>
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>
+        <Grid
+          container
+          item
+          className={formIsShown ? 'board__form' : 'board__form board__form_hidden'}
+          xl={2.2}
+          xs={2.2}
+          component={Paper}
+        >
+          <Button
+            className="board-form__close-btn"
+            onClick={toggleForm}
+            variant="outlined"
+            color="error"
+            startIcon={<CloseIcon />}
+          ></Button>
+          {taskIsChosen ? (
+            <CreateTaskForm userId={userId} columnId={clickedColumnId} board={currentBoard} toggleForm={toggleForm} />
+          ) : (
+            <CreateColumnForm board={currentBoard} toggleForm={toggleForm} />
+          )}
+        </Grid>
         <Typography className="board__title" variant="h4">
           {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>

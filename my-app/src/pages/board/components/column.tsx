@@ -2,6 +2,7 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
 import { ICreateTaskData } from '../boards-types';
+import { Dispatch, SetStateAction } from 'react';
 
 function Column(props: {
   userId: string;
@@ -10,8 +11,10 @@ function Column(props: {
   tasks: ITask[];
   key: number;
   deleteColumnByButtonPress: (columnId: string) => void;
-  createTaskByButtonPress: (data: ICreateTaskData) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
+  toggleForm: () => void;
+  setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
+  setClickedColumnId: Dispatch<SetStateAction<string>>;
 }): JSX.Element {
   // TODO: Вернуть эту функцию, если в ней появится необходимость. Пока она вызывает ошибку
   // const sortTask = (tasks: ITask[]): ITask[] => {
@@ -28,16 +31,14 @@ function Column(props: {
 
   const filteredTasks = filterTask(props.tasks);
 
-  const deleteThisColumn = () => {
+  const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);
   };
 
-  const createNewTask = () => {
-    props.createTaskByButtonPress({
-      userId: props.userId,
-      boardId: props.board._id,
-      columnId: props.column._id,
-    });
+  const handleAddTask = (): void => {
+    props.setTaskIsChosen((): boolean => true);
+    props.setClickedColumnId((): string => props.column._id);
+    props.toggleForm();
   };
 
   return (
@@ -57,18 +58,18 @@ function Column(props: {
         )}
         <Button
           className="task__create-btn"
-          onClick={createNewTask}
+          onClick={handleAddTask}
           variant="contained"
           color="secondary"
           endIcon={<AddIcon />}
         >
-          Create task
+          Add task
         </Button>
       </Grid>
       <Button
         className="column__delete-btn"
         onClick={deleteThisColumn}
-        variant="contained"
+        variant="outlined"
         color="error"
         endIcon={<DeleteIcon />}
       >

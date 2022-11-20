@@ -1,7 +1,7 @@
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
-import React, { Dispatch, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, FocusEvent, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -63,7 +63,9 @@ function Column(props: {
     props.changeColumnTitle(props.column);
   };
 
-  const handleColumnTitleInputClose = (event: React.SyntheticEvent<HTMLButtonElement>): void => {
+  const handleColumnTitleInputClose = (
+    event: React.SyntheticEvent<HTMLButtonElement> | React.FocusEvent<HTMLInputElement | unknown>
+  ): void => {
     event.stopPropagation();
     props.showColumnTitleInput('');
   };
@@ -72,14 +74,16 @@ function Column(props: {
     <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
       <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
-          <Grid container item>
+          <Grid container item className="column__title-form-conteiner">
             <ValidatorForm
+              className="column__title-form"
               onError={(errors) => console.log(errors)}
               onChange={onColumnTitleInputChange}
               onSubmit={onColumnTitleInputSubmit}
               noValidate
             >
               <TextValidator
+                onBlur={handleColumnTitleInputClose}
                 autoComplete="off"
                 variant="outlined"
                 margin="normal"

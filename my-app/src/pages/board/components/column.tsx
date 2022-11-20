@@ -5,6 +5,7 @@ import React, { Dispatch, FocusEvent, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 function Column(props: {
   userId: string;
@@ -63,9 +64,7 @@ function Column(props: {
     props.changeColumnTitle(props.column);
   };
 
-  const handleColumnTitleInputClose = (
-    event: React.SyntheticEvent<HTMLButtonElement> | React.FocusEvent<HTMLInputElement | unknown>
-  ): void => {
+  const handleColumnTitleInputClose = (event: React.SyntheticEvent<HTMLButtonElement>): void => {
     event.stopPropagation();
     props.showColumnTitleInput('');
   };
@@ -83,7 +82,8 @@ function Column(props: {
               noValidate
             >
               <TextValidator
-                onBlur={handleColumnTitleInputClose}
+                className="column__title-input"
+                // onBlur={handleColumnTitleInputClose}
                 autoComplete="off"
                 variant="outlined"
                 margin="normal"
@@ -97,24 +97,26 @@ function Column(props: {
                 validators={['required']}
                 errorMessages={['this field is required', 'column title is not valid']}
               />
-              <LoadingButton
-                fullWidth
-                variant="contained"
-                color="secondary"
-                type="submit"
-                // disabled={auth.signInLoading}
-                // loading={auth.signInLoading}
-                loadingPosition="center"
-              >
-                Change title
-              </LoadingButton>
-              <Button
-                className="column__close-title-btn"
-                onClick={handleColumnTitleInputClose}
-                variant="outlined"
-                color="error"
-                startIcon={<CloseIcon />}
-              ></Button>
+              <ButtonGroup className="title-form__btn-group">
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  // disabled={auth.signInLoading}
+                  // loading={auth.signInLoading}
+                  loadingPosition="center"
+                >
+                  Change title
+                </LoadingButton>
+                <Button
+                  className="column__close-title-btn"
+                  onClick={handleColumnTitleInputClose}
+                  variant="contained"
+                  color="error"
+                >
+                  <CloseIcon />
+                </Button>
+              </ButtonGroup>
             </ValidatorForm>{' '}
           </Grid>
         ) : (

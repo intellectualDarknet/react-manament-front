@@ -1,7 +1,7 @@
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
-import { Dispatch, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -48,7 +48,9 @@ function Column(props: {
     props.toggleForm();
   };
 
-  const handleTitleClick = (): void => {
+  const handleTitleClick = (event: React.SyntheticEvent<HTMLElement>): void => {
+    event.stopPropagation();
+    props.changeColumnTitleState(props.column.title);
     props.showColumnTitleInput(props.column._id);
   };
 
@@ -56,13 +58,19 @@ function Column(props: {
     props.changeColumnTitleState((event.target as HTMLInputElement).value);
   };
 
-  const onColumnTitleInputSubmit = (): void => {
+  const onColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
+    event.stopPropagation();
     props.changeColumnTitle(props.column);
+  };
+
+  const handleColumnTitleInputClose = (event: React.SyntheticEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
+    props.showColumnTitleInput('');
   };
 
   return (
     <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
-      <Grid container item className="column__title-conteiner" onClick={handleTitleClick}>
+      <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
           <Grid container item>
             <ValidatorForm
@@ -98,7 +106,7 @@ function Column(props: {
               </LoadingButton>
               <Button
                 className="column__close-title-btn"
-                // onClick={toggleForm}
+                onClick={handleColumnTitleInputClose}
                 variant="outlined"
                 color="error"
                 startIcon={<CloseIcon />}
@@ -106,7 +114,7 @@ function Column(props: {
             </ValidatorForm>{' '}
           </Grid>
         ) : (
-          <Typography variant="h5" className="column__title">
+          <Typography variant="h5" className="column__title" onClick={handleTitleClick}>
             {props.column.title}
           </Typography>
         )}

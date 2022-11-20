@@ -83,6 +83,7 @@ const Board = (): JSX.Element => {
       })
     );
     changeColumnTitleState('');
+    showColumnTitleInput('');
   };
 
   const renderAllColumns = (): JSX.Element[] =>

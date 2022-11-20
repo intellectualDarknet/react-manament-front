@@ -29,7 +29,10 @@ const Board = (): JSX.Element => {
   const userId = useSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
+  const currentBoardColumnsCount = currentBoardColumns.length;
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
+
+  // TODO: Сделать перераспределение порядка после удаления колонки
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -110,7 +113,11 @@ const Board = (): JSX.Element => {
           {taskIsChosen ? (
             <CreateTaskForm userId={userId} columnId={clickedColumnId} board={currentBoard} toggleForm={toggleForm} />
           ) : (
-            <CreateColumnForm board={currentBoard} toggleForm={toggleForm} />
+            <CreateColumnForm
+              board={currentBoard}
+              currentBoardColumnsCount={currentBoardColumnsCount}
+              toggleForm={toggleForm}
+            />
           )}
         </Grid>
         <Typography className="board__title" variant="h4">

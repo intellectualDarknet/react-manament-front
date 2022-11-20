@@ -10,7 +10,11 @@ interface IColumnTitle {
   title: string;
 }
 
-const CreateColumnForm = (props: { board: IGetBoardResponse; toggleForm: () => void }): JSX.Element => {
+const CreateColumnForm = (props: {
+  board: IGetBoardResponse;
+  currentBoardColumnsCount: number;
+  toggleForm: () => void;
+}): JSX.Element => {
   // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   // TODO: Заменить на переменную загрузки колонки
   const dispatch = useAppDispatch();
@@ -20,9 +24,10 @@ const CreateColumnForm = (props: { board: IGetBoardResponse; toggleForm: () => v
       createColumn({
         boardId: props.board._id,
         title: columnTitle.title,
-        order: 0, // TODO: Добавить определение порядка
+        order: props.currentBoardColumnsCount,
       })
     );
+    console.log(props.currentBoardColumnsCount);
     setColumnTitle(() => {
       return { title: '' };
     });

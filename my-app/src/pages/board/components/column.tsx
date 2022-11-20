@@ -1,7 +1,6 @@
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
-import { ICreateTaskData } from '../boards-types';
 import { Dispatch, SetStateAction } from 'react';
 
 function Column(props: {

@@ -7,7 +7,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import './style.scss';
 import { useAppSelector, RootState, useAppDispatch } from 'store/store';
-import { getUserById, updateUserById, deleteUserById, getUsers } from 'store/users/users-thunks';
+import { getUserById, updateUserById, deleteUserById } from 'store/users/users-thunks';
 import { IUsersState } from 'store/users/users-slice';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
@@ -39,7 +39,6 @@ const User = () => {
     setOpenDeleteMessage((openDeleteMessage) => !openDeleteMessage);
   };
   useEffect(() => {
-    dispatch(getUsers());
     dispatch(getUserById(userId));
   }, [dispatch, userId, userState.userById]);
   const deleteUser = () => {
@@ -208,81 +207,3 @@ const User = () => {
   );
 };
 export default User;
-{
-  /*         <ValidatorForm
-          className="userPage__form"
-          onError={(errors) => console.log(errors)}
-          onSubmit={onSigninSubmit}
-          noValidate
-        >
-          <Typography variant="h5" component="h2">
-            EDIT PROFILE
-          </Typography>
-          <TextValidator
-            variant="outlined"
-            sx={{ width: '100%' }}
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="name"
-            name="name"
-            autoComplete="name"
-            autoFocus
-            value={user.name}
-            validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
-            errorMessages={[
-              'this field is required',
-              'name should be more than 2 symbols and less than 12',
-              'name should be more than 2 symbols and less than 12',
-              'name should contain only letters',
-            ]}
-            onChange={(e: FormEvent<HTMLFormElement>) => {
-              SetUser({ ...user, name: (e.target as HTMLInputElement).value });
-            }}
-          />
-          <TextValidator
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="login"
-            label="login"
-            name="login"
-            autoComplete="login"
-            autoFocus
-            value={user.login}
-            validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
-            errorMessages={[
-              'this field is required',
-              'login should be more than 2 symbols and less than 12',
-              'login should be more than 2 symbols and less than 12',
-              'login should contain only letters',
-            ]}
-            onChange={(e: FormEvent<HTMLFormElement>) => {
-              SetUser({ ...user, login: (e.target as HTMLInputElement).value });
-            }}
-          />
-          <TextValidator
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={user.password}
-            validators={['required', 'minStringLength:8', 'maxStringLength:15']}
-            errorMessages={[
-              'this field is required',
-              'password should be more than 8 symbols and less than 15',
-              'paswword should be more than 8 symbols and less than 15',
-            ]}
-            onChange={(e: FormEvent<HTMLFormElement>) => {
-              SetUser({ ...user, password: (e.target as HTMLInputElement).value });
-            }}
-          />
-        </ValidatorForm> */
-}

@@ -10,20 +10,25 @@ interface IColumnTitle {
   title: string;
 }
 
-const CreateColumnForm = (props: { board: IGetBoardResponse; toggleForm: () => void }): JSX.Element => {
+const CreateColumnForm = (props: {
+  board: IGetBoardResponse;
+  currentBoardColumnsCount: number;
+  toggleForm: () => void;
+}): JSX.Element => {
   // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   // TODO: Заменить на переменную загрузки колонки
   const dispatch = useAppDispatch();
-  const [columnTitle, setColumnTitle] = useState<IColumnTitle>({ title: '' });
+  const [newColumnTitle, setNewColumnTitle] = useState<IColumnTitle>({ title: '' });
   const onColumnTitleSubmit = async () => {
     await dispatch(
       createColumn({
         boardId: props.board._id,
-        title: columnTitle.title,
-        order: 0, // TODO: Добавить определение порядка
+        title: newColumnTitle.title,
+        order: props.currentBoardColumnsCount,
       })
     );
-    setColumnTitle(() => {
+    console.log(props.currentBoardColumnsCount);
+    setNewColumnTitle(() => {
       return { title: '' };
     });
     props.toggleForm();
@@ -31,7 +36,7 @@ const CreateColumnForm = (props: { board: IGetBoardResponse; toggleForm: () => v
 
   function onFormChange(e: FormEvent<HTMLFormElement>) {
     const value = (e.target as HTMLInputElement).value;
-    setColumnTitle(() => {
+    setNewColumnTitle(() => {
       return { title: value };
     });
   }
@@ -66,11 +71,11 @@ const CreateColumnForm = (props: { board: IGetBoardResponse; toggleForm: () => v
           margin="normal"
           required
           fullWidth
-          id="column-title"
-          label="columnTitle"
-          name="column-title"
+          id="new-column-title"
+          label="newColumnTitle"
+          name="new-column-title"
           autoFocus
-          value={columnTitle.title}
+          value={newColumnTitle.title}
           validators={['required']}
           errorMessages={['this field is required', 'column title is not valid']}
         />

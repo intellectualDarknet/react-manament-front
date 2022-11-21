@@ -11,6 +11,7 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
+import sortArr from './functions/sort-arr';
 
 const Board = (): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -29,8 +30,10 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
+  const currentBoardColumnsSorted = sortArr(currentBoardColumns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
+  // TODO: Сделать сортировку колонок перед рендером
   // TODO: Сделать перераспределение порядка после удаления колонки
 
   const [formIsShown, setFormIsShown] = useState(false);
@@ -86,12 +89,13 @@ const Board = (): JSX.Element => {
     showColumnTitleInput('');
   };
 
-  const renderAllColumns = (): JSX.Element[] =>
-    currentBoardColumns.map((column, index): JSX.Element => {
+  const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
+    boardColumns.map((column, index): JSX.Element => {
       let isChosenColumnTitle = false;
       if (clickedEditTitleColumnId === column._id) {
         isChosenColumnTitle = true;
       }
+      console.log(column.order);
       return Column({
         userId,
         board: currentBoard,
@@ -164,7 +168,7 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns()}
+          {renderAllColumns(currentBoardColumnsSorted)}
         </Grid>
       </Grid>
     </Grid>

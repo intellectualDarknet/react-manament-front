@@ -62,7 +62,6 @@ function Header() {
           >
             PROJECT MANAGMENT APP
           </Typography>
-          {userId ? <Link to="/boards">Boards</Link> : <></>}
           <AssessmentIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
           <Typography
@@ -83,7 +82,32 @@ function Header() {
           >
             PROJECT MANAGMENT APP
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              textDecoration: 'none',
+            }}
+          >
+            {userId ? (
+              <Link to="/boards">
+                <Typography>BOARDS</Typography>
+              </Link>
+            ) : (
+              <></>
+            )}
+            {userId ? (
+              <Link to="/UserPage">
+                <Typography>EDIT PROFILE</Typography>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

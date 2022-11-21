@@ -98,7 +98,7 @@ const SignUpPage = () => {
             autoFocus
             value={formValues.name}
             validators={['required']}
-            errorMessages={['this field is required', 'email is not valid']}
+            errorMessages={['this field is required']}
             disabled={auth.signUpLoading}
           />
           <TextValidator

@@ -3,9 +3,15 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import './style.scss';
+import { useAppSelector, RootState, useAppDispatch } from 'store/store';
+import { getUserById, updateUserById, deleteUserById, getUsers } from 'store/users/users-thunks';
+import { IUsersState } from 'store/users/users-slice';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { logout } from 'store/auth/auth-slice';
+import { useNavigate } from 'react-router';
 
 type User = {
   name: string;
@@ -13,9 +19,37 @@ type User = {
   login: string;
 };
 const User = () => {
+  const navigate = useNavigate();
   const [user, SetUser] = useState<User>({ name: '', login: '', password: '' });
+  const [open, setOpen] = useState<boolean>(false);
+  const [openDeleteMessage, setOpenDeleteMessage] = useState<boolean>(false);
+  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const userState: IUsersState = useAppSelector((state: RootState) => state.rootReducer.usersReducer);
+  const dispatch = useAppDispatch();
+
   const onSigninSubmit = () => {
-    console.log('hi');
+    dispatch(updateUserById({ userId, ...user }));
+    handleClose();
+    SetUser({ name: '', login: '', password: '' });
+  };
+  const handleClose = () => {
+    setOpen((open) => !open);
+  };
+  const handleCloseDelete = () => {
+    setOpenDeleteMessage((openDeleteMessage) => !openDeleteMessage);
+  };
+  useEffect(() => {
+    dispatch(getUsers());
+    dispatch(getUserById(userId));
+  }, [dispatch, userId, userState.userById]);
+  const deleteUser = () => {
+    (async () => {
+      dispatch(deleteUserById(userId));
+    })()
+      .then(() => dispatch(logout()))
+      .then(() => {
+        navigate('/', { replace: true });
+      });
   };
   return (
     <Box
@@ -24,13 +58,159 @@ const User = () => {
     >
       <Grid
         item
-        sx={{ display: 'flex', justifyContent: 'center', width: '500px', minWidth: '400px', padding: '20px' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          width: '500px',
+          minWidth: '400px',
+          padding: '20px',
+        }}
         component={Paper}
         square
       >
-        <ValidatorForm
-          className="userPage__form"
+        <Typography variant="h5" component="h2">
+          User data:
+        </Typography>
+        {userState.userById ? (
+          <>
+            <Typography variant="h5" component="h4">
+              Name: {userState.userById.name}
+            </Typography>
+
+            <Typography variant="h5" component="h4">
+              Login: {userState.userById.login}
+            </Typography>
+          </>
+        ) : (
+          <></>
+        )}
+
+        <Typography variant="h5" component="h4">
+          Id: {userId}
+        </Typography>
+        <Button
+          type="submit"
           fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ marginBottom: '10px' }}
+          onClick={handleClose}
+        >
+          Edit
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>EDIT PROFILE</DialogTitle>
+          <DialogContent>
+            <ValidatorForm
+              className="userPage__form"
+              onError={(errors) => console.log(errors)}
+              onSubmit={onSigninSubmit}
+              noValidate
+            >
+              <TextValidator
+                variant="outlined"
+                sx={{ width: '100%' }}
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="name"
+                name="name"
+                autoComplete="name"
+                autoFocus
+                value={user.name}
+                validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+                errorMessages={[
+                  'this field is required',
+                  'name should be more than 2 symbols and less than 12',
+                  'name should be more than 2 symbols and less than 12',
+                  'name should contain only letters',
+                ]}
+                onChange={(e: FormEvent<HTMLFormElement>) => {
+                  SetUser({ ...user, name: (e.target as HTMLInputElement).value });
+                }}
+              />
+              <TextValidator
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="login"
+                label="login"
+                name="login"
+                autoComplete="login"
+                autoFocus
+                value={user.login}
+                validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+                errorMessages={[
+                  'this field is required',
+                  'login should be more than 2 symbols and less than 12',
+                  'login should be more than 2 symbols and less than 12',
+                  'login should contain only letters',
+                ]}
+                onChange={(e: FormEvent<HTMLFormElement>) => {
+                  SetUser({ ...user, login: (e.target as HTMLInputElement).value });
+                }}
+              />
+              <TextValidator
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={user.password}
+                validators={['required', 'minStringLength:8', 'maxStringLength:15']}
+                errorMessages={[
+                  'this field is required',
+                  'password should be more than 8 symbols and less than 15',
+                  'paswword should be more than 8 symbols and less than 15',
+                ]}
+                onChange={(e: FormEvent<HTMLFormElement>) => {
+                  SetUser({ ...user, password: (e.target as HTMLInputElement).value });
+                }}
+              />
+              <Button sx={{ color: 'black' }} onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button sx={{ color: 'black' }} type="submit">
+                Submit
+              </Button>
+            </ValidatorForm>
+          </DialogContent>
+        </Dialog>
+        <Button
+          onClick={handleCloseDelete}
+          fullWidth
+          variant="contained"
+          color="secondary"
+          sx={{ marginBottom: '10px' }}
+        >
+          Delete user
+        </Button>
+        <Dialog open={openDeleteMessage} onClose={handleCloseDelete}>
+          <DialogTitle>This user will be deleted. Are you sure?</DialogTitle>
+          <DialogActions>
+            <Button sx={{ color: 'black' }} onClick={handleCloseDelete}>
+              No
+            </Button>
+            <Button sx={{ color: 'black' }} onClick={deleteUser}>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Grid>
+    </Box>
+  );
+};
+export default User;
+{
+  /*         <ValidatorForm
+          className="userPage__form"
           onError={(errors) => console.log(errors)}
           onSubmit={onSigninSubmit}
           noValidate
@@ -50,8 +230,13 @@ const User = () => {
             autoComplete="name"
             autoFocus
             value={user.name}
-            validators={['required']}
-            errorMessages={['this field is required']}
+            validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+            errorMessages={[
+              'this field is required',
+              'name should be more than 2 symbols and less than 12',
+              'name should be more than 2 symbols and less than 12',
+              'name should contain only letters',
+            ]}
             onChange={(e: FormEvent<HTMLFormElement>) => {
               SetUser({ ...user, name: (e.target as HTMLInputElement).value });
             }}
@@ -67,8 +252,13 @@ const User = () => {
             autoComplete="login"
             autoFocus
             value={user.login}
-            validators={['required']}
-            errorMessages={['this field is required']}
+            validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+            errorMessages={[
+              'this field is required',
+              'login should be more than 2 symbols and less than 12',
+              'login should be more than 2 symbols and less than 12',
+              'login should contain only letters',
+            ]}
             onChange={(e: FormEvent<HTMLFormElement>) => {
               SetUser({ ...user, login: (e.target as HTMLInputElement).value });
             }}
@@ -94,15 +284,5 @@ const User = () => {
               SetUser({ ...user, password: (e.target as HTMLInputElement).value });
             }}
           />
-          <Button type="submit" fullWidth variant="contained" color="primary" sx={{ marginBottom: '10px' }}>
-            Submit
-          </Button>
-          <Button type="submit" fullWidth variant="contained" color="secondary" sx={{ marginBottom: '10px' }}>
-            Delete user
-          </Button>
-        </ValidatorForm>
-      </Grid>
-    </Box>
-  );
-};
-export default User;
+        </ValidatorForm> */
+}

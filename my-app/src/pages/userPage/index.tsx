@@ -7,11 +7,12 @@ import { FormEvent, useEffect, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import './style.scss';
 import { useAppSelector, RootState, useAppDispatch } from 'store/store';
-import { getUserById, updateUserById, deleteUserById } from 'store/users/users-thunks';
+import { getUserById, updateUserById, deleteUserById, getUsers } from 'store/users/users-thunks';
 import { IUsersState } from 'store/users/users-slice';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useNavigate } from 'react-router';
+import DeleteModal from './../../components/deleteModal';
 
 type User = {
   name: string;
@@ -22,7 +23,6 @@ const User = () => {
   const navigate = useNavigate();
   const [user, SetUser] = useState<User>({ name: '', login: '', password: '' });
   const [open, setOpen] = useState<boolean>(false);
-  const [openDeleteMessage, setOpenDeleteMessage] = useState<boolean>(false);
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const userState: IUsersState = useAppSelector((state: RootState) => state.rootReducer.usersReducer);
   const dispatch = useAppDispatch();
@@ -35,13 +35,12 @@ const User = () => {
   const handleClose = () => {
     setOpen((open) => !open);
   };
-  const handleCloseDelete = () => {
-    setOpenDeleteMessage((openDeleteMessage) => !openDeleteMessage);
-  };
+
   useEffect(() => {
+    dispatch(getUsers());
     dispatch(getUserById(userId));
   }, [dispatch, userId, userState.userById]);
-  const deleteUser = () => {
+  function deleteUser() {
     (async () => {
       dispatch(deleteUserById(userId));
     })()
@@ -49,7 +48,7 @@ const User = () => {
       .then(() => {
         navigate('/', { replace: true });
       });
-  };
+  }
   return (
     <Box
       className="userPage"
@@ -182,26 +181,7 @@ const User = () => {
             </ValidatorForm>
           </DialogContent>
         </Dialog>
-        <Button
-          onClick={handleCloseDelete}
-          fullWidth
-          variant="contained"
-          color="secondary"
-          sx={{ marginBottom: '10px' }}
-        >
-          Delete user
-        </Button>
-        <Dialog open={openDeleteMessage} onClose={handleCloseDelete}>
-          <DialogTitle>This user will be deleted. Are you sure?</DialogTitle>
-          <DialogActions>
-            <Button sx={{ color: 'black' }} onClick={handleCloseDelete}>
-              No
-            </Button>
-            <Button sx={{ color: 'black' }} onClick={deleteUser}>
-              Yes
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <DeleteModal message="This user will be deleted. Are you sure?" submit={deleteUser} />
       </Grid>
     </Box>
   );

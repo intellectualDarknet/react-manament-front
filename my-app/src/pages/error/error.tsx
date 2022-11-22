@@ -22,13 +22,8 @@ import {
   updateSetOfColumns,
 } from 'store/columns/columns-thunks';
 
-const lngs = {
-  en: { nativeName: 'English' },
-  ru: { nativeName: 'Russia' },
-};
-
 const ErrorPage = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,22 +51,8 @@ const ErrorPage = () => {
 
   return (
     <>
-      {Object.keys(lngs).map((lng) => (
-        <button
-          type="submit"
-          key={lng}
-          onClick={() => i18n.changeLanguage(lng)}
-          disabled={i18n.resolvedLanguage === lng}
-        >
-          {lngs[lng as keyof typeof lngs].nativeName}
-        </button>
-      ))}
-      <p>
-        <Trans i18nKey="description"></Trans>
-      </p>
-      {t('learn')}
       <div className="error">
-        <div className="error__descr">The page was not found</div>
+        <div className="error__descr">{t('notFound')}</div>
       </div>
     </>
   );

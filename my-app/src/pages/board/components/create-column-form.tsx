@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { useAppDispatch, useAppSelector } from 'store/store';
 import { createColumn } from 'store/columns/columns-thunks';
+import { useTranslation } from 'react-i18next';
 
 interface IColumnTitle {
   title: string;
@@ -17,6 +18,7 @@ const CreateColumnForm = (props: {
 }): JSX.Element => {
   // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   // TODO: Заменить на переменную загрузки колонки
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [newColumnTitle, setNewColumnTitle] = useState<IColumnTitle>({ title: '' });
   const onColumnTitleSubmit = async () => {
@@ -63,7 +65,7 @@ const CreateColumnForm = (props: {
         sx={{ width: '80%' }}
       >
         <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
-          Enter new column title
+          {t('board.title', { item: 'column', itemRu: 'колонки' })}
         </Typography>
         <TextValidator
           autoComplete="off"
@@ -90,9 +92,9 @@ const CreateColumnForm = (props: {
           // loading={auth.signInLoading}
           loadingPosition="center"
         >
-          Create column
+          {t('board.createColumn')}
         </LoadingButton>
-      </ValidatorForm>{' '}
+      </ValidatorForm>
     </Grid>
   );
 };

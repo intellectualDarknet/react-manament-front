@@ -34,11 +34,21 @@ i18next
             edit: 'EDIT PROFILE',
           },
           notFound: 'The page not found',
-        },
-        deleteModal: {
-          delete: 'Delete',
-          yes: 'Yes',
-          no: 'No',
+
+          deleteModal: {
+            delete: 'Delete',
+            yes: 'Yes',
+            no: 'No',
+          },
+          board: {
+            back: 'Back',
+            addColumn: 'Add column',
+            changeTitle: 'Change title',
+            addTask: 'Add task',
+            deleteColumn: 'Delete column',
+            title: 'Enter new {{item}} title',
+            createColumn: 'Create column',
+          },
         },
       },
       ru: {
@@ -57,11 +67,21 @@ i18next
             edit: 'РЕДАКТИРОВАТЬ ПРОФИЛЬ',
           },
           notFound: 'Страница не найдена',
-        },
-        deleteModal: {
-          delete: 'Удалить',
-          yes: 'Да',
-          no: 'Нет',
+
+          deleteModal: {
+            delete: 'Удалить',
+            yes: 'Да',
+            no: 'Нет',
+          },
+          board: {
+            back: 'Назад',
+            addColumn: 'Добавить колонку',
+            changeTitle: 'Изменить заголовок',
+            addTask: 'Добавить задание',
+            deleteColumn: 'Удалить колонку',
+            title: 'Введите новый заголовок {{itemRu}}',
+            createColumn: 'Создать колонку',
+          },
         },
       },
     },

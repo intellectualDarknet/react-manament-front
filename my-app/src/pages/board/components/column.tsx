@@ -6,6 +6,7 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import { useTranslation } from 'react-i18next';
 
 function Column(props: {
   userId: string;
@@ -31,6 +32,7 @@ function Column(props: {
   // };
 
   // const sortedTasks = sortTask(props.tasks);
+  const { t } = useTranslation();
 
   const filterTask = (tasks: ITask[]): ITask[] => {
     const filteredTasks = tasks.filter((elem) => elem.columnId === props.column._id);
@@ -106,7 +108,7 @@ function Column(props: {
                   // loading={auth.signInLoading}
                   loadingPosition="center"
                 >
-                  Change title
+                  {t('board.changeTitle')}
                 </LoadingButton>
                 <Button
                   className="column__close-title-btn"
@@ -142,7 +144,7 @@ function Column(props: {
           color="secondary"
           endIcon={<AddIcon />}
         >
-          Add task
+          {t('board.addTask')}
         </Button>
       </Grid>
       <Button
@@ -152,7 +154,7 @@ function Column(props: {
         color="error"
         endIcon={<DeleteIcon />}
       >
-        Delete column
+        {t('board.deleteColumn')}
       </Button>
     </Grid>
   );

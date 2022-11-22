@@ -19,8 +19,8 @@ import { logout } from 'store/auth/auth-slice';
 import { useTranslation, Trans } from 'react-i18next';
 
 const settings = [
-  { name: 'Sign In', link: 'sign-in' },
-  { name: 'Sign Up', link: 'sign-up' },
+  { name: 'main.signIn', link: 'sign-in' },
+  { name: 'main.signUp', link: 'sign-up' },
 ];
 const lngs = {
   en: { nativeName: 'English' },
@@ -148,7 +148,7 @@ function Header() {
                   <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                     <Link to={setting.link}>
                       <Typography textAlign="center">
-                        {setting.name === 'Sign In' ? t('main.signIn') : t('main.signUp')}
+                        <Trans i18nKey={setting.name}></Trans>
                       </Typography>
                     </Link>
                   </MenuItem>

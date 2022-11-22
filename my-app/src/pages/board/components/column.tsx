@@ -1,13 +1,13 @@
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import Task from './task';
-import React, { Dispatch, FocusEvent, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
-import DeleteButton from 'pages/boards/components/Board/DeleteButton';
+import DeleteColumnButton from './DeleteColumnButton';
 
 function Column(props: {
   userId: string;
@@ -73,11 +73,6 @@ function Column(props: {
 
   return (
     <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
-      <DeleteModal
-        message="Are you sure, you want to delete this column?"
-        submit={deleteThisColumn}
-        deleteButton={DeleteButton}
-      />
       <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">
@@ -152,15 +147,11 @@ function Column(props: {
           Add task
         </Button>
       </Grid>
-      <Button
-        className="column__delete-btn"
-        onClick={deleteThisColumn}
-        variant="outlined"
-        color="error"
-        endIcon={<DeleteIcon />}
-      >
-        Delete column
-      </Button>
+      <DeleteModal
+        message="Are you sure, you want to delete this column?"
+        submit={deleteThisColumn}
+        deleteButton={DeleteColumnButton}
+      />
     </Grid>
   );
 }

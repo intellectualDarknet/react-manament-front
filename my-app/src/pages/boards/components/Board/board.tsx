@@ -1,14 +1,15 @@
+import react, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, styled, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import background from './../../../../assets/img/background2.jpg';
-import { useState } from 'react';
 import { useAppDispatch } from 'store/store';
 import { useNavigate } from 'react-router-dom';
 import { updateBoardById, deleteBoardById, getBoardById } from 'store/boards/boards-thunks';
 import DeleteModal from 'components/deleteModal';
+import DeleteButton from './DeleteButton';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -59,7 +60,11 @@ const Board = (props: { title: string; id: string }) => {
           e.stopPropagation();
         }}
       >
-        <DeleteModal message="This board will be deleted. Are you sure?" submit={deleteCard} />
+        <DeleteModal
+          message="This board will be deleted. Are you sure?"
+          submit={deleteCard}
+          deleteButton={DeleteButton}
+        />
         <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClose}>
           Edit board name
         </Button>

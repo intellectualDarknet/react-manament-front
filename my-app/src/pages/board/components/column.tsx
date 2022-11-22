@@ -1,5 +1,5 @@
 import { Grid, Typography, Button } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import Task from './task';
 import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';

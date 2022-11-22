@@ -22,7 +22,7 @@ const Board = (): JSX.Element => {
     await dispatch(getTasksByBoardId(boardId));
   }
 
-  useEffect(() => {
+  useEffect((): void => {
     getData();
   }, []);
 
@@ -32,9 +32,6 @@ const Board = (): JSX.Element => {
   const currentBoardColumnsCount = currentBoardColumns.length;
   useResortColumnArr(currentBoardColumns, currentBoard._id);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
-
-  // TODO: Сделать сортировку колонок перед рендером
-  // TODO: Сделать перераспределение порядка после удаления колонки
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);

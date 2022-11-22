@@ -17,12 +17,12 @@ async function useResortColumnArr(columnArrToResort: IColumnResponse[], boardId:
     newColumnsOrder.forEach((column, index) => {
       if (column._id !== columnArrToResort[index]._id || column.order !== columnArrToResort[index].order) {
         isChanged = true;
+        return;
       }
     });
 
     if (isChanged) {
       await dispatch(updateSetOfColumns(newColumnsOrder));
-      await dispatch(getColumnsInBoard(boardId));
     }
   }
 }

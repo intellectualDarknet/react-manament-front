@@ -162,7 +162,7 @@ export const columnsSlice = createSlice({
       .addCase(updateSetOfColumns.fulfilled, (state, action) => {
         state.updateSetOfColumnsLoading = false;
         // TODO this equation can be changed according to logic
-        state.getColumnsByColumnId = action.payload;
+        state.columns = action.payload;
       })
       .addCase(updateSetOfColumns.rejected, (state, action) => {
         state.updateSetOfColumnsLoading = false;

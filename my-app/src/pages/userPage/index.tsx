@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useNavigate } from 'react-router';
 import DeleteModal from './../../components/deleteModal';
+import DeleteButton from 'pages/boards/components/Board/DeleteButton';
 
 type User = {
   name: string;
@@ -181,7 +182,11 @@ const User = () => {
             </ValidatorForm>
           </DialogContent>
         </Dialog>
-        <DeleteModal message="This user will be deleted. Are you sure?" submit={deleteUser} />
+        <DeleteModal
+          message="This user will be deleted. Are you sure?"
+          submit={deleteUser}
+          deleteButton={DeleteButton}
+        />
       </Grid>
     </Box>
   );

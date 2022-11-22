@@ -6,6 +6,8 @@ import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import DeleteModal from 'components/deleteModal';
+import DeleteButton from 'pages/boards/components/Board/DeleteButton';
 
 function Column(props: {
   userId: string;
@@ -71,6 +73,11 @@ function Column(props: {
 
   return (
     <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
+      <DeleteModal
+        message="Are you sure, you want to delete this column?"
+        submit={deleteThisColumn}
+        deleteButton={DeleteButton}
+      />
       <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">

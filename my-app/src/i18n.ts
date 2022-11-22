@@ -20,12 +20,22 @@ i18next
         translation: {
           learn: 'Learn React',
           description: 'Edit <1>src/App.js</1> and save to reload',
+          header: {
+            boards: 'BOARDS',
+            edit: 'EDIT PROFILE',
+          },
+          notFound: 'The page not found',
         },
       },
       ru: {
         translation: {
           learn: 'Изучи Реакт',
           description: 'Поставь буквы гг вп изи бризи',
+          header: {
+            boards: 'ДОСКИ',
+            edit: 'РЕДАКТИРОВАТЬ ПРОФИЛЬ',
+          },
+          notFound: 'Страница не найдена',
         },
       },
     },

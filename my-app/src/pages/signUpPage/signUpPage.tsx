@@ -26,7 +26,7 @@ const SignUpPage = () => {
     dispatch(signUp({ name: formValues.name, login: formValues.login, password: formValues.password }))
       .unwrap()
       .then(() => {
-        navigate('/', { replace: true });
+        navigate('/sign-in', { replace: true });
       });
   };
 

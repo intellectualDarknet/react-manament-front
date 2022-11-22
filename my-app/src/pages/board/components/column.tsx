@@ -1,11 +1,13 @@
 import { Grid, Typography, Button } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import Task from './task';
-import React, { Dispatch, FocusEvent, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import DeleteModal from 'components/deleteModal';
+import DeleteColumnButton from './DeleteColumnButton';
 import { useTranslation } from 'react-i18next';
 
 function Column(props: {
@@ -147,15 +149,11 @@ function Column(props: {
           {t('board.addTask')}
         </Button>
       </Grid>
-      <Button
-        className="column__delete-btn"
-        onClick={deleteThisColumn}
-        variant="outlined"
-        color="error"
-        endIcon={<DeleteIcon />}
-      >
-        {t('board.deleteColumn')}
-      </Button>
+      <DeleteModal
+        message={t('board.deleteColumnMessage')}
+        submit={deleteThisColumn}
+        deleteButton={DeleteColumnButton}
+      />
     </Grid>
   );
 }

@@ -1,29 +1,32 @@
+import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { useState } from 'react';
+
 import { useTranslation } from 'react-i18next';
 
-const DeleteModal = (props: { message: string; submit: () => void }) => {
+const DeleteModal = (props: {
+  message: string;
+  submit: () => void;
+  deleteButton: (handleToggleModal: () => void) => JSX.Element;
+}): JSX.Element => {
   const { t } = useTranslation();
   const [openDeleteMessage, setOpenDeleteMessage] = useState<boolean>(false);
-  const handleCloseDelete = () => {
+  const handleToggleModal = () => {
     setOpenDeleteMessage((openDeleteMessage) => !openDeleteMessage);
   };
   return (
     <>
-      <Button onClick={handleCloseDelete} fullWidth variant="contained" color="secondary" sx={{ marginBottom: '10px' }}>
-        {t('deletModal.delete')}
-      </Button>
-      <Dialog open={openDeleteMessage} onClose={handleCloseDelete}>
+      {props.deleteButton(handleToggleModal)}
+      <Dialog open={openDeleteMessage} onClose={handleToggleModal}>
         <DialogTitle>{props.message}</DialogTitle>
         <DialogActions>
-          <Button sx={{ color: 'black' }} onClick={handleCloseDelete}>
+          <Button sx={{ color: 'black' }} onClick={handleToggleModal}>
             {t('deletModal.no')}
           </Button>
           <Button
             sx={{ color: 'black' }}
             onClick={() => {
               props.submit();
-              handleCloseDelete();
+              handleToggleModal();
             }}
           >
             {t('deletModal.yes')}

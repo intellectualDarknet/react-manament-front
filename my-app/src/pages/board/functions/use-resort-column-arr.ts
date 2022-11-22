@@ -1,24 +1,30 @@
 import { useDispatch } from 'react-redux';
-import { updateColumnById } from 'store/columns/columns-thunks';
+import { getColumnsInBoard, updateSetOfColumns } from 'store/columns/columns-thunks';
 import store from 'store/store';
 import sortArr from './sort-arr';
 
-function useResortColumnArr(columnArrToResort: IColumnResponse[], boardId: string): void {
+async function useResortColumnArr(columnArrToResort: IColumnResponse[], boardId: string): Promise<void> {
   const dispatch = useDispatch<typeof store.dispatch>();
   const resortedColumnArr = sortArr(columnArrToResort);
   if (resortedColumnArr) {
+    const newColumnsOrder: IColumnRequest[] = [];
     resortedColumnArr.forEach((column, index) => {
-      dispatch(
-        updateColumnById({
-          boardId,
-          columnId: column._id,
-          title: column.title,
-          order: index,
-        })
-      );
+      const newColumnOrder = { _id: column._id, order: index };
+      newColumnsOrder.push(newColumnOrder);
     });
+
+    let isChanged = false;
+    newColumnsOrder.forEach((column, index) => {
+      if (column._id !== columnArrToResort[index]._id || column.order !== columnArrToResort[index].order) {
+        isChanged = true;
+      }
+    });
+
+    if (isChanged) {
+      await dispatch(updateSetOfColumns(newColumnsOrder));
+      await dispatch(getColumnsInBoard(boardId));
+    }
   }
-} // TODO: В цикле нужно подготовить массив для обновления всех колонок по методу updateSetColumn
-// TODO: Так же нужно произвести обновление только если в порядке действительно произошли изменения (сравнить массивы ордеров)
+}
 
 export default useResortColumnArr;

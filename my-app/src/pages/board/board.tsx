@@ -11,7 +11,7 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
-import sortArr from './functions/sort-arr';
+import useResortColumnArr from './functions/use-resort-column-arr';
 
 const Board = (): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -30,7 +30,7 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
-  const currentBoardColumnsSorted = sortArr(currentBoardColumns);
+  useResortColumnArr(currentBoardColumns, currentBoard._id);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
   // TODO: Сделать сортировку колонок перед рендером
@@ -168,7 +168,7 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns(currentBoardColumnsSorted)}
+          {renderAllColumns(currentBoardColumns)}
         </Grid>
       </Grid>
     </Grid>

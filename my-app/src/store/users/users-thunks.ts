@@ -42,7 +42,7 @@ export const deleteUserById = createAsyncThunk<IGetUserResponse, string>(
   'deleteUserById',
   async function (userId, { rejectWithValue }) {
     try {
-      const data: AxiosResponse = await api.delete(`boards/${userId}`);
+      const data: AxiosResponse = await api.delete(`users/${userId}`);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);

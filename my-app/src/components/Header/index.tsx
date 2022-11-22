@@ -16,13 +16,19 @@ import { Link } from 'react-router-dom';
 import { useAppSelector, RootState, useAppDispatch } from 'store/store';
 import { Button } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
+import { useTranslation, Trans } from 'react-i18next';
 
 const settings = [
   { name: 'Sign In', link: 'sign-in' },
   { name: 'Sign Up', link: 'sign-up' },
 ];
+const lngs = {
+  en: { nativeName: 'English' },
+  ru: { nativeName: 'Russia' },
+};
 
 function Header() {
+  const { t, i18n } = useTranslation();
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const dispatch = useAppDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -62,7 +68,6 @@ function Header() {
           >
             PROJECT MANAGMENT APP
           </Typography>
-          {userId ? <Link to="/boards">Boards</Link> : <></>}
           <AssessmentIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
           <Typography
@@ -83,7 +88,36 @@ function Header() {
           >
             PROJECT MANAGMENT APP
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              textDecoration: 'none',
+            }}
+          >
+            {userId ? (
+              <Link to="/boards">
+                <Typography>
+                  <Trans i18nKey="header.boards"></Trans>
+                </Typography>
+              </Link>
+            ) : (
+              <></>
+            )}
+            {userId ? (
+              <Link to="/UserPage">
+                <Typography>
+                  <Trans i18nKey="header.edit"></Trans>
+                </Typography>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
@@ -131,8 +165,17 @@ function Header() {
               marginLeft: '15px',
             }}
           >
-            <ToggleButton value="EN">EN</ToggleButton>
-            <ToggleButton value="RU">RU</ToggleButton>
+            {Object.keys(lngs).map((lng) => (
+              <ToggleButton
+                value={lng}
+                type="submit"
+                key={lng}
+                onClick={() => i18n.changeLanguage(lng)}
+                disabled={i18n.resolvedLanguage === lng}
+              >
+                {lngs[lng as keyof typeof lngs].nativeName}
+              </ToggleButton>
+            ))}
           </ToggleButtonGroup>
         </Toolbar>
       </Container>

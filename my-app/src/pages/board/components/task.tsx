@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid, Paper, Typography, Button } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Grid, Paper, Typography } from '@mui/material';
+import DeleteModal from 'components/deleteModal';
+import DeleteTaskButton from './DeleteTaskButton';
 
 function Task(props: {
   board: IBoardResponse;
@@ -24,13 +25,11 @@ function Task(props: {
         </Typography>
       </Grid>
       <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-        <Button
-          className="task__delete-btn"
-          onClick={deleteThisTask}
-          variant="outlined"
-          color="error"
-          startIcon={<DeleteIcon />}
-        ></Button>
+        <DeleteModal
+          message="Are you sure, you want to delete this task?"
+          submit={deleteThisTask}
+          deleteButton={DeleteTaskButton}
+        />
       </Grid>
     </Paper>
   );

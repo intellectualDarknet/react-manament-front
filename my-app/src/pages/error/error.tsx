@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './error.scss';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { signIn, signUp } from 'store/auth/auth-thunks';
 import { AppDispatch, RootState, useAppDispatch, useAppSelector } from 'store/store';
 import {

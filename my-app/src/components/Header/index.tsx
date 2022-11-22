@@ -142,12 +142,14 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {userId ? (
-                <Button onClick={() => dispatch(logout())}>Log out</Button>
+                <Button onClick={() => dispatch(logout())}>{t('main.logOut')}</Button>
               ) : (
                 settings.map((setting) => (
                   <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                     <Link to={setting.link}>
-                      <Typography textAlign="center">{setting.name}</Typography>
+                      <Typography textAlign="center">
+                        {setting.name === 'Sign In' ? t('main.signIn') : t('main.signUp')}
+                      </Typography>
                     </Link>
                   </MenuItem>
                 ))

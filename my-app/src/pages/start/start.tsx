@@ -7,8 +7,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import mainPict from './../../assets/img/mainPicture1.jpg';
 import { Link } from 'react-router-dom';
 import { RootState, useAppSelector } from 'store/store';
+import { useTranslation } from 'react-i18next';
 
 const Start = () => {
+  const { t } = useTranslation();
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   return (
     <Grid
@@ -19,30 +21,26 @@ const Start = () => {
     >
       <Grid item xs={5} sx={{ paddingTop: '2%' }}>
         <Typography variant="h4" gutterBottom>
-          PROJECT MANAGER APPLICATION
+          {t('main.heading')}
         </Typography>
-        <Typography gutterBottom>
-          is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. You can
-          automate and customize your workflow and avoid unnecessary meetings as communicating to your team members are
-          easier with project manager application .
-        </Typography>
+        <Typography gutterBottom>{t('main.text')}</Typography>
         <Box sx={{ width: '70%', display: 'flex', justifyContent: 'space-between', paddingLeft: 5, paddingTop: 2 }}>
           {!userId ? (
             <>
               <Link to="/Sign-in">
                 <Button variant="contained" endIcon={<PersonIcon />}>
-                  Sign in
+                  {t('main.signIn')}
                 </Button>
               </Link>
               <Link to="/sign-up">
                 <Button variant="contained" endIcon={<PersonAddIcon />}>
-                  Sign up
+                  {t('main.signUp')}
                 </Button>
               </Link>{' '}
             </>
           ) : (
             <Link to="/boards">
-              <Button variant="contained">Boards</Button>
+              <Button variant="contained">{t('main.boards')}</Button>
             </Link>
           )}
         </Box>

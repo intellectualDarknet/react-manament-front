@@ -9,6 +9,8 @@ import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import './signUpPage.scss';
 import { IAuthState } from './../../store/auth/auth-slice';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useTranslation } from 'react-i18next';
+
 interface ISignUpForm {
   name: string;
   login: string;
@@ -17,6 +19,7 @@ interface ISignUpForm {
 }
 
 const SignUpPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   const dispatch = useAppDispatch();
@@ -64,7 +67,7 @@ const SignUpPage = () => {
           sx={{ width: '80%' }}
         >
           <Typography variant="h5" component="h2">
-            Sign up
+            {t('auth.signUp')}
           </Typography>
           <TextValidator
             autoComplete="off"
@@ -73,16 +76,30 @@ const SignUpPage = () => {
             required
             fullWidth
             id="login"
-            label="Login"
+            label={t('user.login')}
             name="login"
             autoFocus
             value={formValues.login}
             validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
             errorMessages={[
-              'this field is required',
-              'login should be more than 2 symbols and less than 12',
-              'login should be more than 2 symbols and less than 12',
-              'login should contain only letters',
+              t('user.errorRequired'),
+              t('user.errorLength', {
+                itemRu: 'Логин',
+                item: 'Login',
+                should: 'should',
+                shouldRu: 'должен',
+                minCount: '2',
+                maxCount: '13',
+              }),
+              t('user.errorLength', {
+                itemRu: 'Логин',
+                item: 'Login',
+                should: 'should',
+                shouldRu: 'должен',
+                minCount: '2',
+                maxCount: '13',
+              }),
+              t('user.errorLetters'),
             ]}
             disabled={auth.signUpLoading}
           />
@@ -93,12 +110,31 @@ const SignUpPage = () => {
             required
             fullWidth
             id="name"
-            label="name"
+            label={t('user.name')}
             name="name"
             autoFocus
             value={formValues.name}
-            validators={['required']}
-            errorMessages={['this field is required']}
+            validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+            errorMessages={[
+              t('user.errorRequired'),
+              t('user.errorLength', {
+                itemRu: 'Имя',
+                item: 'Name',
+                should: 'should',
+                shouldRu: 'должно',
+                minCount: '2',
+                maxCount: '13',
+              }),
+              t('user.errorLength', {
+                itemRu: 'Имя',
+                item: 'Name',
+                should: 'should',
+                shouldRu: 'должно',
+                minCount: '2',
+                maxCount: '13',
+              }),
+              t('user.errorLetters'),
+            ]}
             disabled={auth.signUpLoading}
           />
           <TextValidator
@@ -108,15 +144,29 @@ const SignUpPage = () => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t('user.password')}
             type="password"
             id="password"
             value={formValues.password}
             validators={['required', 'minStringLength:8', 'maxStringLength:15']}
             errorMessages={[
-              'this field is required',
-              'password should be more than 8 symbols and less than 15',
-              'paswword should be more than 8 symbols and less than 15',
+              t('user.errorRequired'),
+              t('user.errorLength', {
+                itemRu: 'Пароль',
+                item: 'Password',
+                should: 'should',
+                shouldRu: 'должен',
+                minCount: '7',
+                maxCount: '16',
+              }),
+              t('user.errorLength', {
+                itemRu: 'Пароль',
+                item: 'Password',
+                should: 'should',
+                shouldRu: 'должен',
+                minCount: '7',
+                maxCount: '16',
+              }),
             ]}
             disabled={auth.signUpLoading}
           />
@@ -127,12 +177,12 @@ const SignUpPage = () => {
             required
             fullWidth
             name="repeat"
-            label="Repeat password"
+            label={t('user.repeat')}
             type="password"
             id="repeat"
             value={formValues.repeat}
             validators={['isPasswordMatch', 'required']}
-            errorMessages={['password mismatch', 'this field is required']}
+            errorMessages={[t('auth.mismatch'), t('user.errorRequired')]}
             disabled={auth.signUpLoading}
           />
 
@@ -147,17 +197,17 @@ const SignUpPage = () => {
             loading={auth.signUpLoading}
             loadingPosition="center"
           >
-            Register
+            {t('auth.register')}
           </LoadingButton>
 
           <div className="signup__bottom">
-            <div className="signup__bottom-reg">Already registered?</div>
+            <div className="signup__bottom-reg">{t('auth.alreadyRegistered')}</div>
             <Link className="signup__bottom-link" to="/sign-in">
-              Sign in
+              {t('auth.signIn')}
             </Link>
-            <div className="signin__bottom-reg">Back to main page</div>
+            <div className="signin__bottom-reg">{t('auth.backToMain')}</div>
             <Link className="signin__bottom-link" to="/">
-              Main page
+              {t('auth.main')}
             </Link>
           </div>
         </ValidatorForm>

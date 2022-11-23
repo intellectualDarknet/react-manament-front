@@ -11,8 +11,10 @@ import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
+import { useTranslation } from 'react-i18next';
 
 const Board = (): JSX.Element => {
+  const { t } = useTranslation();
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
@@ -116,7 +118,7 @@ const Board = (): JSX.Element => {
       <Grid item className="board__btn-conteiner" xl={0.8} xs={0.8}>
         <Link to="/boards">
           <Button className="board__back-btn" variant="contained" color="primary" startIcon={<ArrowBackIosIcon />}>
-            Back
+            {t('board.back')}
           </Button>
         </Link>
         <Button
@@ -126,7 +128,7 @@ const Board = (): JSX.Element => {
           color="secondary"
           startIcon={<AddIcon />}
         >
-          Add column
+          {t('board.addColumn')}
         </Button>
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>

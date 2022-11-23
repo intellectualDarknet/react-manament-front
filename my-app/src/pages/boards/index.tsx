@@ -6,10 +6,11 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
-import Board from './components/Board/board';
+import Board from './components/board';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { IBoardsState } from './../../store/boards/boards-slice';
 import { createBoard, getBoards } from 'store/boards/boards-thunks';
+import { useTranslation } from 'react-i18next';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,6 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Boards = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState<boolean>(false);
   const [input, setInput] = useState<string>(' ');
   const boardsResp: IBoardsState = useAppSelector((state: RootState) => state.rootReducer.boardsReducer);
@@ -69,13 +71,13 @@ const Boards = () => {
             onClick={handleClose}
           >
             <Typography variant="h4" gutterBottom>
-              + Add new board
+              + {t('boards.addBoard')}
             </Typography>
           </Item>
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Add new board</DialogTitle>
+            <DialogTitle>{t('boards.addBoard')}</DialogTitle>
             <DialogContent>
-              <DialogContentText>Please enter name of the board.</DialogContentText>
+              <DialogContentText>{t('boards.name')}</DialogContentText>
               <TextField
                 autoFocus
                 id="name"
@@ -89,10 +91,10 @@ const Boards = () => {
             </DialogContent>
             <DialogActions>
               <Button sx={{ color: 'black' }} onClick={handleClose}>
-                Cancel
+                {t('boards.cancel')}
               </Button>
               <Button sx={{ color: 'black' }} onClick={addBoard}>
-                Add
+                {t('boards.add')}
               </Button>
             </DialogActions>
           </Dialog>

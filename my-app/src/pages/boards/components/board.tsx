@@ -4,12 +4,13 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, styled, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import background from './../../../../assets/img/background2.jpg';
+import background from 'assets/img/background2.jpg';
 import { useAppDispatch } from 'store/store';
 import { useNavigate } from 'react-router-dom';
 import { updateBoardById, deleteBoardById, getBoardById } from 'store/boards/boards-thunks';
 import DeleteModal from 'components/deleteModal';
 import DeleteButton from './DeleteButton';
+import { useTranslation } from 'react-i18next';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,6 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Board = (props: { title: string; id: string }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const [input, setInput] = useState<string>(' ');
@@ -60,18 +62,14 @@ const Board = (props: { title: string; id: string }) => {
           e.stopPropagation();
         }}
       >
-        <DeleteModal
-          message="This board will be deleted. Are you sure?"
-          submit={deleteCard}
-          deleteButton={DeleteButton}
-        />
+        <DeleteModal message={t('deleteModal.message')} submit={deleteCard} deleteButton={DeleteButton} />
         <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClose}>
-          Edit board name
+          {t('boards.edit')}
         </Button>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Rename board</DialogTitle>
+          <DialogTitle>{t('boards.rename')}</DialogTitle>
           <DialogContent>
-            <DialogContentText>Enter new name</DialogContentText>
+            <DialogContentText>{t('boards.enterName')}</DialogContentText>
             <TextField
               autoFocus
               id="name"
@@ -84,10 +82,10 @@ const Board = (props: { title: string; id: string }) => {
           </DialogContent>
           <DialogActions>
             <Button sx={{ color: 'black' }} onClick={handleClose}>
-              Cancel
+              {t('boards.cancel')}
             </Button>
             <Button sx={{ color: 'black' }} onClick={handleRename}>
-              Rename
+              {t('boards.rename')}
             </Button>
           </DialogActions>
         </Dialog>

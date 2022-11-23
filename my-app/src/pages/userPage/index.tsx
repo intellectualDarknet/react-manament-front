@@ -13,7 +13,9 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useNavigate } from 'react-router';
 import DeleteModal from './../../components/deleteModal';
-import DeleteButton from 'pages/boards/components/Board/DeleteButton';
+import DeleteButton from 'pages/boards/components/DeleteButton';
+import { useTranslation } from 'react-i18next';
+import Board from 'pages/board/board';
 
 type User = {
   name: string;
@@ -21,13 +23,14 @@ type User = {
   login: string;
 };
 const User = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [user, SetUser] = useState<User>({ name: '', login: '', password: '' });
   const [open, setOpen] = useState<boolean>(false);
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const userState: IUsersState = useAppSelector((state: RootState) => state.rootReducer.usersReducer);
   const dispatch = useAppDispatch();
-
+  const lang = localStorage.getItem('i18nextLng');
   const onSigninSubmit = () => {
     dispatch(updateUserById({ userId, ...user }));
     handleClose();
@@ -69,16 +72,16 @@ const User = () => {
         square
       >
         <Typography variant="h5" component="h2">
-          User data:
+          {t('user.data')}
         </Typography>
         {userState.userById ? (
           <>
             <Typography variant="h5" component="h4">
-              Name: {userState.userById.name}
+              {t('user.name')} {userState.userById.name}
             </Typography>
 
             <Typography variant="h5" component="h4">
-              Login: {userState.userById.login}
+              {t('user.login')} {userState.userById.login}
             </Typography>
           </>
         ) : (
@@ -96,10 +99,10 @@ const User = () => {
           sx={{ marginBottom: '10px' }}
           onClick={handleClose}
         >
-          Edit
+          {t('user.edit')}
         </Button>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>EDIT PROFILE</DialogTitle>
+          <DialogTitle>{t('header.edit')}</DialogTitle>
           <DialogContent>
             <ValidatorForm
               className="userPage__form"
@@ -114,17 +117,31 @@ const User = () => {
                 required
                 fullWidth
                 id="name"
-                label="name"
+                label={t('user.name')}
                 name="name"
-                autoComplete="name"
+                autoComplete={t('user.name')}
                 autoFocus
                 value={user.name}
                 validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
                 errorMessages={[
-                  'this field is required',
-                  'name should be more than 2 symbols and less than 12',
-                  'name should be more than 2 symbols and less than 12',
-                  'name should contain only letters',
+                  t('user.errorRequired'),
+                  t('user.errorLength', {
+                    itemRu: 'Имя',
+                    item: 'Name',
+                    should: 'should',
+                    shouldRu: 'должно',
+                    minCount: '2',
+                    maxCount: '13',
+                  }),
+                  t('user.errorLength', {
+                    itemRu: 'Имя',
+                    item: 'Name',
+                    should: 'should',
+                    shouldRu: 'должно',
+                    minCount: '2',
+                    maxCount: '13',
+                  }),
+                  t('user.errorLetters'),
                 ]}
                 onChange={(e: FormEvent<HTMLFormElement>) => {
                   SetUser({ ...user, name: (e.target as HTMLInputElement).value });
@@ -136,17 +153,31 @@ const User = () => {
                 required
                 fullWidth
                 id="login"
-                label="login"
+                label={t('user.login')}
                 name="login"
-                autoComplete="login"
+                autoComplete={t('user.login')}
                 autoFocus
                 value={user.login}
                 validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
                 errorMessages={[
-                  'this field is required',
-                  'login should be more than 2 symbols and less than 12',
-                  'login should be more than 2 symbols and less than 12',
-                  'login should contain only letters',
+                  t('user.errorRequired'),
+                  t('user.errorLength', {
+                    itemRu: 'Логин',
+                    item: 'Login',
+                    should: 'should',
+                    shouldRu: 'должен',
+                    minCount: '2',
+                    maxCount: '13',
+                  }),
+                  t('user.errorLength', {
+                    itemRu: 'Логин',
+                    item: 'Login',
+                    should: 'should',
+                    shouldRu: 'должен',
+                    minCount: '2',
+                    maxCount: '13',
+                  }),
+                  t('user.errorLetters'),
                 ]}
                 onChange={(e: FormEvent<HTMLFormElement>) => {
                   SetUser({ ...user, login: (e.target as HTMLInputElement).value });
@@ -158,35 +189,45 @@ const User = () => {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={t('user.password')}
                 type="password"
                 id="password"
                 autoComplete="current-password"
                 value={user.password}
                 validators={['required', 'minStringLength:8', 'maxStringLength:15']}
                 errorMessages={[
-                  'this field is required',
-                  'password should be more than 8 symbols and less than 15',
-                  'paswword should be more than 8 symbols and less than 15',
+                  t('user.errorRequired'),
+                  t('user.errorLength', {
+                    itemRu: 'Пароль',
+                    item: 'Password',
+                    should: 'should',
+                    shouldRu: 'должен',
+                    minCount: '7',
+                    maxCount: '16',
+                  }),
+                  t('user.errorLength', {
+                    itemRu: 'Пароль',
+                    item: 'Password',
+                    should: 'should',
+                    shouldRu: 'должен',
+                    minCount: '7',
+                    maxCount: '16',
+                  }),
                 ]}
                 onChange={(e: FormEvent<HTMLFormElement>) => {
                   SetUser({ ...user, password: (e.target as HTMLInputElement).value });
                 }}
               />
               <Button sx={{ color: 'black' }} onClick={handleClose}>
-                Cancel
+                {t('boards.cancel')}
               </Button>
               <Button sx={{ color: 'black' }} type="submit">
-                Submit
+                {t('user.submit')}
               </Button>
             </ValidatorForm>
           </DialogContent>
         </Dialog>
-        <DeleteModal
-          message="This user will be deleted. Are you sure?"
-          submit={deleteUser}
-          deleteButton={DeleteButton}
-        />
+        <DeleteModal message={t('user.message')} submit={deleteUser} deleteButton={DeleteButton} />
       </Grid>
     </Box>
   );

@@ -34,7 +34,6 @@ function Column(props: {
   // };
 
   // const sortedTasks = sortTask(props.tasks);
-  const { t } = useTranslation();
 
   const filterTask = (tasks: ITask[]): ITask[] => {
     const filteredTasks = tasks.filter((elem) => elem.columnId === props.column._id);
@@ -110,7 +109,7 @@ function Column(props: {
                   // loading={auth.signInLoading}
                   loadingPosition="center"
                 >
-                  {t('board.changeTitle')}
+                  Change title
                 </LoadingButton>
                 <Button
                   className="column__close-title-btn"
@@ -146,11 +145,11 @@ function Column(props: {
           color="secondary"
           endIcon={<AddIcon />}
         >
-          {t('board.addTask')}
+          Add column
         </Button>
       </Grid>
       <DeleteModal
-        message={t('board.deleteColumnMessage')}
+        message="Are you sure, you want to delete this column?"
         submit={deleteThisColumn}
         deleteButton={DeleteColumnButton}
       />

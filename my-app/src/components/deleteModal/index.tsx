@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
-
 import { useTranslation } from 'react-i18next';
 
 const DeleteModal = (props: {
@@ -20,7 +19,7 @@ const DeleteModal = (props: {
         <DialogTitle>{props.message}</DialogTitle>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleToggleModal}>
-            {t('deletModal.no')}
+            {t('deleteModal.no')}
           </Button>
           <Button
             sx={{ color: 'black' }}
@@ -29,7 +28,7 @@ const DeleteModal = (props: {
               handleToggleModal();
             }}
           >
-            {t('deletModal.yes')}
+            {t('deleteModal.yes')}
           </Button>
         </DialogActions>
       </Dialog>

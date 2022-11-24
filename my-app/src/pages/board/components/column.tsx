@@ -38,11 +38,12 @@ function Column(props: {
   // const sortedTasks = sortTask(props.tasks);
 
   const filterTask = (tasks: ITask[]): ITask[] => {
-    const filteredTasks = tasks.filter((elem) => elem.columnId === props.column._id);
-    return filteredTasks;
+    const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
+    return tasksOfCurrentColumn;
   };
 
-  const filteredTasks = filterTask(props.tasks);
+  const tasksOfCurrentColumn = filterTask(props.tasks);
+  const tasksOfCurrentColumnCount = tasksOfCurrentColumn.length;
 
   const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);
@@ -189,15 +190,16 @@ function Column(props: {
         )}
       </Grid>
       <Grid container className="column__tasks-conteiner">
-        {filteredTasks.map((elem, index) =>
-          Task({
+        {tasksOfCurrentColumn.map((elem, index) => {
+          console.log('Column id: ', props.column._id, 'Task order: ', elem.order);
+          return Task({
             board: props.board,
             column: props.column,
             task: elem,
             key: index,
             deleteTaskByButtonPress: props.deleteTaskByButtonPress,
-          })
-        )}
+          });
+        })}
         <Button
           className="task__create-btn"
           onClick={handleAddTask}

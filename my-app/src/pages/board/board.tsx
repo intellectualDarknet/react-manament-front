@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import useResortColumnArr from './functions/use-resort-column-arr';
 import { useTranslation } from 'react-i18next';
+import sortTasks from './functions/sort-tasks';
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
@@ -34,6 +35,9 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
+  const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
+
+  console.log('Sorted tasks: ', sortedTasks);
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -188,8 +192,9 @@ const Board = (): JSX.Element => {
           {taskIsChosen ? (
             <CreateTaskForm
               userId={userId}
-              columnId={clickedAddTaskColumnId}
               board={currentBoard}
+              columnId={clickedAddTaskColumnId}
+              sortedTasks={sortedTasks}
               toggleForm={toggleForm}
             />
           ) : (

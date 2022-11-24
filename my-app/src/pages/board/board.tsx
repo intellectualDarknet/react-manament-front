@@ -6,7 +6,7 @@ import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
 import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
-import { getTasksByBoardId, createTask, deleteTask } from 'store/tasks/tasks-thunk';
+import { getTasksByBoardId, deleteTask } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -30,7 +30,6 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
-  useResortColumnArr(currentBoardColumns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
   const [formIsShown, setFormIsShown] = useState(false);
@@ -39,6 +38,7 @@ const Board = (): JSX.Element => {
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
   const [dragColumn, setDragColumn] = useState('');
+  const [dropColumn, setDropColumn] = useState('');
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -88,19 +88,41 @@ const Board = (): JSX.Element => {
   };
 
   const getNewOrder = (dragColumn: string, dropColumn: string): number[] => {
-    const emptyArr = new Array(currentBoardColumnsCount - 1);
-    const newOrder = emptyArr.map((elem, index) => {
-      if (index === +dragColumn) {
-        return dropColumn;
-      } else {
-        if (index === +dropColumn) {
-          return dragColumn;
+    console.log('Drag and Drop Columns:', dragColumn, dropColumn);
+    const straightArr = [];
+    for (let i = 0; i < currentBoardColumnsCount; i += 1) {
+      straightArr.push(i);
+    }
+    let newOrder: number[];
+    if (dragColumn && dropColumn) {
+      newOrder = straightArr.map((elem, index) => {
+        if (index === +dragColumn) {
+          return +dropColumn;
+        } else {
+          if (index === +dropColumn) {
+            return +dragColumn;
+          }
+          return index;
         }
-        return elem;
-      }
-    });
+      });
+      setDragColumn('');
+      setDropColumn('');
+    } else {
+      newOrder = straightArr.map((elem, index) => {
+        console.log('Elements: ', elem, index);
+        return index;
+      });
+      console.log('New order-1: ', newOrder);
+    }
+    console.log('New order-2: ', newOrder);
     return newOrder;
   };
+
+  const useChangeColumns = (): void => {
+    useResortColumnArr(currentBoardColumns, getNewOrder(dragColumn, dropColumn));
+  };
+
+  useChangeColumns();
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column, index): JSX.Element => {
@@ -123,6 +145,7 @@ const Board = (): JSX.Element => {
         setTaskIsChosen,
         setClickedAddTaskColumnId,
         setDragColumn,
+        setDropColumn,
         showColumnTitleInput,
         changeColumnTitleState,
         changeColumnTitle,

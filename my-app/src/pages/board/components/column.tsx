@@ -22,6 +22,7 @@ function Column(props: {
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
   setDragColumn: Dispatch<SetStateAction<string>>;
+  setDropColumn: Dispatch<SetStateAction<string>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
@@ -90,6 +91,7 @@ function Column(props: {
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
     console.log('Drop column: ', dropColumn.dataset.columnOrder);
+    props.setDropColumn(dropColumn.dataset.columnOrder);
   };
 
   return (

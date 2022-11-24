@@ -9,7 +9,7 @@ async function useResortColumnArr(columnArrToResort: IColumnResponse[], newOrder
   if (resortedColumnArr) {
     const newColumnsOrder: IColumnRequest[] = [];
     resortedColumnArr.forEach((column, index) => {
-      let newColumnOrder: { _id: string, order: number }
+      let newColumnOrder: { _id: string; order: number };
       if (newOrder) {
         newColumnOrder = { _id: column._id, order: newOrder[index] };
       } else {

@@ -1,7 +1,7 @@
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction, SyntheticEvent } from 'react';
+import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import Task from './task';
-import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -71,8 +71,52 @@ function Column(props: {
     props.showColumnTitleInput('');
   };
 
+  const dragStartHandler = (event: DragEvent<HTMLElement>) => {
+    console.log('Drag start: ', (event.target as HTMLElement).dataset.columnOrder);
+  };
+
+  const dragEndHandler = (event: DragEvent<HTMLElement>) => {};
+
+  const dragOverHandler = (event: DragEvent<HTMLElement>) => {
+    event.preventDefault();
+  };
+
+  const dragLeaveHandler = (event: DragEvent<HTMLElement>) => {};
+
+  const dropHandler = (event: SyntheticEvent<HTMLElement>) => {
+    event.preventDefault();
+    console.log('Drop: ', event.nativeEvent.composedPath());
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    console.log('Drop column: ', dropColumn.dataset.columnOrder);
+  };
+
   return (
-    <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
+    <Grid
+      container
+      item
+      className="board__column"
+      xl={3}
+      xs={3}
+      key={props.key}
+      data-column-order={props.column.order}
+      draggable={true}
+      onDragStart={(event: DragEvent<HTMLElement>) => {
+        dragStartHandler(event);
+      }}
+      onDragEnd={(event: DragEvent<HTMLElement>) => {
+        dragEndHandler(event);
+      }}
+      onDragOver={(event: DragEvent<HTMLElement>) => {
+        dragOverHandler(event);
+      }}
+      onDragLeave={(event: DragEvent<HTMLElement>) => {
+        dragLeaveHandler(event);
+      }}
+      onDrop={(event: SyntheticEvent<HTMLElement>) => {
+        dropHandler(event);
+      }}
+    >
       <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">

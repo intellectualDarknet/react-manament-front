@@ -30,7 +30,7 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
-  useResortColumnArr(currentBoardColumns, currentBoard._id);
+  useResortColumnArr(currentBoardColumns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
   const [formIsShown, setFormIsShown] = useState(false);
@@ -38,6 +38,7 @@ const Board = (): JSX.Element => {
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
+  const [dragColumn, setDragColumn] = useState('');
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -86,6 +87,21 @@ const Board = (): JSX.Element => {
     showColumnTitleInput('');
   };
 
+  const getNewOrder = (dragColumn: string, dropColumn: string): number[] => {
+    const emptyArr = new Array(currentBoardColumnsCount - 1);
+    const newOrder = emptyArr.map((elem, index) => {
+      if (index === +dragColumn) {
+        return dropColumn;
+      } else {
+        if (index === +dropColumn) {
+          return dragColumn;
+        }
+        return elem;
+      }
+    });
+    return newOrder;
+  };
+
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column, index): JSX.Element => {
       let isChosenColumnTitle = false;
@@ -106,6 +122,7 @@ const Board = (): JSX.Element => {
         toggleForm,
         setTaskIsChosen,
         setClickedAddTaskColumnId,
+        setDragColumn,
         showColumnTitleInput,
         changeColumnTitleState,
         changeColumnTitle,

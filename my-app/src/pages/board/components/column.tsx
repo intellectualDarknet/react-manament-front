@@ -21,6 +21,7 @@ function Column(props: {
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
+  setDragColumn: Dispatch<SetStateAction<string>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
@@ -73,6 +74,7 @@ function Column(props: {
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
     console.log('Drag start: ', (event.target as HTMLElement).dataset.columnOrder);
+    props.setDragColumn((event.target as HTMLElement).dataset.columnOrder);
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {};
@@ -85,7 +87,6 @@ function Column(props: {
 
   const dropHandler = (event: SyntheticEvent<HTMLElement>) => {
     event.preventDefault();
-    console.log('Drop: ', event.nativeEvent.composedPath());
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
     console.log('Drop column: ', dropColumn.dataset.columnOrder);

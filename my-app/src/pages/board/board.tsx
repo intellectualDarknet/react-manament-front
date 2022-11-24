@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
+  const addTaskBtnTitle = t('board.addTask');
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
@@ -136,6 +137,7 @@ const Board = (): JSX.Element => {
         key: index,
         isChosenColumnTitle,
         currentColumnTitle,
+        addTaskBtnTitle,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,

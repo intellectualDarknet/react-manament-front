@@ -8,7 +8,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
-import { useTranslation } from 'react-i18next';
 
 function Column(props: {
   userId: string;
@@ -17,6 +16,7 @@ function Column(props: {
   tasks: ITask[];
   key: number;
   isChosenColumnTitle: boolean;
+  addTaskBtnTitle: string;
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
@@ -205,7 +205,7 @@ function Column(props: {
           color="secondary"
           endIcon={<AddIcon />}
         >
-          Add column
+          {props.addTaskBtnTitle}
         </Button>
       </Grid>
       <DeleteModal

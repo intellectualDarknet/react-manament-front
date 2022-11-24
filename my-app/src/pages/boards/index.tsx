@@ -48,7 +48,6 @@ const Boards = () => {
     <Box
       sx={{
         display: 'flex',
-        overflowY: 'scroll',
         height: '100%',
         justifyContent: 'center',
         width: '100%',

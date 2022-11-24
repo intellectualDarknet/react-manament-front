@@ -1,0 +1,9 @@
+@import 'assets/styles/constants.scss';
+
+.start-page {
+  height: $minFullWidth;
+  background-image: url('/assets/img/mainPicture1.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+}

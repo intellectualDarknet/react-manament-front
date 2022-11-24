@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
-import mainPict from './../../assets/img/mainPicture1.jpg';
+import './start.scss';
 import { Link } from 'react-router-dom';
 import { RootState, useAppSelector } from 'store/store';
 import { useTranslation } from 'react-i18next';
@@ -14,17 +14,18 @@ const Start = () => {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   return (
     <Grid
+      className="start-page"
       container
       spacing={5}
       columns={15}
-      sx={{ display: 'flex', justifyContent: 'space-evenly', width: '100%', height: '100%', paddingTop: '5%' }}
+      sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%', margin: 0 }}
     >
-      <Grid item xs={5} sx={{ paddingTop: '2%' }}>
+      <Grid item xs={5} sx={{ marginTop: '5%', marginLeft: '10%', padding: 0 }}>
         <Typography variant="h4" gutterBottom>
           {t('main.heading')}
         </Typography>
         <Typography gutterBottom>{t('main.text')}</Typography>
-        <Box sx={{ width: '70%', display: 'flex', justifyContent: 'space-between', paddingLeft: 5, paddingTop: 2 }}>
+        <Box sx={{ width: '80%', display: 'flex', justifyContent: 'space-between' }}>
           {!userId ? (
             <>
               <Link to="/Sign-in">
@@ -45,9 +46,9 @@ const Start = () => {
           )}
         </Box>
       </Grid>
-      <Grid item xs={4} sx={{ height: '100%' }}>
+      {/*       <Grid item xs={4} sx={{ height: '100%' }}>
         <img src={mainPict} alt="main picture" height="100%" />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

@@ -88,7 +88,6 @@ const Board = (): JSX.Element => {
   };
 
   const getNewOrder = (dragColumn: string, dropColumn: string): number[] => {
-    console.log('Drag and Drop Columns:', dragColumn, dropColumn);
     const straightArr = [];
     for (let i = 0; i < currentBoardColumnsCount; i += 1) {
       straightArr.push(i);
@@ -109,12 +108,9 @@ const Board = (): JSX.Element => {
       setDropColumn('');
     } else {
       newOrder = straightArr.map((elem, index) => {
-        console.log('Elements: ', elem, index);
         return index;
       });
-      console.log('New order-1: ', newOrder);
     }
-    console.log('New order-2: ', newOrder);
     return newOrder;
   };
 
@@ -130,7 +126,6 @@ const Board = (): JSX.Element => {
       if (clickedEditTitleColumnId === column._id) {
         isChosenColumnTitle = true;
       }
-      console.log(column.order);
       return Column({
         userId,
         board: currentBoard,

@@ -74,24 +74,37 @@ function Column(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
-    console.log('Drag start: ', (event.target as HTMLElement).dataset.columnOrder);
     props.setDragColumn((event.target as HTMLElement).dataset.columnOrder);
+    (event.target as HTMLElement).classList.add('board__column_dragged');
   };
 
-  const dragEndHandler = (event: DragEvent<HTMLElement>) => {};
+  const dragEndHandler = (event: DragEvent<HTMLElement>) => {
+    (event.target as HTMLElement).classList.remove('board__column_dragged');
+  };
 
   const dragOverHandler = (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (!dropColumn.classList.contains('board__column_dragged')) {
+      dropColumn.classList.add('board__column_hovered');
+    }
   };
 
-  const dragLeaveHandler = (event: DragEvent<HTMLElement>) => {};
+  const dragLeaveHandler = (event: DragEvent<HTMLElement>) => {
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (!dropColumn.classList.contains('board__column_dragged')) {
+      dropColumn.classList.remove('board__column_hovered');
+    }
+  };
 
   const dropHandler = (event: SyntheticEvent<HTMLElement>) => {
     event.preventDefault();
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
-    console.log('Drop column: ', dropColumn.dataset.columnOrder);
     props.setDropColumn(dropColumn.dataset.columnOrder);
+    dropColumn.classList.remove('board__column_hovered');
   };
 
   return (

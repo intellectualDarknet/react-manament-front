@@ -30,9 +30,11 @@ const lngs = {
 };
 
 function Header() {
-  const trigger = useScrollTrigger();
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+  });
   const { t, i18n } = useTranslation();
-  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer?.userId);
   const dispatch = useAppDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [alignment, setAlignment] = React.useState('web');

@@ -18,7 +18,6 @@ import SnackBar from 'components/snackbar/snackbar';
 
 function App(): JSX.Element {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
-
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>

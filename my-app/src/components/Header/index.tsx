@@ -17,10 +17,12 @@ import { useAppSelector, RootState, useAppDispatch } from 'store/store';
 import { Button } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useTranslation, Trans } from 'react-i18next';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
+import theme from 'components/Theme';
 
 const settings = [
-  { name: 'Sign In', link: 'sign-in' },
-  { name: 'Sign Up', link: 'sign-up' },
+  { name: 'main.signIn', link: 'sign-in' },
+  { name: 'main.signUp', link: 'sign-up' },
 ];
 const lngs = {
   en: { nativeName: 'English' },
@@ -28,8 +30,11 @@ const lngs = {
 };
 
 function Header() {
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+  });
   const { t, i18n } = useTranslation();
-  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer?.userId);
   const dispatch = useAppDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [alignment, setAlignment] = React.useState('web');
@@ -47,7 +52,13 @@ function Header() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: trigger ? theme.palette.primary.light : 'primary',
+        boxShadow: trigger ? 'none' : 'default',
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AssessmentIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -142,12 +153,14 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {userId ? (
-                <Button onClick={() => dispatch(logout())}>Log out</Button>
+                <Button onClick={() => dispatch(logout())}>{t('main.logOut')}</Button>
               ) : (
                 settings.map((setting) => (
                   <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                     <Link to={setting.link}>
-                      <Typography textAlign="center">{setting.name}</Typography>
+                      <Typography textAlign="center">
+                        <Trans i18nKey={setting.name}></Trans>
+                      </Typography>
                     </Link>
                   </MenuItem>
                 ))

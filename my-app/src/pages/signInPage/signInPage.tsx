@@ -11,6 +11,7 @@ import { getIcon } from 'components/icon/icon';
 import { signIn } from 'store/auth/auth-thunks';
 import './signInPage.scss';
 import { IAuthState } from 'store/auth/auth-slice';
+import { useTranslation } from 'react-i18next';
 
 interface ISignInForm {
   login: string;
@@ -18,6 +19,7 @@ interface ISignInForm {
 }
 
 const SignInPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   const dispatch = useAppDispatch();
@@ -57,7 +59,7 @@ const SignInPage = () => {
         sx={{ width: '80%' }}
       >
         <Typography variant="h5" component="h2">
-          Sign in
+          {t('auth.signIn')}
         </Typography>
         <TextValidator
           autoComplete="off"
@@ -66,12 +68,12 @@ const SignInPage = () => {
           required
           fullWidth
           id="login"
-          label="Login"
+          label={t('user.login')}
           name="login"
           autoFocus
           value={formValues.login}
           validators={['required']}
-          errorMessages={['this field is required', 'login is not valid']}
+          errorMessages={[t('user.errorRequired'), t('user.errorSignIn')]}
           disabled={auth.signInLoading}
         />
 
@@ -81,13 +83,13 @@ const SignInPage = () => {
           required
           fullWidth
           name="password"
-          label="Password"
+          label={t('user.password')}
           type="password"
           id="password"
           autoComplete="off"
           value={formValues.password}
           validators={['required']}
-          errorMessages={['this field is required']}
+          errorMessages={[t('user.errorRequired')]}
           disabled={auth.signInLoading}
         />
         <LoadingButton
@@ -101,16 +103,16 @@ const SignInPage = () => {
           loading={auth.signInLoading}
           loadingPosition="center"
         >
-          Sign In
+          {t('auth.signIn')}
         </LoadingButton>
         <div className="signin__bottom">
-          <div className="signin__bottom-reg">Not registered?</div>
+          <div className="signin__bottom-reg">{t('auth.notRegistered')}</div>
           <Link className="signin__bottom-link" to="/sign-up">
-            Sign up
+            {t('auth.signUp')}
           </Link>
-          <div className="signin__bottom-reg">Back to main page</div>
+          <div className="signin__bottom-reg">{t('auth.backToMain')}</div>
           <Link className="signin__bottom-link" to="/">
-            Main page
+            {t('auth.main')}
           </Link>
         </div>
       </ValidatorForm>{' '}

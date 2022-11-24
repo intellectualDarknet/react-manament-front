@@ -26,7 +26,7 @@ export const authInterceptor = (store: StoreType) => {
       setTimeout(() => {
         store.dispatch(hideMessage());
       }, 5000);
-      if (error.status === 401) {
+      if (error.response.status === 401 || error.response.status === 403) {
         store.dispatch(logout());
         localStorage.clear();
       }

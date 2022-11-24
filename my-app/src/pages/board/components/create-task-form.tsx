@@ -7,6 +7,7 @@ import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { IAuthState } from 'store/auth/auth-slice';
 import { createColumn } from 'store/columns/columns-thunks';
 import { createTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskState {
   title: string;
@@ -21,6 +22,7 @@ const CreateTaskForm = (props: {
 }): JSX.Element => {
   // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
   // TODO: Заменить на переменную загрузки таска
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [taskState, setTaskState] = useState<ITaskState>({ title: '', description: '' });
   const onColumnTitleSubmit = async () => {
@@ -75,7 +77,7 @@ const CreateTaskForm = (props: {
         sx={{ width: '80%' }}
       >
         <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
-          Enter new task title
+          {t('board.title', { item: 'task', itemRu: 'задания' })}
         </Typography>
         <TextValidator
           autoComplete="off"

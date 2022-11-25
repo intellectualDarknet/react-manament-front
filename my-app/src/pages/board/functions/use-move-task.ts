@@ -3,7 +3,8 @@ import { ITaskState } from '../board';
 import useChangeTaskOrder from './use-change-task-order';
 
 async function useMoveTask(
-  boardId: string,
+  board: IBoardResponse,
+  columns: IColumnResponse[],
   dragTaskState: ITaskState,
   dropTaskState: ITaskState,
   setDragTask: Dispatch<SetStateAction<ITaskState>>,
@@ -16,7 +17,7 @@ async function useMoveTask(
     dragTask = currentBoardTasks.find((task) => task._id === dragTaskState.taskId);
     dropTask = currentBoardTasks.find((task) => task._id === dropTaskState.taskId);
   }
-  await useChangeTaskOrder(boardId, dragTask, dropTask, setDragTask, setDropTask);
+  await useChangeTaskOrder(board, columns, currentBoardTasks, dragTask, dropTask, setDragTask, setDropTask);
 }
 
 export default useMoveTask;

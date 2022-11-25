@@ -43,7 +43,6 @@ export const updateTaskById = createAsyncThunk<ITask, IUpdateTaskRequest>(
   async function ({ boardId, columnId, taskId, ...rest }, { rejectWithValue }) {
     const fullRest = { ...rest, columnId };
     try {
-      console.log('Endpoint: ', `boards/${boardId}/columns/${columnId}/tasks/${taskId}`, fullRest);
       const data: AxiosResponse = await api.put(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`, fullRest);
       return await data.data;
     } catch (e: unknown) {

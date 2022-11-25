@@ -46,8 +46,6 @@ const Board = (): JSX.Element => {
   useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
 
-  console.log('Sorted tasks: ', sortedTasks);
-
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
@@ -58,7 +56,7 @@ const Board = (): JSX.Element => {
   const [dragTask, setDragTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
   const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
 
-  useMoveTask(currentBoard._id, dragTask, dropTask, setDragTask, setDropTask, currentBoardTasks);
+  useMoveTask(currentBoard, currentBoardColumns, dragTask, dropTask, setDragTask, setDropTask, currentBoardTasks);
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));

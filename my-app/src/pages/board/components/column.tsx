@@ -185,7 +185,6 @@ function Column(props: {
       </Grid>
       <Grid container className="column__tasks-conteiner">
         {tasksOfCurrentColumn.map((elem, index) => {
-          console.log('Column id: ', props.column._id, 'Task order: ', elem.order);
           return Task({
             board: props.board,
             column: props.column,

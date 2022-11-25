@@ -18,36 +18,37 @@ function Task(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
+    event.stopPropagation();
     const dragTask = event.target as HTMLElement;
     props.setDragTask({
       columnId: dragTask.dataset.columnId,
       taskId: dragTask.dataset.taskId,
       taskOrder: dragTask.dataset.taskOrder,
     });
-    // (event.target as HTMLElement).classList.add('board__column_dragged');
-    console.log('Column of the dragged task: ', dragTask.dataset.columnId);
-    console.log('Order of the dragged task: ', dragTask.dataset.taskOrder);
+    dragTask.classList.add('column__task_dragged');
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
-    // (event.target as HTMLElement).classList.remove('board__column_dragged');
+    (event.target as HTMLElement).classList.remove('column__task_dragged');
   };
 
   const dragOverHandler = (event: DragEvent<HTMLElement>) => {
-    // event.preventDefault();
-    // const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
-    // const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
-    // if (!dropColumn.classList.contains('board__column_dragged')) {
-    //   dropColumn.classList.add('board__column_hovered');
-    // }
+    event.preventDefault();
+    event.stopPropagation();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropTask = dropPath.find((task) => task.dataset.taskOrder);
+    if (!dropTask.classList.contains('column__task_dragged')) {
+      dropTask.classList.add('column__task_hovered');
+    }
   };
 
   const dragLeaveHandler = (event: DragEvent<HTMLElement>) => {
-    // const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
-    // const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
-    // if (!dropColumn.classList.contains('board__column_dragged')) {
-    //   dropColumn.classList.remove('board__column_hovered');
-    // }
+    event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropTask = dropPath.find((task) => task.dataset.taskOrder);
+    if (!dropTask.classList.contains('column__task_dragged')) {
+      dropTask.classList.remove('column__task_hovered');
+    }
   };
 
   const dropHandler = (event: DragEvent<HTMLElement>) => {
@@ -59,9 +60,7 @@ function Task(props: {
       taskId: dropTask.dataset.taskId,
       taskOrder: dropTask.dataset.taskOrder,
     });
-    // dropColumn.classList.remove('board__column_hovered');
-    console.log('Column of the dropped task: ', dropTask.dataset.columnId);
-    console.log('Order of the dropped task: ', dropTask.dataset.taskOrder);
+    dropTask.classList.remove('column__task_hovered');
   };
 
   return (

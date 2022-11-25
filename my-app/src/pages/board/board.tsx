@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import useResortColumnArr from './functions/use-resort-column-arr';
 import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
+import useResortTasksArr from './functions/use-resort-tasks-arr';
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
@@ -35,6 +36,7 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
+  useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
 
   console.log('Sorted tasks: ', sortedTasks);
@@ -121,11 +123,7 @@ const Board = (): JSX.Element => {
     return newOrder;
   };
 
-  const useChangeColumns = (): void => {
-    useResortColumnArr(currentBoardColumns, getNewOrder(dragColumn, dropColumn));
-  };
-
-  useChangeColumns();
+  useResortColumnArr(currentBoardColumns, getNewOrder(dragColumn, dropColumn));
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column, index): JSX.Element => {

@@ -34,7 +34,7 @@ const CreateTaskForm = (props: {
         title: taskState.title,
         order: props.sortedTasks.get(props.columnId).length,
         description: taskState.description,
-        userId: 0,
+        userId: 0, // Здесь ошибка типа на бэкенде
         users: [props.userId],
       })
     );

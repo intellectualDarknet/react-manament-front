@@ -15,6 +15,13 @@ import useResortColumnArr from './functions/use-resort-column-arr';
 import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
 import useResortTasksArr from './functions/use-resort-tasks-arr';
+import useMoveTask from './functions/use-move-task';
+
+export interface ITaskState {
+  columnId: string;
+  taskId: string;
+  taskOrder: string;
+}
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
@@ -48,8 +55,10 @@ const Board = (): JSX.Element => {
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
   const [dragColumn, setDragColumn] = useState('');
   const [dropColumn, setDropColumn] = useState('');
-  const [dragTask, setDragTask] = useState({ columnId: '', taskOrder: '' });
-  const [dropTask, setDropTask] = useState({ columnId: '', taskOrder: '' });
+  const [dragTask, setDragTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
+  const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
+
+  useMoveTask(currentBoard._id, dragTask, dropTask, setDragTask, setDropTask, currentBoardTasks);
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));

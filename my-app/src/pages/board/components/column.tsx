@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
+import { ITaskState } from '../board';
 
 function Column(props: {
   userId: string;
@@ -24,8 +25,8 @@ function Column(props: {
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
   setDragColumn: Dispatch<SetStateAction<string>>;
   setDropColumn: Dispatch<SetStateAction<string>>;
-  setDragTask: Dispatch<SetStateAction<{ columnId: string; taskOrder: string }>>;
-  setDropTask: Dispatch<SetStateAction<{ columnId: string; taskOrder: string }>>;
+  setDragTask: Dispatch<SetStateAction<ITaskState>>;
+  setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;

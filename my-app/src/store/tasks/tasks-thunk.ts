@@ -41,8 +41,10 @@ export const getTaskById = createAsyncThunk<ITask, IGetTasksRequest>(
 export const updateTaskById = createAsyncThunk<ITask, IUpdateTaskRequest>(
   'updateTaskById',
   async function ({ boardId, columnId, taskId, ...rest }, { rejectWithValue }) {
+    const fullRest = { ...rest, columnId };
     try {
-      const data: AxiosResponse = await api.put(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`, rest);
+      console.log('Endpoint: ', `boards/${boardId}/columns/${columnId}/tasks/${taskId}`, fullRest);
+      const data: AxiosResponse = await api.put(`boards/${boardId}/columns/${columnId}/tasks/${taskId}`, fullRest);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);

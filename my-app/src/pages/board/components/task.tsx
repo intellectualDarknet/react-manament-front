@@ -2,14 +2,15 @@ import React, { Dispatch, DragEvent, SetStateAction } from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import DeleteModal from 'components/deleteModal';
 import DeleteTaskButton from './DeleteTaskButton';
+import { ITaskState } from '../board';
 
 function Task(props: {
   board: IBoardResponse;
   column: IColumnResponse;
   task: ITask;
   key: number;
-  setDragTask: Dispatch<SetStateAction<{ columnId: string; taskOrder: string }>>;
-  setDropTask: Dispatch<SetStateAction<{ columnId: string; taskOrder: string }>>;
+  setDragTask: Dispatch<SetStateAction<ITaskState>>;
+  setDropTask: Dispatch<SetStateAction<ITaskState>>;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
 }): JSX.Element {
   const deleteThisTask = () => {
@@ -17,11 +18,15 @@ function Task(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
-    const task = event.target as HTMLElement;
-    props.setDragTask({ columnId: task.dataset.columnId, taskOrder: task.dataset.taskOrder });
+    const dragTask = event.target as HTMLElement;
+    props.setDragTask({
+      columnId: dragTask.dataset.columnId,
+      taskId: dragTask.dataset.taskId,
+      taskOrder: dragTask.dataset.taskOrder,
+    });
     // (event.target as HTMLElement).classList.add('board__column_dragged');
-    console.log('Column of the dragged task', task.dataset.columnId);
-    console.log('Order of the dragged task', task.dataset.taskOrder);
+    console.log('Column of the dragged task: ', dragTask.dataset.columnId);
+    console.log('Order of the dragged task: ', dragTask.dataset.taskOrder);
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
@@ -46,11 +51,17 @@ function Task(props: {
   };
 
   const dropHandler = (event: DragEvent<HTMLElement>) => {
-    // event.preventDefault();
-    // const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
-    // const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
-    // props.setDropColumn(dropColumn.dataset.columnOrder);
+    event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropTask = dropPath.find((task) => task.dataset.taskOrder);
+    props.setDropTask({
+      columnId: dropTask.dataset.columnId,
+      taskId: dropTask.dataset.taskId,
+      taskOrder: dropTask.dataset.taskOrder,
+    });
     // dropColumn.classList.remove('board__column_hovered');
+    console.log('Column of the dropped task: ', dropTask.dataset.columnId);
+    console.log('Order of the dropped task: ', dropTask.dataset.taskOrder);
   };
 
   return (
@@ -60,6 +71,7 @@ function Task(props: {
       key={props.key}
       draggable={true}
       data-column-id={props.column._id}
+      data-task-id={props.task._id}
       data-task-order={props.task.order}
       onDragStart={(event: DragEvent<HTMLElement>) => {
         dragStartHandler(event);

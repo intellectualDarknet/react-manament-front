@@ -48,6 +48,8 @@ const Board = (): JSX.Element => {
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
   const [dragColumn, setDragColumn] = useState('');
   const [dropColumn, setDropColumn] = useState('');
+  const [dragTask, setDragTask] = useState({ columnId: '', taskOrder: '' });
+  const [dropTask, setDropTask] = useState({ columnId: '', taskOrder: '' });
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -147,6 +149,8 @@ const Board = (): JSX.Element => {
         setClickedAddTaskColumnId,
         setDragColumn,
         setDropColumn,
+        setDragTask,
+        setDropTask,
         showColumnTitleInput,
         changeColumnTitleState,
         changeColumnTitle,

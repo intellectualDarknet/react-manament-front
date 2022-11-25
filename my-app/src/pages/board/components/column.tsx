@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEvent, FormEvent, SetStateAction, SyntheticEvent } from 'react';
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
 import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
@@ -24,26 +24,19 @@ function Column(props: {
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
   setDragColumn: Dispatch<SetStateAction<string>>;
   setDropColumn: Dispatch<SetStateAction<string>>;
+  setDragTask: Dispatch<SetStateAction<{ columnId: string; taskOrder: string }>>;
+  setDropTask: Dispatch<SetStateAction<{ columnId: string; taskOrder: string }>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
   changeColumnTitle: (column: IColumnResponse) => void;
 }): JSX.Element {
-  // TODO: Вернуть эту функцию, если в ней появится необходимость. Пока она вызывает ошибку
-  // const sortTask = (tasks: ITask[]): ITask[] => {
-  //   const sortedTasks = tasks.sort((a, b) => b.order - a.order);
-  //   return sortedTasks;
-  // };
-
-  // const sortedTasks = sortTask(props.tasks);
-
   const filterTask = (tasks: ITask[]): ITask[] => {
     const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
     return tasksOfCurrentColumn;
   };
 
   const tasksOfCurrentColumn = filterTask(props.tasks);
-  const tasksOfCurrentColumnCount = tasksOfCurrentColumn.length;
 
   const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);
@@ -101,7 +94,7 @@ function Column(props: {
     }
   };
 
-  const dropHandler = (event: SyntheticEvent<HTMLElement>) => {
+  const dropHandler = (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
@@ -131,7 +124,7 @@ function Column(props: {
       onDragLeave={(event: DragEvent<HTMLElement>) => {
         dragLeaveHandler(event);
       }}
-      onDrop={(event: SyntheticEvent<HTMLElement>) => {
+      onDrop={(event: DragEvent<HTMLElement>) => {
         dropHandler(event);
       }}
     >
@@ -197,6 +190,8 @@ function Column(props: {
             column: props.column,
             task: elem,
             key: index,
+            setDragTask: props.setDragTask,
+            setDropTask: props.setDropTask,
             deleteTaskByButtonPress: props.deleteTaskByButtonPress,
           });
         })}

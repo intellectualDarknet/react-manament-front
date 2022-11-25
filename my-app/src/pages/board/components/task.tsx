@@ -15,7 +15,7 @@ function Task(props: {
   };
 
   return (
-    <Paper elevation={2} className="column__task" key={props.key}>
+    <Paper elevation={2} className="column__task" key={props.key} draggable={true}>
       <Grid container item className="task__description-conteiner" xl={10} xs={10}>
         <Typography className="task__description" variant="h6">
           {props.task.title}

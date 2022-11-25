@@ -1,14 +1,13 @@
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction, SyntheticEvent } from 'react';
+import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import Task from './task';
-import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
-import { useTranslation } from 'react-i18next';
 
 function Column(props: {
   userId: string;
@@ -17,11 +16,14 @@ function Column(props: {
   tasks: ITask[];
   key: number;
   isChosenColumnTitle: boolean;
+  addTaskBtnTitle: string;
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
+  setDragColumn: Dispatch<SetStateAction<string>>;
+  setDropColumn: Dispatch<SetStateAction<string>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
@@ -72,8 +74,66 @@ function Column(props: {
     props.showColumnTitleInput('');
   };
 
+  const dragStartHandler = (event: DragEvent<HTMLElement>) => {
+    props.setDragColumn((event.target as HTMLElement).dataset.columnOrder);
+    (event.target as HTMLElement).classList.add('board__column_dragged');
+  };
+
+  const dragEndHandler = (event: DragEvent<HTMLElement>) => {
+    (event.target as HTMLElement).classList.remove('board__column_dragged');
+  };
+
+  const dragOverHandler = (event: DragEvent<HTMLElement>) => {
+    event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (!dropColumn.classList.contains('board__column_dragged')) {
+      dropColumn.classList.add('board__column_hovered');
+    }
+  };
+
+  const dragLeaveHandler = (event: DragEvent<HTMLElement>) => {
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (!dropColumn.classList.contains('board__column_dragged')) {
+      dropColumn.classList.remove('board__column_hovered');
+    }
+  };
+
+  const dropHandler = (event: SyntheticEvent<HTMLElement>) => {
+    event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    props.setDropColumn(dropColumn.dataset.columnOrder);
+    dropColumn.classList.remove('board__column_hovered');
+  };
+
   return (
-    <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
+    <Grid
+      container
+      item
+      className="board__column"
+      xl={3}
+      xs={3}
+      key={props.key}
+      data-column-order={props.column.order}
+      draggable={true}
+      onDragStart={(event: DragEvent<HTMLElement>) => {
+        dragStartHandler(event);
+      }}
+      onDragEnd={(event: DragEvent<HTMLElement>) => {
+        dragEndHandler(event);
+      }}
+      onDragOver={(event: DragEvent<HTMLElement>) => {
+        dragOverHandler(event);
+      }}
+      onDragLeave={(event: DragEvent<HTMLElement>) => {
+        dragLeaveHandler(event);
+      }}
+      onDrop={(event: SyntheticEvent<HTMLElement>) => {
+        dropHandler(event);
+      }}
+    >
       <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">
@@ -145,7 +205,7 @@ function Column(props: {
           color="secondary"
           endIcon={<AddIcon />}
         >
-          Add column
+          {props.addTaskBtnTitle}
         </Button>
       </Grid>
       <DeleteModal

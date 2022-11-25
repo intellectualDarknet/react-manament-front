@@ -6,15 +6,17 @@ import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
 import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
-import { getTasksByBoardId, createTask, deleteTask } from 'store/tasks/tasks-thunk';
+import { getTasksByBoardId, deleteTask } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
+import useResortColumnArr from './functions/use-resort-column-arr';
 import { useTranslation } from 'react-i18next';
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
+  const addTaskBtnTitle = t('board.addTask');
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
@@ -23,7 +25,7 @@ const Board = (): JSX.Element => {
     await dispatch(getTasksByBoardId(boardId));
   }
 
-  useEffect(() => {
+  useEffect((): void => {
     getData();
   }, []);
 
@@ -33,13 +35,13 @@ const Board = (): JSX.Element => {
   const currentBoardColumnsCount = currentBoardColumns.length;
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
 
-  // TODO: Сделать перераспределение порядка после удаления колонки
-
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
+  const [dragColumn, setDragColumn] = useState('');
+  const [dropColumn, setDropColumn] = useState('');
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -88,8 +90,41 @@ const Board = (): JSX.Element => {
     showColumnTitleInput('');
   };
 
-  const renderAllColumns = (): JSX.Element[] =>
-    currentBoardColumns.map((column, index): JSX.Element => {
+  const getNewOrder = (dragColumn: string, dropColumn: string): number[] => {
+    const straightArr = [];
+    for (let i = 0; i < currentBoardColumnsCount; i += 1) {
+      straightArr.push(i);
+    }
+    let newOrder: number[];
+    if (dragColumn && dropColumn) {
+      newOrder = straightArr.map((elem, index) => {
+        if (index === +dragColumn) {
+          return +dropColumn;
+        } else {
+          if (index === +dropColumn) {
+            return +dragColumn;
+          }
+          return index;
+        }
+      });
+      setDragColumn('');
+      setDropColumn('');
+    } else {
+      newOrder = straightArr.map((elem, index) => {
+        return index;
+      });
+    }
+    return newOrder;
+  };
+
+  const useChangeColumns = (): void => {
+    useResortColumnArr(currentBoardColumns, getNewOrder(dragColumn, dropColumn));
+  };
+
+  useChangeColumns();
+
+  const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
+    boardColumns.map((column, index): JSX.Element => {
       let isChosenColumnTitle = false;
       if (clickedEditTitleColumnId === column._id) {
         isChosenColumnTitle = true;
@@ -102,11 +137,14 @@ const Board = (): JSX.Element => {
         key: index,
         isChosenColumnTitle,
         currentColumnTitle,
+        addTaskBtnTitle,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
         setTaskIsChosen,
         setClickedAddTaskColumnId,
+        setDragColumn,
+        setDropColumn,
         showColumnTitleInput,
         changeColumnTitleState,
         changeColumnTitle,
@@ -166,7 +204,7 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : 'No board chosen'}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns()}
+          {renderAllColumns(currentBoardColumns)}
         </Grid>
       </Grid>
     </Grid>

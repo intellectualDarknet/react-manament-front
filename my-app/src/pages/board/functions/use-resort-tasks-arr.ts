@@ -12,9 +12,12 @@ async function useResortTasksArr(board: IBoardResponse, columns: IColumnResponse
   columns.forEach((column) => {
     const tasksOfCurrentColumn = sortedTasks.get(column._id);
     const sortedTasksOfCurrentColumn = sortArr(tasksOfCurrentColumn);
+    console.log('Сортируем таски, согласно порядку order: ', sortedTasksOfCurrentColumn);
     sortedTasksOfCurrentColumn.forEach((task, index) => {
       if (task.order !== index) {
         orderHasChanged = true;
+        console.log('Task order! ', task.order);
+        console.log('Index! ', index);
       }
       newOrder.push({
         _id: task._id,
@@ -24,6 +27,7 @@ async function useResortTasksArr(board: IBoardResponse, columns: IColumnResponse
     });
   });
   if (newOrder && orderHasChanged) {
+    console.log('Tasks was sorted!');
     await dispatch(updateSetOfTasks(newOrder));
     await dispatch(getTasksByBoardId(board._id));
   }

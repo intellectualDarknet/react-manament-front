@@ -11,11 +11,14 @@ async function useMoveTask(
   setDropTask: Dispatch<SetStateAction<ITaskState>>,
   currentBoardTasks: ITask[]
 ): Promise<void> {
+  console.log('Все такси доски: ', currentBoardTasks);
   let dragTask: ITask;
   let dropTask: ITask;
-  if (dragTaskState && dropTaskState && setDragTask && setDropTask && currentBoardTasks) {
+  if (dragTaskState.taskId && dropTaskState.taskId && currentBoardTasks) {
     dragTask = currentBoardTasks.find((task) => task._id === dragTaskState.taskId);
     dropTask = currentBoardTasks.find((task) => task._id === dropTaskState.taskId);
+    console.log('D&d tasks: ', dragTask, dropTask);
+    console.log('D&d state: ', dragTaskState, dropTaskState);
   }
   await useChangeTaskOrder(board, columns, currentBoardTasks, dragTask, dropTask, setDragTask, setDropTask);
 }

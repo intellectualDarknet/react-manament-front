@@ -28,6 +28,7 @@ async function useChangeTaskOrder(
         userId: 0, // Здесь ошибка в типе на бэкенде
         users: dragTask.users,
       };
+      console.log('changeTaskOrderRequest', changeTaskOrderRequest);
       await dispatch(updateTaskById(changeTaskOrderRequest));
       setDragTask({ columnId: '', taskId: '', taskOrder: '' });
       setDropTask({ columnId: '', taskId: '', taskOrder: '' });

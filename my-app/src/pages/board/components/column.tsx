@@ -14,7 +14,7 @@ function Column(props: {
   userId: string;
   board: IBoardResponse;
   column: IColumnResponse;
-  tasks: ITask[];
+  tasks: Map<string, ITask[]>;
   key: number;
   isChosenColumnTitle: boolean;
   addTaskBtnTitle: string;
@@ -37,7 +37,7 @@ function Column(props: {
     return tasksOfCurrentColumn;
   };
 
-  const tasksOfCurrentColumn = filterTask(props.tasks);
+  const tasksOfCurrentColumn = filterTask(props.tasks.get(props.column._id));
 
   const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);

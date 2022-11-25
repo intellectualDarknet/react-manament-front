@@ -45,6 +45,7 @@ const Board = (): JSX.Element => {
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
   useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
+  console.log('!!!!sortedTasks!!!! ', sortedTasks);
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -144,7 +145,7 @@ const Board = (): JSX.Element => {
         userId,
         board: currentBoard,
         column,
-        tasks: currentBoardTasks,
+        tasks: sortedTasks,
         key: index,
         isChosenColumnTitle,
         currentColumnTitle,

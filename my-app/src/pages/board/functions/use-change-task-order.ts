@@ -31,7 +31,7 @@ async function useChangeTaskOrder(
       setDropTask({ columnId: '', taskId: '', taskOrder: '' });
       await dispatch(getTasksByBoardId(board._id));
     }
-  } else if (dragTask && !dropTask) {
+  } else if (dragTask && !dropTask && dropColumn.columnId) {
     const changeTaskOrderRequest = {
       title: dragTask.title,
       order: -0.5,
@@ -44,6 +44,7 @@ async function useChangeTaskOrder(
     };
     await dispatch(updateTaskById(changeTaskOrderRequest));
     setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+    setDropTask({ columnId: '', taskId: '', taskOrder: '' });
     setDropColumn({ columnId: '', columnOrder: '' });
     await dispatch(getTasksByBoardId(board._id));
   }

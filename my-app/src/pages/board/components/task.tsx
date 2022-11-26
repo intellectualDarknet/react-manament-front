@@ -20,16 +20,17 @@ function Task(props: {
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
     event.stopPropagation();
     const dragTask = event.target as HTMLElement;
+    dragTask.classList.add('column__task_dragged');
+  };
+
+  const dragEndHandler = (event: DragEvent<HTMLElement>) => {
+    const dragTask = event.target as HTMLElement;
     props.setDragItem({
       type: DragItemType.TASK,
       columnId: dragTask.dataset.columnId,
       taskId: dragTask.dataset.taskId,
       order: dragTask.dataset.taskOrder,
     });
-    dragTask.classList.add('column__task_dragged');
-  };
-
-  const dragEndHandler = (event: DragEvent<HTMLElement>) => {
     (event.target as HTMLElement).classList.remove('column__task_dragged');
   };
 

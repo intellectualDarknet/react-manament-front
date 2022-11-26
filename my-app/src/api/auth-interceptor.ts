@@ -19,10 +19,15 @@ export const authInterceptor = (store: StoreType) => {
   api.interceptors.response.use(
     (next) => {
       store.dispatch(showMessage({ open: true, message: next.statusText, severity: 'success' }));
+      setTimeout(() => {
+        store.dispatch(hideMessage());
+      }, 5000);
       return Promise.resolve(next);
     },
     (error) => {
-      store.dispatch(showMessage({ open: true, message: error.message, severity: 'error' }));
+      store.dispatch(
+        showMessage({ open: true, message: error?.response.data.message || error.message, severity: 'error' })
+      );
       setTimeout(() => {
         store.dispatch(hideMessage());
       }, 5000);

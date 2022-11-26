@@ -47,9 +47,11 @@ const Board = (): JSX.Element => {
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
-    const boardId = store.getState().rootReducer.boardsReducer.boardById._id;
-    await dispatch(getColumnsInBoard(boardId));
-    await dispatch(getTasksByBoardId(boardId));
+    const boardId = store.getState().rootReducer.boardsReducer.boardById?._id;
+    if (boardId) {
+      await dispatch(getColumnsInBoard(boardId));
+      await dispatch(getTasksByBoardId(boardId));
+    }
   }
 
   useEffect((): void => {

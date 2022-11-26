@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
-import { ITaskState } from '../board';
+import { DragItemType, IDragItemState, ITaskState } from '../board';
 
 function Column(props: {
   userId: string;
@@ -23,9 +23,8 @@ function Column(props: {
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
-  setDragColumn: Dispatch<SetStateAction<string>>;
+  setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropColumn: Dispatch<SetStateAction<string>>;
-  setDragTask: Dispatch<SetStateAction<ITaskState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
@@ -70,7 +69,12 @@ function Column(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
-    props.setDragColumn((event.target as HTMLElement).dataset.columnOrder);
+    props.setDragItem({
+      type: DragItemType.COLUMN,
+      columnId: (event.target as HTMLElement).dataset.columnId,
+      taskId: '',
+      order: (event.target as HTMLElement).dataset.columnOrder,
+    });
     (event.target as HTMLElement).classList.add('board__column_dragged');
   };
 
@@ -97,10 +101,14 @@ function Column(props: {
 
   const dropHandler = (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
+    console.log('Column drop!');
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
-    props.setDropColumn(dropColumn.dataset.columnOrder);
-    dropColumn.classList.remove('board__column_hovered');
+    if (dropColumn) {
+      console.log('Column drop!', dropColumn);
+      props.setDropColumn(dropColumn.dataset.columnOrder);
+      dropColumn.classList.remove('board__column_hovered');
+    }
   };
 
   return (
@@ -111,6 +119,7 @@ function Column(props: {
       xl={3}
       xs={3}
       key={props.key}
+      data-column-id={props.column._id}
       data-column-order={props.column.order}
       draggable={true}
       onDragStart={(event: DragEvent<HTMLElement>) => {
@@ -190,7 +199,7 @@ function Column(props: {
             column: props.column,
             task: elem,
             key: index,
-            setDragTask: props.setDragTask,
+            setDragItem: props.setDragItem,
             setDropTask: props.setDropTask,
             deleteTaskByButtonPress: props.deleteTaskByButtonPress,
           });

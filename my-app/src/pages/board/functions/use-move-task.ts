@@ -1,26 +1,25 @@
 import { Dispatch, SetStateAction } from 'react';
-import { ITaskState } from '../board';
+import { DragItemType, IDragItemState, ITaskState } from '../board';
 import useChangeTaskOrder from './use-change-task-order';
 
 async function useMoveTask(
   board: IBoardResponse,
-  columns: IColumnResponse[],
-  dragTaskState: ITaskState,
+  dragItem: IDragItemState,
   dropTaskState: ITaskState,
-  setDragTask: Dispatch<SetStateAction<ITaskState>>,
+  setDragItem: Dispatch<SetStateAction<IDragItemState>>,
   setDropTask: Dispatch<SetStateAction<ITaskState>>,
   currentBoardTasks: ITask[]
 ): Promise<void> {
   console.log('Все такси доски: ', currentBoardTasks);
   let dragTask: ITask;
   let dropTask: ITask;
-  if (dragTaskState.taskId && dropTaskState.taskId && currentBoardTasks) {
-    dragTask = currentBoardTasks.find((task) => task._id === dragTaskState.taskId);
+  if (dragItem.type === DragItemType.TASK && dropTaskState.taskId && currentBoardTasks) {
+    dragTask = currentBoardTasks.find((task) => task._id === dragItem.taskId);
     dropTask = currentBoardTasks.find((task) => task._id === dropTaskState.taskId);
     console.log('D&d tasks: ', dragTask, dropTask);
-    console.log('D&d state: ', dragTaskState, dropTaskState);
+    console.log('D&d state: ', dragItem, dropTaskState);
   }
-  await useChangeTaskOrder(board, columns, currentBoardTasks, dragTask, dropTask, setDragTask, setDropTask);
+  await useChangeTaskOrder(board, dragTask, dropTask, setDragItem, setDropTask);
 }
 
 export default useMoveTask;

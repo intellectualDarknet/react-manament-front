@@ -2,14 +2,14 @@ import React, { Dispatch, DragEvent, SetStateAction } from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import DeleteModal from 'components/deleteModal';
 import DeleteTaskButton from './DeleteTaskButton';
-import { ITaskState } from '../board';
+import { DragItemType, IDragItemState, ITaskState } from '../board';
 
 function Task(props: {
   board: IBoardResponse;
   column: IColumnResponse;
   task: ITask;
   key: number;
-  setDragTask: Dispatch<SetStateAction<ITaskState>>;
+  setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
 }): JSX.Element {
@@ -20,10 +20,11 @@ function Task(props: {
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
     event.stopPropagation();
     const dragTask = event.target as HTMLElement;
-    props.setDragTask({
+    props.setDragItem({
+      type: DragItemType.TASK,
       columnId: dragTask.dataset.columnId,
       taskId: dragTask.dataset.taskId,
-      taskOrder: dragTask.dataset.taskOrder,
+      order: dragTask.dataset.taskOrder,
     });
     dragTask.classList.add('column__task_dragged');
   };
@@ -52,15 +53,19 @@ function Task(props: {
   };
 
   const dropHandler = (event: DragEvent<HTMLElement>) => {
+    console.log('Task drop!');
     event.preventDefault();
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    console.log('dropPath', dropPath);
     const dropTask = dropPath.find((task) => task.dataset.taskOrder);
-    props.setDropTask({
-      columnId: dropTask.dataset.columnId,
-      taskId: dropTask.dataset.taskId,
-      taskOrder: dropTask.dataset.taskOrder,
-    });
-    dropTask.classList.remove('column__task_hovered');
+    if (dropTask) {
+      props.setDropTask({
+        columnId: dropTask.dataset.columnId,
+        taskId: dropTask.dataset.taskId,
+        taskOrder: dropTask.dataset.taskOrder,
+      });
+      dropTask.classList.remove('column__task_hovered');
+    }
   };
 
   return (

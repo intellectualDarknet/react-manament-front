@@ -1,18 +1,14 @@
 import { useDispatch } from 'react-redux';
 import { getTasksByBoardId, updateTaskById } from 'store/tasks/tasks-thunk';
 import { Dispatch, SetStateAction } from 'react';
-import { ITaskState } from '../board';
+import { DragItemType, IDragItemState, ITaskState } from '../board';
 import store from 'store/store';
-import useResortTasksArr from './use-resort-tasks-arr';
-import { getColumnsInBoard } from 'store/columns/columns-thunks';
 
 async function useChangeTaskOrder(
   board: IBoardResponse,
-  columns: IColumnResponse[],
-  currentBoardTasks: ITask[],
   dragTask: ITask | undefined,
   dropTask: ITask | undefined,
-  setDragTask: Dispatch<SetStateAction<ITaskState>>,
+  setDragItem: Dispatch<SetStateAction<IDragItemState>>,
   setDropTask: Dispatch<SetStateAction<ITaskState>>
 ): Promise<void> {
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -30,7 +26,7 @@ async function useChangeTaskOrder(
       };
       console.log('changeTaskOrderRequest', changeTaskOrderRequest);
       await dispatch(updateTaskById(changeTaskOrderRequest));
-      setDragTask({ columnId: '', taskId: '', taskOrder: '' });
+      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
       setDropTask({ columnId: '', taskId: '', taskOrder: '' });
       await dispatch(getTasksByBoardId(board._id));
     }

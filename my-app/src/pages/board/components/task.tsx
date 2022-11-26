@@ -53,10 +53,8 @@ function Task(props: {
   };
 
   const dropHandler = (event: DragEvent<HTMLElement>) => {
-    console.log('Task drop!');
     event.preventDefault();
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
-    console.log('dropPath', dropPath);
     const dropTask = dropPath.find((task) => task.dataset.taskOrder);
     if (dropTask) {
       props.setDropTask({

@@ -23,6 +23,11 @@ export interface ITaskState {
   taskOrder: string;
 }
 
+export interface IColumnState {
+  columnId: string;
+  columnOrder: string;
+}
+
 export enum DragItemType {
   COLUMN = 'column',
   TASK = 'task',
@@ -58,7 +63,6 @@ const Board = (): JSX.Element => {
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
   useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
-  console.log('!!!!sortedTasks!!!! ', sortedTasks);
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -66,10 +70,10 @@ const Board = (): JSX.Element => {
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
   const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
-  const [dropColumn, setDropColumn] = useState('');
+  const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
   const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
 
-  useMoveTask(currentBoard, dragItem, dropTask, setDragItem, setDropTask, currentBoardTasks);
+  useMoveTask(currentBoard, dragItem, dropTask, dropColumn, setDragItem, setDropColumn, setDropTask, currentBoardTasks);
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -118,29 +122,22 @@ const Board = (): JSX.Element => {
     showColumnTitleInput('');
   };
 
-  const getNewOrder = (dragItem: IDragItemState, dropColumn: string): number[] => {
-    let newOrder: number[];
-    const straightArr = [];
+  const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
+    let newOrder = [];
     for (let i = 0; i < currentBoardColumnsCount; i += 1) {
-      straightArr.push(i);
+      newOrder.push(i);
     }
-    if (dragItem.type === DragItemType.COLUMN && dropColumn) {
-      newOrder = straightArr.map((elem, index) => {
+    if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
+      newOrder = newOrder.map((elem, index) => {
         if (index === +dragItem.order) {
-          return +dropColumn;
-        } else {
-          if (index === +dropColumn) {
-            return +dragItem.order;
-          }
-          return index;
+          return +dropColumn.columnOrder;
+        } else if (index === +dropColumn.columnOrder) {
+          return +dragItem.order;
         }
-      });
-      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
-      setDropColumn('');
-    } else {
-      newOrder = straightArr.map((elem, index) => {
         return index;
       });
+      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+      setDropColumn({ columnId: '', columnOrder: '' });
     }
     return newOrder;
   };

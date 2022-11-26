@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
-import { DragItemType, IDragItemState, ITaskState } from '../board';
+import { DragItemType, IColumnState, IDragItemState, ITaskState } from '../board';
 
 function Column(props: {
   userId: string;
@@ -24,7 +24,7 @@ function Column(props: {
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
-  setDropColumn: Dispatch<SetStateAction<string>>;
+  setDropColumn: Dispatch<SetStateAction<IColumnState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
@@ -101,12 +101,10 @@ function Column(props: {
 
   const dropHandler = (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
-    console.log('Column drop!');
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
     if (dropColumn) {
-      console.log('Column drop!', dropColumn);
-      props.setDropColumn(dropColumn.dataset.columnOrder);
+      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
       dropColumn.classList.remove('board__column_hovered');
     }
   };

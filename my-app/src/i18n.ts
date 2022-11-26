@@ -50,6 +50,7 @@ i18next
             title: 'Enter new {{item}} title',
             createColumn: 'Create column',
             deleteColumnMessage: 'Are you sure, you want to delete this {{item}}?',
+            unchoisen: '☚ Choose a bord there and come back!',
           },
           boards: {
             edit: 'Edit board name',
@@ -120,6 +121,7 @@ i18next
             title: 'Введите новый заголовок {{itemRu}}',
             createColumn: 'Создать колонку',
             deleteColumnMessage: 'Are you sure, you want to delete this {{itemRu}}?',
+            unchoisen: '☚ Выберите доску там и возвращайтесь!',
           },
           boards: {
             edit: 'Редактировать доску',

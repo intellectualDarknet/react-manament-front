@@ -226,7 +226,7 @@ const Board = (): JSX.Element => {
           )}
         </Grid>
         <Typography className="board__title" variant="h4">
-          {currentBoard ? currentBoard.title : 'No board chosen'}
+          {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
         <Grid container className="board__columns-layout">
           {renderAllColumns(currentBoardColumns)}

@@ -43,7 +43,15 @@ export interface IDragItemState {
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
-  const addTaskBtnTitle = t('board.addTask');
+  const columnTranslation = {
+    columnNewTitle: t('board.columnNewTitle'),
+    changeTitle: t('board.changeTitle'),
+    columnDeleteMessage: t('board.deleteMessage', { item: 'column', itemRu: 'колонку' }),
+  };
+  const taskTranslation = {
+    addTaskBtnTitle: t('board.addTask'),
+    taskDeleteMessage: t('board.deleteMessage', { item: 'task', itemRu: 'задачу' }),
+  };
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
@@ -65,6 +73,36 @@ const Board = (): JSX.Element => {
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
   useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
+  const allColumnsIsGetting = useSelector((state: RootState) => state.rootReducer.columnsReducer.columnsLoading);
+  const allColumnsIsUpdating = useSelector(
+    (state: RootState) => state.rootReducer.columnsReducer.updateSetOfColumnsLoading
+  );
+  const oneColumnIsUpdating = useSelector(
+    (state: RootState) => state.rootReducer.columnsReducer.updateColumnByIdLoading
+  );
+  const oneColumnIsDeleting = useSelector((state: RootState) => state.rootReducer.columnsReducer.deleteColumnLoading);
+  const allTasksIsGetting = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardIdLoading);
+  const allTasksIsUpdating = useSelector((state: RootState) => state.rootReducer.tasksReducer.updateTasksByIdsLoading);
+  const oneTaskIsDeleting = useSelector((state: RootState) => state.rootReducer.tasksReducer.deleteTasksLoading);
+  const isLoading =
+    allColumnsIsGetting ||
+    oneColumnIsUpdating ||
+    allColumnsIsUpdating ||
+    oneColumnIsDeleting ||
+    allTasksIsGetting ||
+    allTasksIsUpdating ||
+    oneTaskIsDeleting;
+  console.log(
+    allColumnsIsGetting,
+    oneColumnIsUpdating,
+    allColumnsIsUpdating,
+    oneColumnIsDeleting,
+    allTasksIsGetting,
+    allTasksIsUpdating,
+    oneTaskIsDeleting,
+    'isLoding: ',
+    isLoading
+  );
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -160,7 +198,8 @@ const Board = (): JSX.Element => {
         key: index,
         isChosenColumnTitle,
         currentColumnTitle,
-        addTaskBtnTitle,
+        columnTranslation,
+        taskTranslation,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
@@ -229,7 +268,7 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns(currentBoardColumns)}
+          {isLoading ? 'Loading...' : renderAllColumns(currentBoardColumns)}
         </Grid>
       </Grid>
     </Grid>

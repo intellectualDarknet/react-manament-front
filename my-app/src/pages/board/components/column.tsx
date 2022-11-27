@@ -3,7 +3,6 @@ import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
@@ -17,7 +16,12 @@ function Column(props: {
   tasks: Map<string, ITask[]>;
   key: number;
   isChosenColumnTitle: boolean;
-  addTaskBtnTitle: string;
+  columnTranslation: {
+    columnNewTitle: string;
+    changeTitle: string;
+    columnDeleteMessage: string;
+  };
+  taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
@@ -155,7 +159,7 @@ function Column(props: {
                 required
                 fullWidth
                 id="column-title"
-                label="columnTitle"
+                label={props.columnTranslation.columnNewTitle}
                 name="column-title"
                 autoFocus
                 value={props.currentColumnTitle}
@@ -163,16 +167,9 @@ function Column(props: {
                 errorMessages={['this field is required', 'column title is not valid']}
               />
               <ButtonGroup className="title-form__btn-group">
-                <LoadingButton
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  // disabled={auth.signInLoading}
-                  // loading={auth.signInLoading}
-                  loadingPosition="center"
-                >
-                  Change title
-                </LoadingButton>
+                <Button variant="contained" color="primary" type="button">
+                  {props.columnTranslation.changeTitle}
+                </Button>
                 <Button
                   className="column__close-title-btn"
                   onClick={handleColumnTitleInputClose}
@@ -197,6 +194,7 @@ function Column(props: {
             column: props.column,
             task: elem,
             key: index,
+            taskTranslation: props.taskTranslation,
             setDragItem: props.setDragItem,
             setDropTask: props.setDropTask,
             deleteTaskByButtonPress: props.deleteTaskByButtonPress,
@@ -209,11 +207,11 @@ function Column(props: {
           color="secondary"
           endIcon={<AddIcon />}
         >
-          {props.addTaskBtnTitle}
+          {props.taskTranslation.addTaskBtnTitle}
         </Button>
       </Grid>
       <DeleteModal
-        message="Are you sure, you want to delete this column?"
+        message={props.columnTranslation.columnDeleteMessage}
         submit={deleteThisColumn}
         deleteButton={DeleteColumnButton}
       />

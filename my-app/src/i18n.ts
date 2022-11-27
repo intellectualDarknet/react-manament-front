@@ -19,6 +19,7 @@ i18next
       en: {
         translation: {
           learn: 'Learn React',
+          loading: 'Loading...',
           main: {
             heading: 'PROJECT MANAGER APPLICATION',
             text: `is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. You can
@@ -98,6 +99,7 @@ i18next
       ru: {
         translation: {
           learn: 'Изучи Реакт',
+          loading: 'Загрузка...',
           main: {
             heading: 'МЕНЕДЖЕР ПРОЕКТОВ',
             text: `это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу. Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,

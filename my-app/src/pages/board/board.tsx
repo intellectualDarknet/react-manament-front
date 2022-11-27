@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
 import useResortTasksArr from './functions/use-resort-tasks-arr';
 import useMoveTask from './functions/use-move-task';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export interface ITaskState {
   columnId: string;
@@ -92,17 +93,6 @@ const Board = (): JSX.Element => {
     allTasksIsGetting ||
     allTasksIsUpdating ||
     oneTaskIsDeleting;
-  console.log(
-    allColumnsIsGetting,
-    oneColumnIsUpdating,
-    allColumnsIsUpdating,
-    oneColumnIsDeleting,
-    allTasksIsGetting,
-    allTasksIsUpdating,
-    oneTaskIsDeleting,
-    'isLoding: ',
-    isLoading
-  );
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -268,7 +258,16 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
         <Grid container className="board__columns-layout">
-          {isLoading ? 'Loading...' : renderAllColumns(currentBoardColumns)}
+          {isLoading ? (
+            <Grid container className="board__loading">
+              <CircularProgress color="primary" />
+              <Typography className="board__loading-title" variant="h4">
+                {t('loading')}
+              </Typography>
+            </Grid>
+          ) : (
+            renderAllColumns(currentBoardColumns)
+          )}
         </Grid>
       </Grid>
     </Grid>

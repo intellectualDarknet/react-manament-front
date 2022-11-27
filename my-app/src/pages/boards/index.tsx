@@ -11,6 +11,8 @@ import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { IBoardsState } from './../../store/boards/boards-slice';
 import { createBoard, getBoards } from 'store/boards/boards-thunks';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -44,6 +46,28 @@ const Boards = () => {
     );
     handleClose();
   };
+
+  const allBoardsIsGetting = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardsLoading);
+  const isLoading = allBoardsIsGetting; // TODO: Добавить переменные с других диспатчей
+
+  const boards = (boardsArr: IBoardResponse[]): JSX.Element | JSX.Element[] => {
+    if (isLoading) {
+      return (
+        <Grid container className="board__loading">
+          <CircularProgress color="primary" />
+          <Typography className="board__loading-title" variant="h4">
+            {t('loading')}
+          </Typography>
+        </Grid>
+      );
+    } else {
+      return boardsArr.map((board, index): JSX.Element => {
+        console.log('Mapped!');
+        return (<Board key={index} title={board.title} id={board._id} />) as JSX.Element;
+      });
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -55,9 +79,7 @@ const Boards = () => {
       }}
     >
       <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
-        {boardsResp.boards
-          ? boardsResp.boards.map((board, index) => <Board key={index} title={board.title} id={board._id} />)
-          : []}
+        {boardsResp.boards ? boards(boardsResp.boards) : []}
         <div>
           <Item
             sx={{

@@ -1,4 +1,4 @@
-function sortArr(arrToSort: IColumnResponse[]): IColumnResponse[] {
+function sortArr(arrToSort: IColumnResponse[] | ITask[]): IColumnResponse[] | ITask[] {
   const sortedArr = [...arrToSort];
   if (sortedArr) {
     sortedArr.sort((item1, item2) => {

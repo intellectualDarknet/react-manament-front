@@ -13,6 +13,33 @@ import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import useResortColumnArr from './functions/use-resort-column-arr';
 import { useTranslation } from 'react-i18next';
+import sortTasks from './functions/sort-tasks';
+import useResortTasksArr from './functions/use-resort-tasks-arr';
+import useMoveTask from './functions/use-move-task';
+
+export interface ITaskState {
+  columnId: string;
+  taskId: string;
+  taskOrder: string;
+}
+
+export interface IColumnState {
+  columnId: string;
+  columnOrder: string;
+}
+
+export enum DragItemType {
+  COLUMN = 'column',
+  TASK = 'task',
+  NONE = '',
+}
+
+export interface IDragItemState {
+  type: DragItemType;
+  columnId: string;
+  taskId: string;
+  order: string;
+}
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
@@ -36,14 +63,19 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
+  useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
+  const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
-  const [dragColumn, setDragColumn] = useState('');
-  const [dropColumn, setDropColumn] = useState('');
+  const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+  const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
+  const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
+
+  useMoveTask(currentBoard, dragItem, dropTask, dropColumn, setDragItem, setDropColumn, setDropTask, currentBoardTasks);
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -92,38 +124,27 @@ const Board = (): JSX.Element => {
     showColumnTitleInput('');
   };
 
-  const getNewOrder = (dragColumn: string, dropColumn: string): number[] => {
-    const straightArr = [];
+  const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
+    let newOrder = [];
     for (let i = 0; i < currentBoardColumnsCount; i += 1) {
-      straightArr.push(i);
+      newOrder.push(i);
     }
-    let newOrder: number[];
-    if (dragColumn && dropColumn) {
-      newOrder = straightArr.map((elem, index) => {
-        if (index === +dragColumn) {
-          return +dropColumn;
-        } else {
-          if (index === +dropColumn) {
-            return +dragColumn;
-          }
-          return index;
+    if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
+      newOrder = newOrder.map((elem, index) => {
+        if (index === +dragItem.order) {
+          return +dropColumn.columnOrder;
+        } else if (index === +dropColumn.columnOrder) {
+          return +dragItem.order;
         }
-      });
-      setDragColumn('');
-      setDropColumn('');
-    } else {
-      newOrder = straightArr.map((elem, index) => {
         return index;
       });
+      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+      setDropColumn({ columnId: '', columnOrder: '' });
     }
     return newOrder;
   };
 
-  const useChangeColumns = (): void => {
-    useResortColumnArr(currentBoardColumns, getNewOrder(dragColumn, dropColumn));
-  };
-
-  useChangeColumns();
+  useResortColumnArr(currentBoardColumns, getNewOrder(dragItem, dropColumn));
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column, index): JSX.Element => {
@@ -135,7 +156,7 @@ const Board = (): JSX.Element => {
         userId,
         board: currentBoard,
         column,
-        tasks: currentBoardTasks,
+        tasks: sortedTasks,
         key: index,
         isChosenColumnTitle,
         currentColumnTitle,
@@ -145,8 +166,9 @@ const Board = (): JSX.Element => {
         toggleForm,
         setTaskIsChosen,
         setClickedAddTaskColumnId,
-        setDragColumn,
+        setDragItem,
         setDropColumn,
+        setDropTask,
         showColumnTitleInput,
         changeColumnTitleState,
         changeColumnTitle,
@@ -190,8 +212,9 @@ const Board = (): JSX.Element => {
           {taskIsChosen ? (
             <CreateTaskForm
               userId={userId}
-              columnId={clickedAddTaskColumnId}
               board={currentBoard}
+              columnId={clickedAddTaskColumnId}
+              sortedTasks={sortedTasks}
               toggleForm={toggleForm}
             />
           ) : (

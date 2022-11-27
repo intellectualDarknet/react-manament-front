@@ -16,8 +16,9 @@ interface ITaskState {
 
 const CreateTaskForm = (props: {
   userId: string;
-  columnId: string;
   board: IGetBoardResponse;
+  columnId: string;
+  sortedTasks: Map<string, ITask[]>;
   toggleForm: () => void;
 }): JSX.Element => {
   // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
@@ -31,9 +32,9 @@ const CreateTaskForm = (props: {
         boardId: props.board._id,
         columnId: props.columnId,
         title: taskState.title,
-        order: 0, // TODO: Добавить определение порядка
+        order: props.sortedTasks.get(props.columnId).length,
         description: taskState.description,
-        userId: 0,
+        userId: 0, // Здесь ошибка типа на бэкенде
         users: [props.userId],
       })
     );

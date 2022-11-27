@@ -119,6 +119,18 @@ $shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0p
   transition: all 0.3s;
 }
 
+.column__task_dragged {
+  transform: scale(95%) !important;
+  background-color: #c8c3a8 !important;
+  transition: all 0.3s !important;
+}
+
+.column__task_hovered {
+  transform: scale(102%) translateY(-10px) !important;
+  background-color: #a8c8ac !important;
+  transition: all 0.3s !important;
+}
+
 .column__title {
   width: 100%;
   height: min-content;
@@ -137,6 +149,7 @@ $shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0p
   flex-shrink: 1;
   gap: 10px;
   flex-wrap: nowrap !important;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 

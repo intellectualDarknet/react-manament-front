@@ -29,7 +29,6 @@ const CreateColumnForm = (props: {
         order: props.currentBoardColumnsCount,
       })
     );
-    console.log(props.currentBoardColumnsCount);
     setNewColumnTitle(() => {
       return { title: '' };
     });

@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEvent, FormEvent, SetStateAction, SyntheticEvent } from 'react';
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
 import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
@@ -8,12 +8,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
+import { DragItemType, IColumnState, IDragItemState, ITaskState } from '../board';
 
 function Column(props: {
   userId: string;
   board: IBoardResponse;
   column: IColumnResponse;
-  tasks: ITask[];
+  tasks: Map<string, ITask[]>;
   key: number;
   isChosenColumnTitle: boolean;
   addTaskBtnTitle: string;
@@ -22,27 +23,20 @@ function Column(props: {
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
-  setDragColumn: Dispatch<SetStateAction<string>>;
-  setDropColumn: Dispatch<SetStateAction<string>>;
+  setDragItem: Dispatch<SetStateAction<IDragItemState>>;
+  setDropColumn: Dispatch<SetStateAction<IColumnState>>;
+  setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
   currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
   changeColumnTitle: (column: IColumnResponse) => void;
 }): JSX.Element {
-  // TODO: Вернуть эту функцию, если в ней появится необходимость. Пока она вызывает ошибку
-  // const sortTask = (tasks: ITask[]): ITask[] => {
-  //   const sortedTasks = tasks.sort((a, b) => b.order - a.order);
-  //   return sortedTasks;
-  // };
-
-  // const sortedTasks = sortTask(props.tasks);
-
   const filterTask = (tasks: ITask[]): ITask[] => {
-    const filteredTasks = tasks.filter((elem) => elem.columnId === props.column._id);
-    return filteredTasks;
+    const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
+    return tasksOfCurrentColumn;
   };
 
-  const filteredTasks = filterTask(props.tasks);
+  const tasksOfCurrentColumn = filterTask(props.tasks.get(props.column._id));
 
   const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);
@@ -75,7 +69,12 @@ function Column(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
-    props.setDragColumn((event.target as HTMLElement).dataset.columnOrder);
+    props.setDragItem({
+      type: DragItemType.COLUMN,
+      columnId: (event.target as HTMLElement).dataset.columnId,
+      taskId: '',
+      order: (event.target as HTMLElement).dataset.columnOrder,
+    });
     (event.target as HTMLElement).classList.add('board__column_dragged');
   };
 
@@ -100,12 +99,14 @@ function Column(props: {
     }
   };
 
-  const dropHandler = (event: SyntheticEvent<HTMLElement>) => {
+  const dropHandler = (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
-    props.setDropColumn(dropColumn.dataset.columnOrder);
-    dropColumn.classList.remove('board__column_hovered');
+    if (dropColumn) {
+      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
+      dropColumn.classList.remove('board__column_hovered');
+    }
   };
 
   return (
@@ -116,6 +117,7 @@ function Column(props: {
       xl={3}
       xs={3}
       key={props.key}
+      data-column-id={props.column._id}
       data-column-order={props.column.order}
       draggable={true}
       onDragStart={(event: DragEvent<HTMLElement>) => {
@@ -130,7 +132,7 @@ function Column(props: {
       onDragLeave={(event: DragEvent<HTMLElement>) => {
         dragLeaveHandler(event);
       }}
-      onDrop={(event: SyntheticEvent<HTMLElement>) => {
+      onDrop={(event: DragEvent<HTMLElement>) => {
         dropHandler(event);
       }}
     >
@@ -189,15 +191,17 @@ function Column(props: {
         )}
       </Grid>
       <Grid container className="column__tasks-conteiner">
-        {filteredTasks.map((elem, index) =>
-          Task({
+        {tasksOfCurrentColumn.map((elem, index) => {
+          return Task({
             board: props.board,
             column: props.column,
             task: elem,
             key: index,
+            setDragItem: props.setDragItem,
+            setDropTask: props.setDropTask,
             deleteTaskByButtonPress: props.deleteTaskByButtonPress,
-          })
-        )}
+          });
+        })}
         <Button
           className="task__create-btn"
           onClick={handleAddTask}

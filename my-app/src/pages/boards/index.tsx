@@ -11,7 +11,6 @@ import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { IBoardsState } from './../../store/boards/boards-slice';
 import { createBoard, getBoards } from 'store/boards/boards-thunks';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -47,10 +46,12 @@ const Boards = () => {
     handleClose();
   };
 
-  const allBoardsIsGetting = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardsLoading);
-  const isLoading = allBoardsIsGetting; // TODO: Добавить переменные с других диспатчей
+  const allBoardsIsGetting = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.boardsLoading);
+  const oneBoardIsCreating = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.createBoardLoading);
+  const oneBoardIsDeleting = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.deleteBoardLoading);
+  const isLoading = allBoardsIsGetting || oneBoardIsCreating || oneBoardIsDeleting;
 
-  const boards = (boardsArr: IBoardResponse[]): JSX.Element | JSX.Element[] => {
+  const renderBoards = (): JSX.Element => {
     if (isLoading) {
       return (
         <Grid container className="board__loading">
@@ -61,10 +62,55 @@ const Boards = () => {
         </Grid>
       );
     } else {
-      return boardsArr.map((board, index): JSX.Element => {
-        console.log('Mapped!');
-        return (<Board key={index} title={board.title} id={board._id} />) as JSX.Element;
-      });
+      return (
+        <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
+          {boardsResp.boards
+            ? boardsResp.boards.map(
+                (board, index): JSX.Element => <Board key={index} title={board.title} id={board._id} />
+              )
+            : []}
+          <div>
+            <Item
+              sx={{
+                width: '300px',
+                height: '150px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}
+              onClick={handleClose}
+            >
+              <Typography variant="h4" gutterBottom>
+                + {t('boards.addBoard')}
+              </Typography>
+            </Item>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>{t('boards.addBoard')}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>{t('boards.name')}</DialogContentText>
+                <TextField
+                  autoFocus
+                  id="name"
+                  type="text"
+                  fullWidth
+                  value={input}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                  }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button sx={{ color: 'black' }} onClick={handleClose}>
+                  {t('boards.cancel')}
+                </Button>
+                <Button sx={{ color: 'black' }} onClick={addBoard}>
+                  {t('boards.add')}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        </Grid>
+      );
     }
   };
 
@@ -78,49 +124,7 @@ const Boards = () => {
         margin: '30px 0 0 30px',
       }}
     >
-      <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
-        {boardsResp.boards ? boards(boardsResp.boards) : []}
-        <div>
-          <Item
-            sx={{
-              width: '300px',
-              height: '150px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignSelf: 'center',
-            }}
-            onClick={handleClose}
-          >
-            <Typography variant="h4" gutterBottom>
-              + {t('boards.addBoard')}
-            </Typography>
-          </Item>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{t('boards.addBoard')}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>{t('boards.name')}</DialogContentText>
-              <TextField
-                autoFocus
-                id="name"
-                type="text"
-                fullWidth
-                value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                }}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button sx={{ color: 'black' }} onClick={handleClose}>
-                {t('boards.cancel')}
-              </Button>
-              <Button sx={{ color: 'black' }} onClick={addBoard}>
-                {t('boards.add')}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </Grid>
+      {renderBoards()}
     </Box>
   );
 };

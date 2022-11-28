@@ -1,16 +1,17 @@
-import react, { useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, styled, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import background from 'assets/img/background2.jpg';
-import { useAppDispatch } from 'store/store';
+import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { useNavigate } from 'react-router-dom';
 import { updateBoardById, deleteBoardById, getBoardById } from 'store/boards/boards-thunks';
 import DeleteModal from 'components/deleteModal';
 import DeleteButton from './DeleteButton';
 import { useTranslation } from 'react-i18next';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -39,6 +40,9 @@ const Board = (props: { title: string; id: string }) => {
   const deleteCard = () => {
     dispatch(deleteBoardById(props.id));
   };
+
+  const boardIsUpdating = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.updateBoardLoading);
+
   return (
     <Item
       sx={{
@@ -54,7 +58,7 @@ const Board = (props: { title: string; id: string }) => {
       }}
     >
       <Typography variant="h4" gutterBottom>
-        {props.title}
+        {boardIsUpdating ? <CircularProgress color="primary" /> : props.title}
       </Typography>
       <Box
         sx={{ display: 'flex', justifyContent: 'space-between' }}

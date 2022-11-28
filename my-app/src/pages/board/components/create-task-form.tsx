@@ -21,8 +21,7 @@ const CreateTaskForm = (props: {
   sortedTasks: Map<string, ITask[]>;
   toggleForm: () => void;
 }): JSX.Element => {
-  // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
-  // TODO: Заменить на переменную загрузки таска
+  const taskIsCreating = useAppSelector((state: RootState) => state.rootReducer.tasksReducer.createTaskLoading);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [taskState, setTaskState] = useState<ITaskState>({ title: '', description: '' });
@@ -78,7 +77,7 @@ const CreateTaskForm = (props: {
         sx={{ width: '80%' }}
       >
         <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
-          {t('board.title', { item: 'task', itemRu: 'задания' })}
+          {t('board.newTask')}
         </Typography>
         <TextValidator
           autoComplete="off"
@@ -87,7 +86,7 @@ const CreateTaskForm = (props: {
           required
           fullWidth
           id="title"
-          label="taskTitle"
+          label={t('board.createNewTaskTitlePlaceholder')}
           name="task-title"
           autoFocus
           value={taskState.title}
@@ -101,7 +100,7 @@ const CreateTaskForm = (props: {
           required
           fullWidth
           id="description"
-          label="taskDescription"
+          label={t('board.createNewTaskDescriptionPlaceholder')}
           name="task-Description"
           value={taskState.description}
           validators={['required']}
@@ -114,11 +113,11 @@ const CreateTaskForm = (props: {
           color="secondary"
           sx={{ marginBottom: '10px' }}
           type="submit"
-          // disabled={auth.signInLoading}
-          // loading={auth.signInLoading}
+          disabled={taskIsCreating}
+          loading={taskIsCreating}
           loadingPosition="center"
         >
-          Create task
+          {t('board.createTask')}
         </LoadingButton>
       </ValidatorForm>{' '}
     </Grid>

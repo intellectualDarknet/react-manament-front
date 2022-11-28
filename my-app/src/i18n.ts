@@ -28,6 +28,13 @@ i18next
             signUp: 'Sign up',
             logOut: 'Log out',
             boards: 'Boards',
+            team: 'Our team:',
+            ivan: 'Ivan',
+            veronika: 'Veronika',
+            alexey: 'Alexey',
+            descrveronika: 'FrontEnd developer',
+            descralexey: 'FrontEnd developer',
+            descrivan: 'FrontEnd developer, Teamlead',
           },
           header: {
             boards: 'BOARDS',
@@ -61,6 +68,7 @@ i18next
             addBoard: 'Add new board',
             name: 'Please enter name of the board.',
             add: 'Add',
+            myBoards: 'My boards',
           },
           auth: {
             signIn: 'Sign In',
@@ -98,6 +106,13 @@ i18next
             signUp: 'Зарегистрироваться',
             logOut: 'Выйти',
             boards: 'Доски',
+            team: 'Наша команда:',
+            ivan: 'Иван',
+            veronika: 'Вероника',
+            alexey: 'Алексей',
+            descrveronika: 'FrontEnd developer',
+            descralexey: 'FrontEnd developer',
+            descrivan: 'FrontEnd developer, Teamlead',
           },
           header: {
             boards: 'ДОСКИ',
@@ -131,6 +146,7 @@ i18next
             addBoard: 'Добавить новую доску',
             name: 'Пожалуйста, введите имя доски.',
             add: 'Добавить',
+            myBoards: 'Мои доски',
           },
           auth: {
             signIn: 'Войти',

@@ -9,10 +9,8 @@ import { useEffect, useState } from 'react';
 import Board from './components/board';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { IBoardsState } from './../../store/boards/boards-slice';
-import { createBoard, getBoards, getBoardsByUserId } from 'store/boards/boards-thunks';
+import { createBoard, getBoardsByUserId } from 'store/boards/boards-thunks';
 import { useTranslation } from 'react-i18next';
-import theme from 'components/Theme';
-import { Link } from 'react-router-dom';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -23,7 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const Boards = () => {
+const UserBoards = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useState<boolean>(false);
   const [input, setInput] = useState<string>(' ');
@@ -31,9 +29,8 @@ const Boards = () => {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getBoards());
     dispatch(getBoardsByUserId(userId));
-  }, [dispatch, userId]);
+  }, [dispatch, userId, boardsResp.userBoard]);
   const handleClose = () => {
     setOpen((open) => !open);
     setInput(' ');
@@ -46,6 +43,7 @@ const Boards = () => {
         users: ['string'],
       })
     );
+    dispatch(getBoardsByUserId(userId));
     handleClose();
   };
   return (
@@ -60,22 +58,9 @@ const Boards = () => {
         margin: '30px 0 0 30px',
       }}
     >
-      <Link to="/user-boards">
-        <Button
-          sx={{
-            color: theme.palette.primary.main,
-            backgroundColor: theme.palette.secondary.dark,
-            width: '200px',
-            marginBottom: '20px',
-          }}
-        >
-          {t('boards.myBoards')}
-        </Button>
-      </Link>
-
       <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
-        {boardsResp.boards
-          ? boardsResp.boards.map((board, index) => <Board key={index} title={board.title} id={board._id} />)
+        {boardsResp.userBoard
+          ? boardsResp.userBoard.map((board, index) => <Board key={index} title={board.title} id={board._id} />)
           : []}
         <div>
           <Item
@@ -122,4 +107,4 @@ const Boards = () => {
   );
 };
 
-export default Boards;
+export default UserBoards;

@@ -5,11 +5,11 @@ import Paper from '@mui/material/Paper';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, styled, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import background from 'assets/img/background2.jpg';
-import { useAppDispatch } from 'store/store';
+import { useAppDispatch, useAppSelector, RootState } from 'store/store';
 import { useNavigate } from 'react-router-dom';
-import { updateBoardById, deleteBoardById, getBoardById } from 'store/boards/boards-thunks';
+import { updateBoardById, deleteBoardById, getBoardById, getBoardsByUserId } from 'store/boards/boards-thunks';
 import DeleteModal from 'components/deleteModal';
-import DeleteButton from './DeleteButton';
+import DeleteButton from '../DeleteButton';
 import { useTranslation } from 'react-i18next';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -26,6 +26,7 @@ const Board = (props: { title: string; id: string }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const [input, setInput] = useState<string>(' ');
+  const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
@@ -33,11 +34,13 @@ const Board = (props: { title: string; id: string }) => {
     setInput('');
   };
   const handleRename = () => {
-    dispatch(updateBoardById({ boardId: props.id, title: input, owner: 'string', users: ['string'] }));
+    dispatch(updateBoardById({ boardId: props.id, title: input, owner: userId, users: ['string'] }));
     setOpen(false);
+    dispatch(getBoardsByUserId(userId));
   };
   const deleteCard = () => {
     dispatch(deleteBoardById(props.id));
+    dispatch(getBoardsByUserId(userId));
   };
   return (
     <Item

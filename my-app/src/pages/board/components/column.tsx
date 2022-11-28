@@ -8,6 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
 import { DragItemType, IColumnState, IDragItemState, ITaskState } from '../board';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Column(props: {
   userId: string;
@@ -22,6 +23,8 @@ function Column(props: {
     columnDeleteMessage: string;
   };
   taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
+  columnIsLoading: boolean;
+  tasksIsLoading: boolean;
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
@@ -113,6 +116,22 @@ function Column(props: {
     }
   };
 
+  const showColumnTitle = (columnIsLoading: boolean): JSX.Element => {
+    if (columnIsLoading) {
+      return (
+        <Grid container className="column__title-loading">
+          <CircularProgress color="secondary" />
+        </Grid>
+      );
+    } else {
+      return (
+        <Typography variant="h5" className="column__title" onClick={handleTitleClick}>
+          {props.column.title}
+        </Typography>
+      );
+    }
+  };
+
   return (
     <Grid
       container
@@ -167,7 +186,7 @@ function Column(props: {
                 errorMessages={['this field is required', 'column title is not valid']}
               />
               <ButtonGroup className="title-form__btn-group">
-                <Button variant="contained" color="primary" type="button">
+                <Button variant="contained" color="primary" type="submit">
                   {props.columnTranslation.changeTitle}
                 </Button>
                 <Button
@@ -182,24 +201,28 @@ function Column(props: {
             </ValidatorForm>{' '}
           </Grid>
         ) : (
-          <Typography variant="h5" className="column__title" onClick={handleTitleClick}>
-            {props.column.title}
-          </Typography>
+          showColumnTitle(props.columnIsLoading)
         )}
       </Grid>
       <Grid container className="column__tasks-conteiner">
-        {tasksOfCurrentColumn.map((elem, index) => {
-          return Task({
-            board: props.board,
-            column: props.column,
-            task: elem,
-            key: index,
-            taskTranslation: props.taskTranslation,
-            setDragItem: props.setDragItem,
-            setDropTask: props.setDropTask,
-            deleteTaskByButtonPress: props.deleteTaskByButtonPress,
-          });
-        })}
+        {props.tasksIsLoading ? (
+          <Grid container className="column__tasks-loading">
+            <CircularProgress color="secondary" />
+          </Grid>
+        ) : (
+          tasksOfCurrentColumn.map((elem, index) => {
+            return Task({
+              board: props.board,
+              column: props.column,
+              task: elem,
+              key: index,
+              taskTranslation: props.taskTranslation,
+              setDragItem: props.setDragItem,
+              setDropTask: props.setDropTask,
+              deleteTaskByButtonPress: props.deleteTaskByButtonPress,
+            });
+          })
+        )}
         <Button
           className="task__create-btn"
           onClick={handleAddTask}

@@ -85,14 +85,9 @@ const Board = (): JSX.Element => {
   const allTasksIsGetting = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardIdLoading);
   const allTasksIsUpdating = useSelector((state: RootState) => state.rootReducer.tasksReducer.updateTasksByIdsLoading);
   const oneTaskIsDeleting = useSelector((state: RootState) => state.rootReducer.tasksReducer.deleteTasksLoading);
-  const isLoading =
-    allColumnsIsGetting ||
-    oneColumnIsUpdating ||
-    allColumnsIsUpdating ||
-    oneColumnIsDeleting ||
-    allTasksIsGetting ||
-    allTasksIsUpdating ||
-    oneTaskIsDeleting;
+  const columnsIsLoading = allColumnsIsGetting || allColumnsIsUpdating || oneColumnIsDeleting;
+  const columnIsLoading = oneColumnIsUpdating;
+  const tasksIsLoading = allTasksIsGetting || allTasksIsUpdating || oneTaskIsDeleting;
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -190,6 +185,8 @@ const Board = (): JSX.Element => {
         currentColumnTitle,
         columnTranslation,
         taskTranslation,
+        columnIsLoading,
+        tasksIsLoading,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
@@ -258,7 +255,7 @@ const Board = (): JSX.Element => {
           {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
         <Grid container className="board__columns-layout">
-          {isLoading ? (
+          {columnsIsLoading ? (
             <Grid container className="board__loading">
               <CircularProgress color="primary" />
               <Typography className="board__loading-title" variant="h4">

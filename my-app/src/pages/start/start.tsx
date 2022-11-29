@@ -18,15 +18,18 @@ import pictI from './../../assets/img/Ivan.jpg';
 import pictT from './../../assets/img/Taras.jpg';
 
 const team = [
-  { picture: pictI, name: 'ivan' },
-  { picture: pictV, name: 'veronika' },
-  { picture: pictA, name: 'alexey' },
-  { picture: pictT, name: 'taras' },
+  { picture: pictI, name: 'ivan', link: 'https://github.com/Legat14' },
+  { picture: pictV, name: 'veronika', link: 'https://github.com/veronicavoevodina' },
+  { picture: pictA, name: 'alexey', link: 'https://github.com/intellectualDarknet' },
+  { picture: pictT, name: 'taras', link: '' },
 ];
 
 const Start = () => {
   const { t } = useTranslation();
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const proceedLink = (link: string): void => {
+    window.location.href = link;
+  };
   return (
     <>
       <Grid
@@ -79,14 +82,18 @@ const Start = () => {
         </Typography>
         <Box sx={{ width: '93%', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
           {team.map((el) => (
-            <Card sx={{ maxWidth: 300, height: '330px', margin: '10px' }} key={el.name}>
+            <Card
+              onClick={() => proceedLink(el.link)}
+              sx={{ maxWidth: '300px', height: '350px', margin: '10px', display: 'flex' }}
+              key={el.name}
+            >
               <CardActionArea>
                 <CardMedia component="img" height="170" image={el.picture} alt="green iguana" />
-                <CardContent>
+                <CardContent sx={{ margin: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <Typography gutterBottom variant="h5" component="div">
                     {t(`main.${el.name}`)}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body1" color="text.secondary">
                     {t(`main.descr${el.name}`)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">

@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -7,7 +6,6 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
-import { getIcon } from 'components/icon/icon';
 import { signIn } from 'store/auth/auth-thunks';
 import './signInPage.scss';
 import { IAuthState } from 'store/auth/auth-slice';

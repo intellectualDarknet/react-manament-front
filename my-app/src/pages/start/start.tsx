@@ -21,7 +21,7 @@ const team = [
   { picture: pictI, name: 'ivan', link: 'https://github.com/Legat14' },
   { picture: pictV, name: 'veronika', link: 'https://github.com/veronicavoevodina' },
   { picture: pictA, name: 'alexey', link: 'https://github.com/intellectualDarknet' },
-  { picture: pictT, name: 'taras', link: '' },
+  { picture: pictT, name: 'taras', link: 'https://github.com/tarasdemidovich1995' },
 ];
 
 const Start = () => {

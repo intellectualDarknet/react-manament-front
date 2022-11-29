@@ -93,6 +93,7 @@ const Board = (): JSX.Element => {
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
+  const [clickedEditTaskId, setClickedEditTaskId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
   const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
   const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
@@ -180,18 +181,20 @@ const Board = (): JSX.Element => {
         board: currentBoard,
         column,
         tasks: sortedTasks,
-        key: index,
+        key: column._id,
         isChosenColumnTitle,
         currentColumnTitle,
         columnTranslation,
         taskTranslation,
         columnIsLoading,
         tasksIsLoading,
+        clickedEditTaskId,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
         setTaskIsChosen,
         setClickedAddTaskColumnId,
+        setClickedEditTaskId,
         setDragItem,
         setDropColumn,
         setDropTask,

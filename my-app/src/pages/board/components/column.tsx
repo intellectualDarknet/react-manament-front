@@ -15,8 +15,9 @@ function Column(props: {
   board: IBoardResponse;
   column: IColumnResponse;
   tasks: Map<string, ITask[]>;
-  key: number;
+  key: string;
   isChosenColumnTitle: boolean;
+  currentColumnTitle: string;
   columnTranslation: {
     columnNewTitle: string;
     changeTitle: string;
@@ -25,16 +26,17 @@ function Column(props: {
   taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
   columnIsLoading: boolean;
   tasksIsLoading: boolean;
+  clickedEditTaskId: string;
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
+  setClickedEditTaskId: Dispatch<SetStateAction<string>>;
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropColumn: Dispatch<SetStateAction<IColumnState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
-  currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
   changeColumnTitle: (column: IColumnResponse) => void;
 }): JSX.Element {
@@ -210,15 +212,21 @@ function Column(props: {
             <CircularProgress color="secondary" />
           </Grid>
         ) : (
-          tasksOfCurrentColumn.map((elem, index) => {
+          tasksOfCurrentColumn.map((task, index) => {
+            let isChosenTask = false;
+            if (props.clickedEditTaskId === task._id) {
+              isChosenTask = true;
+            }
             return Task({
               board: props.board,
               column: props.column,
-              task: elem,
-              key: index,
+              task: task,
+              key: task._id,
               taskTranslation: props.taskTranslation,
+              isChosenTask,
               setDragItem: props.setDragItem,
               setDropTask: props.setDropTask,
+              setClickedEditTaskId: props.setClickedEditTaskId,
               deleteTaskByButtonPress: props.deleteTaskByButtonPress,
             });
           })

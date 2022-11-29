@@ -8,10 +8,12 @@ function Task(props: {
   board: IBoardResponse;
   column: IColumnResponse;
   task: ITask;
-  key: number;
+  key: string;
   taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
+  isChosenTask: boolean;
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
+  setClickedEditTaskId: Dispatch<SetStateAction<string>>;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
 }): JSX.Element {
   const deleteThisTask = () => {
@@ -68,11 +70,27 @@ function Task(props: {
     }
   };
 
+  const clickHandler = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    const clickPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const isBtn = clickPath.find((elem): boolean => {
+      if (elem.classList) {
+        return elem.classList.contains('task__delete-btn');
+      }
+      return false;
+    });
+    if (!isBtn) {
+      props.setClickedEditTaskId(event.currentTarget.dataset.taskId);
+    }
+  }; // TODO: Если нажать кнопку удаления, потом отменить удаление, таск выбирается
+  // Нужно это устранить
+
   return (
     <Paper
-      elevation={2}
       className="column__task"
       key={props.key}
+      onClick={clickHandler}
+      elevation={2}
       draggable={true}
       data-column-id={props.column._id}
       data-task-id={props.task._id}
@@ -93,21 +111,27 @@ function Task(props: {
         dropHandler(event);
       }}
     >
-      <Grid container item className="task__description-conteiner" xl={10} xs={10}>
-        <Typography className="task__description" variant="h6">
-          {props.task.title}
-        </Typography>
-        <Typography className="task__description" variant="body1">
-          {props.task.description}
-        </Typography>
-      </Grid>
-      <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
-        <DeleteModal
-          message={props.taskTranslation.taskDeleteMessage}
-          submit={deleteThisTask}
-          deleteButton={DeleteTaskButton}
-        />
-      </Grid>
+      {props.isChosenTask ? (
+        <p>Task was chosen</p>
+      ) : (
+        <>
+          <Grid container item className="task__description-conteiner" xl={10} xs={10}>
+            <Typography className="task__description" variant="h6">
+              {props.task.title}
+            </Typography>
+            <Typography className="task__description" variant="body1">
+              {props.task.description}
+            </Typography>
+          </Grid>
+          <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
+            <DeleteModal
+              message={props.taskTranslation.taskDeleteMessage}
+              submit={deleteThisTask}
+              deleteButton={DeleteTaskButton}
+            />
+          </Grid>
+        </>
+      )}
     </Paper>
   );
 }

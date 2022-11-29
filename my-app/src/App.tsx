@@ -11,12 +11,14 @@ import Footer from './components/Footer';
 import Board from 'pages/board/board';
 import SignUpPage from 'pages/signUpPage/signUpPage';
 import SignInPage from 'pages/signInPage/signInPage';
+import UserBoards from 'pages/boards/userBoards';
 import { RootState, useAppSelector } from 'store/store';
 import User from 'pages/userPage';
 import SnackBar from 'components/snackbar/snackbar';
 
 function App(): JSX.Element {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -31,7 +33,8 @@ function App(): JSX.Element {
               <Route path="sign-in" element={!userId ? <SignInPage /> : <Navigate to="/" replace />} />
               <Route path="boards" element={userId ? <Boards /> : <Navigate to="/" replace />} />
               <Route path="board" element={userId ? <Board /> : <Navigate to="/" replace />} />
-              <Route path="UserPage" element={userId ? <User /> : <Navigate to="/" replace />} />
+              <Route path="user-page" element={userId ? <User /> : <Navigate to="/" replace />} />
+              <Route path="user-boards" element={userId ? <UserBoards /> : <Navigate to="/" replace />} />
               <Route path="404" element={<Errorpage />} />
               <Route path="*" element={<Navigate to="404" replace />} />
             </Routes>

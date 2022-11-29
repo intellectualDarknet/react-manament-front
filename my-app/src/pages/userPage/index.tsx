@@ -13,9 +13,8 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useNavigate } from 'react-router';
 import DeleteModal from './../../components/deleteModal';
-import DeleteButton from 'pages/boards/components/DeleteButton';
+import DeleteButton from 'pages/boards/DeleteButton';
 import { useTranslation } from 'react-i18next';
-import Board from 'pages/board/board';
 
 type User = {
   name: string;
@@ -30,7 +29,6 @@ const User = () => {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const userState: IUsersState = useAppSelector((state: RootState) => state.rootReducer.usersReducer);
   const dispatch = useAppDispatch();
-  const lang = localStorage.getItem('i18nextLng');
   const onSigninSubmit = () => {
     dispatch(updateUserById({ userId, ...user }));
     handleClose();

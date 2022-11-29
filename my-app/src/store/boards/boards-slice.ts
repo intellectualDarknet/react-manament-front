@@ -31,7 +31,7 @@ export interface IBoardsState {
   boardsByIdsLoading: boolean;
   boardsByIdsError: IResponseError;
 
-  userBoard: IGetBoardResponse;
+  userBoard: IGetBoardResponse[];
   userBoardLoading: boolean;
   userBoardError: IResponseError;
 }

@@ -64,7 +64,7 @@ export const deleteBoardById = createAsyncThunk<IGetBoardResponse, string>(
 
 // TODO test
 
-export const getBoardsByIds = createAsyncThunk<IGetBoardResponse[], IGetBoardsByIds>(
+export const getBoardsByIds = createAsyncThunk<IGetBoardResponse[], string>(
   'getBoardsByIds',
   async function (userId, { rejectWithValue }) {
     try {
@@ -76,11 +76,11 @@ export const getBoardsByIds = createAsyncThunk<IGetBoardResponse[], IGetBoardsBy
   }
 );
 
-export const getBoardsByUserId = createAsyncThunk<IGetBoardResponse, string>(
+export const getBoardsByUserId = createAsyncThunk<IGetBoardResponse[], string>(
   'getBoardsByUserId',
   async function (userId, { rejectWithValue }) {
     try {
-      const data: AxiosResponse = await api.get(`boards/${userId}`);
+      const data: AxiosResponse = await api.get(`boardsSet/${userId}`);
       return await data.data;
     } catch (e: unknown) {
       return rejectWithValue(e as IResponseError);

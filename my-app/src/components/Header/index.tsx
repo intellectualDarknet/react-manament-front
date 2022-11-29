@@ -112,7 +112,17 @@ function Header() {
           >
             {userId ? (
               <Link to="/boards">
-                <Typography>
+                <Typography
+                  sx={{
+                    mr: 2,
+                    display: { xs: 'none', md: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.3rem',
+                    color: theme.palette.secondary.main,
+                    textDecoration: 'none',
+                  }}
+                >
                   <Trans i18nKey="header.boards"></Trans>
                 </Typography>
               </Link>
@@ -120,8 +130,18 @@ function Header() {
               <></>
             )}
             {userId ? (
-              <Link to="/UserPage">
-                <Typography>
+              <Link to="/user-page">
+                <Typography
+                  sx={{
+                    mr: 2,
+                    display: { xs: 'none', md: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.3rem',
+                    color: theme.palette.secondary.main,
+                    textDecoration: 'none',
+                  }}
+                >
                   <Trans i18nKey="header.edit"></Trans>
                 </Typography>
               </Link>

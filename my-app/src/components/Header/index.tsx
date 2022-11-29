@@ -19,11 +19,9 @@ import { logout } from 'store/auth/auth-slice';
 import { useTranslation, Trans } from 'react-i18next';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import theme from 'components/Theme';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-const settings = [
-  { name: 'main.signIn', link: 'sign-in' },
-  { name: 'main.signUp', link: 'sign-up' },
-];
 const lngs = {
   en: { nativeName: 'English' },
   ru: { nativeName: 'Russia' },
@@ -41,14 +39,6 @@ function Header() {
 
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     setAlignment(newAlignment);
-  };
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -151,41 +141,24 @@ function Header() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <PersonIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {userId ? (
-                <Button onClick={() => dispatch(logout())}>{t('main.logOut')}</Button>
-              ) : (
-                settings.map((setting) => (
-                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                    <Link to={setting.link}>
-                      <Typography textAlign="center">
-                        <Trans i18nKey={setting.name}></Trans>
-                      </Typography>
-                    </Link>
-                  </MenuItem>
-                ))
-              )}
-            </Menu>
+            {userId ? (
+              <Tooltip title={t('main.logOut')}>
+                <LogoutIcon onClick={() => dispatch(logout())} />
+              </Tooltip>
+            ) : (
+              <>
+                <Tooltip title={t('main.signIn')}>
+                  <Link to="sign-in">
+                    <PersonIcon fontSize="large" color="secondary" />
+                  </Link>
+                </Tooltip>
+                <Tooltip title={t('main.signUp')}>
+                  <Link to="sign-up">
+                    <PersonAddAlt1Icon fontSize="large" color="secondary" />
+                  </Link>
+                </Tooltip>
+              </>
+            )}
           </Box>
           <ToggleButtonGroup
             color="secondary"

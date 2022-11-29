@@ -11,6 +11,8 @@ import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { IBoardsState } from './../../store/boards/boards-slice';
 import { createBoard, getBoardsByUserId } from 'store/boards/boards-thunks';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import theme from 'components/Theme';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -58,6 +60,32 @@ const UserBoards = () => {
         margin: '30px 0 0 30px',
       }}
     >
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Link to="/user-boards">
+          <Button
+            sx={{
+              color: theme.palette.primary.main,
+              backgroundColor: theme.palette.secondary.dark,
+              width: '200px',
+              margin: '20px',
+            }}
+          >
+            {t('boards.myBoards')}
+          </Button>
+        </Link>
+        <Link to="/boards">
+          <Button
+            sx={{
+              color: theme.palette.primary.main,
+              backgroundColor: theme.palette.secondary.dark,
+              width: '200px',
+              margin: '20px',
+            }}
+          >
+            {t('boards.allBoards')}
+          </Button>
+        </Link>
+      </Box>
       <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
         {boardsResp.userBoard
           ? boardsResp.userBoard.map((board, index) => <Board key={index} title={board.title} id={board._id} />)

@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { FormEvent, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import { useAppDispatch, useAppSelector } from 'store/store';
+import { RootState, useAppDispatch, useAppSelector } from 'store/store';
 import { createColumn } from 'store/columns/columns-thunks';
 import { useTranslation } from 'react-i18next';
 
@@ -16,8 +16,7 @@ const CreateColumnForm = (props: {
   currentBoardColumnsCount: number;
   toggleForm: () => void;
 }): JSX.Element => {
-  // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
-  // TODO: Заменить на переменную загрузки колонки
+  const columnIsCreating = useAppSelector((state: RootState) => state.rootReducer.columnsReducer.createColumnLoading);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [newColumnTitle, setNewColumnTitle] = useState<IColumnTitle>({ title: '' });
@@ -64,7 +63,7 @@ const CreateColumnForm = (props: {
         sx={{ width: '80%' }}
       >
         <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
-          {t('board.title', { item: 'column', itemRu: 'колонки' })}
+          {t('board.newColumnTitle')}
         </Typography>
         <TextValidator
           autoComplete="off"
@@ -73,7 +72,7 @@ const CreateColumnForm = (props: {
           required
           fullWidth
           id="new-column-title"
-          label="newColumnTitle"
+          label={t('board.createNewColumnPlaceholder')}
           name="new-column-title"
           autoFocus
           value={newColumnTitle.title}
@@ -87,8 +86,8 @@ const CreateColumnForm = (props: {
           color="secondary"
           sx={{ marginBottom: '10px' }}
           type="submit"
-          // disabled={auth.signInLoading}
-          // loading={auth.signInLoading}
+          disabled={columnIsCreating}
+          loading={columnIsCreating}
           loadingPosition="center"
         >
           {t('board.createColumn')}

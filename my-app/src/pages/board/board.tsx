@@ -1,4 +1,4 @@
-import react, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import store, { RootState } from 'store/store';
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
 import useResortTasksArr from './functions/use-resort-tasks-arr';
 import useMoveTask from './functions/use-move-task';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export interface ITaskState {
   columnId: string;
@@ -43,7 +44,15 @@ export interface IDragItemState {
 
 const Board = (): JSX.Element => {
   const { t } = useTranslation();
-  const addTaskBtnTitle = t('board.addTask');
+  const columnTranslation = {
+    columnNewTitle: t('board.columnNewTitle'),
+    changeTitle: t('board.changeTitle'),
+    columnDeleteMessage: t('board.deleteMessage', { item: 'column', itemRu: 'колонку' }),
+  };
+  const taskTranslation = {
+    addTaskBtnTitle: t('board.addTask'),
+    taskDeleteMessage: t('board.deleteMessage', { item: 'task', itemRu: 'задачу' }),
+  };
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
@@ -65,6 +74,20 @@ const Board = (): JSX.Element => {
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
   useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
+  const allColumnsIsGetting = useSelector((state: RootState) => state.rootReducer.columnsReducer.columnsLoading);
+  const allColumnsIsUpdating = useSelector(
+    (state: RootState) => state.rootReducer.columnsReducer.updateSetOfColumnsLoading
+  );
+  const oneColumnIsUpdating = useSelector(
+    (state: RootState) => state.rootReducer.columnsReducer.updateColumnByIdLoading
+  );
+  const oneColumnIsDeleting = useSelector((state: RootState) => state.rootReducer.columnsReducer.deleteColumnLoading);
+  const allTasksIsGetting = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardIdLoading);
+  const allTasksIsUpdating = useSelector((state: RootState) => state.rootReducer.tasksReducer.updateTasksByIdsLoading);
+  const oneTaskIsDeleting = useSelector((state: RootState) => state.rootReducer.tasksReducer.deleteTasksLoading);
+  const columnsIsLoading = allColumnsIsGetting || allColumnsIsUpdating || oneColumnIsDeleting;
+  const columnIsLoading = oneColumnIsUpdating;
+  const tasksIsLoading = allTasksIsGetting || allTasksIsUpdating || oneTaskIsDeleting;
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
@@ -160,7 +183,10 @@ const Board = (): JSX.Element => {
         key: index,
         isChosenColumnTitle,
         currentColumnTitle,
-        addTaskBtnTitle,
+        columnTranslation,
+        taskTranslation,
+        columnIsLoading,
+        tasksIsLoading,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
@@ -226,10 +252,19 @@ const Board = (): JSX.Element => {
           )}
         </Grid>
         <Typography className="board__title" variant="h4">
-          {currentBoard ? currentBoard.title : 'No board chosen'}
+          {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns(currentBoardColumns)}
+          {columnsIsLoading ? (
+            <Grid container className="board__loading">
+              <CircularProgress color="primary" />
+              <Typography className="board__loading-title" variant="h4">
+                {t('loading')}
+              </Typography>
+            </Grid>
+          ) : (
+            renderAllColumns(currentBoardColumns)
+          )}
         </Grid>
       </Grid>
     </Grid>

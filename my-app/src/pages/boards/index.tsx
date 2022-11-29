@@ -13,6 +13,7 @@ import { createBoard, getBoards, getBoardsByUserId } from 'store/boards/boards-t
 import { useTranslation } from 'react-i18next';
 import theme from 'components/Theme';
 import { Link } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -48,6 +49,103 @@ const Boards = () => {
     );
     handleClose();
   };
+
+  const allBoardsIsGetting = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.boardsLoading);
+  const oneBoardIsCreating = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.createBoardLoading);
+  const oneBoardIsDeleting = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.deleteBoardLoading);
+  const isLoading = allBoardsIsGetting || oneBoardIsCreating || oneBoardIsDeleting;
+
+  const renderBoards = (): JSX.Element => {
+    if (isLoading) {
+      return (
+        <Grid container className="board__loading">
+          <CircularProgress color="primary" />
+          <Typography className="board__loading-title" variant="h4">
+            {t('loading')}
+          </Typography>
+        </Grid>
+      );
+    } else {
+      return (
+        <>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Link to="/user-boards">
+              <Button
+                sx={{
+                  color: theme.palette.primary.main,
+                  backgroundColor: theme.palette.secondary.dark,
+                  width: '200px',
+                  margin: '20px',
+                }}
+              >
+                {t('boards.myBoards')}
+              </Button>
+            </Link>
+            <Link to="/boards">
+              <Button
+                sx={{
+                  color: theme.palette.primary.main,
+                  backgroundColor: theme.palette.secondary.dark,
+                  width: '200px',
+                  margin: '20px',
+                }}
+              >
+                {t('boards.allBoards')}
+              </Button>
+            </Link>
+          </Box>
+          <Grid container sx={{ flexGrow: 1, justifyContent: 'center' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
+            {boardsResp.boards
+              ? boardsResp.boards.map(
+                  (board, index): JSX.Element => <Board key={index} title={board.title} id={board._id} />
+                )
+              : []}
+            <div>
+              <Item
+                sx={{
+                  width: '300px',
+                  height: '150px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+                onClick={handleClose}
+              >
+                <Typography variant="h4" gutterBottom>
+                  + {t('boards.addBoard')}
+                </Typography>
+              </Item>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>{t('boards.addBoard')}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>{t('boards.name')}</DialogContentText>
+                  <TextField
+                    autoFocus
+                    id="name"
+                    type="text"
+                    fullWidth
+                    value={input}
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                    }}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button sx={{ color: 'black' }} onClick={handleClose}>
+                    {t('boards.cancel')}
+                  </Button>
+                  <Button sx={{ color: 'black' }} onClick={addBoard}>
+                    {t('boards.add')}
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+          </Grid>
+        </>
+      );
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -55,69 +153,11 @@ const Boards = () => {
         flexDirection: 'column',
         height: '100%',
         justifyContent: 'center',
-        alignItems: 'center',
         width: '100%',
-        margin: '30px 0 0 30px',
+        margin: '2%',
       }}
     >
-      <Link to="/user-boards">
-        <Button
-          sx={{
-            color: theme.palette.primary.main,
-            backgroundColor: theme.palette.secondary.dark,
-            width: '200px',
-            marginBottom: '20px',
-          }}
-        >
-          {t('boards.myBoards')}
-        </Button>
-      </Link>
-
-      <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
-        {boardsResp.boards
-          ? boardsResp.boards.map((board, index) => <Board key={index} title={board.title} id={board._id} />)
-          : []}
-        <div>
-          <Item
-            sx={{
-              width: '300px',
-              height: '150px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignSelf: 'center',
-            }}
-            onClick={handleClose}
-          >
-            <Typography variant="h4" gutterBottom>
-              + {t('boards.addBoard')}
-            </Typography>
-          </Item>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{t('boards.addBoard')}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>{t('boards.name')}</DialogContentText>
-              <TextField
-                autoFocus
-                id="name"
-                type="text"
-                fullWidth
-                value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                }}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button sx={{ color: 'black' }} onClick={handleClose}>
-                {t('boards.cancel')}
-              </Button>
-              <Button sx={{ color: 'black' }} onClick={addBoard}>
-                {t('boards.add')}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </Grid>
+      {renderBoards()}
     </Box>
   );
 };

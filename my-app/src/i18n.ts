@@ -19,6 +19,7 @@ i18next
       en: {
         translation: {
           learn: 'Learn React',
+          loading: 'Loading...',
           main: {
             heading: 'PROJECT MANAGER APPLICATION',
             text: `is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. You can
@@ -32,9 +33,16 @@ i18next
             ivan: 'Ivan',
             veronika: 'Veronika',
             alexey: 'Alexey',
+            taras: 'Taras',
             descrveronika: 'FrontEnd developer',
             descralexey: 'FrontEnd developer',
             descrivan: 'FrontEnd developer, Teamlead',
+            descrtaras: 'Mentor',
+            textveronika: ' Veronika was responsible for Front page, Profile page, Boards management, translation.',
+            textalexey:
+              'Alexey was responsible for API interaction and toast popups, setted up backand and localization.',
+            textivan: 'Ivan was responsible for CI/CD, pages with columns and tasks, Drag-n-Drop.',
+            texttaras: 'Taras provide consultancy and advised about best practice of organazing teamwork.',
           },
           header: {
             boards: 'BOARDS',
@@ -51,12 +59,19 @@ i18next
           board: {
             back: 'Back',
             addColumn: 'Add column',
+            createNewColumnPlaceholder: 'Column title',
+            createNewTaskTitlePlaceholder: 'Task title',
+            createNewTaskDescriptionPlaceholder: 'Task description',
             changeTitle: 'Change title',
             addTask: 'Add task',
             deleteColumn: 'Delete column',
-            title: 'Enter new {{item}} title',
+            columnNewTitle: 'Column title',
+            newColumnTitle: 'Enter title of new column',
+            newTask: 'Enter title and description of new task',
             createColumn: 'Create column',
-            deleteColumnMessage: 'Are you sure, you want to delete this {{item}}?',
+            createTask: 'Create task',
+            deleteMessage: 'Are you sure, you want to delete this {{item}}?',
+            unchoisen: '☚ Choose a bord there and come back!',
           },
           boards: {
             edit: 'Edit board name',
@@ -69,6 +84,7 @@ i18next
             name: 'Please enter name of the board.',
             add: 'Add',
             myBoards: 'My boards',
+            allBoards: 'All boards',
           },
           auth: {
             signIn: 'Sign In',
@@ -99,6 +115,7 @@ i18next
       ru: {
         translation: {
           learn: 'Изучи Реакт',
+          loading: 'Загрузка...',
           main: {
             heading: 'МЕНЕДЖЕР ПРОЕКТОВ',
             text: `это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу. Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,
@@ -110,9 +127,15 @@ i18next
             ivan: 'Иван',
             veronika: 'Вероника',
             alexey: 'Алексей',
+            taras: 'Тарас',
             descrveronika: 'FrontEnd developer',
             descralexey: 'FrontEnd developer',
             descrivan: 'FrontEnd developer, Teamlead',
+            descrtaras: 'Mentor',
+            textveronika: 'Вероника разработала главную страницу, страницу пользователя, страницу досок, перевод.',
+            textalexey: 'Алексей был ответственен за связь с API и toast popups, настроил backand и локализацию.',
+            textivan: 'Иван был ответсвенен за CI/CD, разработал страницу с колонками и задачами, Drag-n-Drop.',
+            texttaras: 'Тарас проводил консультации и делился best practice относительно командной работы.',
           },
           header: {
             boards: 'ДОСКИ',
@@ -129,12 +152,19 @@ i18next
           board: {
             back: 'Назад',
             addColumn: 'Добавить колонку',
+            createNewColumnPlaceholder: 'Заголовок колонки',
+            createNewTaskTitlePlaceholder: 'Заголовок задачи',
+            createNewTaskDescriptionPlaceholder: 'Описание задачи',
             changeTitle: 'Изменить заголовок',
-            addTask: 'Добавить задание',
+            addTask: 'Добавить задачу',
             deleteColumn: 'Удалить колонку',
-            title: 'Введите новый заголовок {{itemRu}}',
+            columnNewTitle: 'Заголовок колонки',
+            newColumnTitle: 'Введите заголовок новой колонки',
+            newTask: 'Введите заголовок и описание новой задачи',
             createColumn: 'Создать колонку',
-            deleteColumnMessage: 'Are you sure, you want to delete this {{itemRu}}?',
+            createTask: 'Создать задачу',
+            deleteMessage: 'Вы уверены, что хотите удалить эту {{itemRu}}?',
+            unchoisen: '☚ Выберите доску там и возвращайтесь!',
           },
           boards: {
             edit: 'Редактировать доску',
@@ -147,6 +177,7 @@ i18next
             name: 'Пожалуйста, введите имя доски.',
             add: 'Добавить',
             myBoards: 'Мои доски',
+            allBoards: 'Все доски',
           },
           auth: {
             signIn: 'Войти',

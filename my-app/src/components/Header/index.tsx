@@ -130,7 +130,7 @@ function Header() {
               <></>
             )}
             {userId ? (
-              <Link to="/UserPage">
+              <Link to="/user-page">
                 <Typography
                   sx={{
                     mr: 2,

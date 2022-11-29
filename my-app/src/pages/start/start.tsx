@@ -15,11 +15,13 @@ import { CardActionArea } from '@mui/material';
 import pictV from './../../assets/img/Veronika.jpg';
 import pictA from './../../assets/img/Alexey.jpg';
 import pictI from './../../assets/img/Ivan.jpg';
+import pictT from './../../assets/img/Taras.jpg';
 
 const team = [
-  { picture: pictI, name: 'ivan', descr: '' },
-  { picture: pictV, name: 'veronika', descr: '' },
-  { picture: pictA, name: 'alexey', descr: '' },
+  { picture: pictI, name: 'ivan' },
+  { picture: pictV, name: 'veronika' },
+  { picture: pictA, name: 'alexey' },
+  { picture: pictT, name: 'taras' },
 ];
 
 const Start = () => {
@@ -75,17 +77,20 @@ const Start = () => {
         <Typography variant="h4" gutterBottom>
           {t('main.team')}
         </Typography>
-        <Box sx={{ width: '80%', display: 'flex', justifyContent: 'space-around' }}>
+        <Box sx={{ width: '93%', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
           {team.map((el) => (
-            <Card sx={{ maxWidth: 345 }} key={el.name}>
+            <Card sx={{ maxWidth: 300, height: '330px', margin: '10px' }} key={el.name}>
               <CardActionArea>
-                <CardMedia component="img" height="140" image={el.picture} alt="green iguana" />
+                <CardMedia component="img" height="170" image={el.picture} alt="green iguana" />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {t(`main.${el.name}`)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {t(`main.descr${el.name}`)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {t(`main.text${el.name}`)}
                   </Typography>
                 </CardContent>
               </CardActionArea>

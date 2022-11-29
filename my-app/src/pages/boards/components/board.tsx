@@ -1,4 +1,4 @@
-import react, { useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -11,12 +11,13 @@ import { updateBoardById, deleteBoardById, getBoardById, getBoardsByUserId } fro
 import DeleteModal from 'components/deleteModal';
 import DeleteButton from '../DeleteButton';
 import { useTranslation } from 'react-i18next';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   backgroundImage: `url(${background})`,
-  padding: theme.spacing(2),
-  margin: theme.spacing(2),
+  padding: theme.spacing(1),
+  margin: theme.spacing(1.2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
@@ -42,6 +43,9 @@ const Board = (props: { title: string; id: string }) => {
     dispatch(deleteBoardById(props.id));
     dispatch(getBoardsByUserId(userId));
   };
+
+  const boardIsUpdating = useAppSelector((state: RootState) => state.rootReducer.boardsReducer.updateBoardLoading);
+
   return (
     <Item
       sx={{
@@ -57,7 +61,7 @@ const Board = (props: { title: string; id: string }) => {
       }}
     >
       <Typography variant="h4" gutterBottom>
-        {props.title}
+        {boardIsUpdating ? <CircularProgress color="primary" /> : props.title}
       </Typography>
       <Box
         sx={{ display: 'flex', justifyContent: 'space-between' }}

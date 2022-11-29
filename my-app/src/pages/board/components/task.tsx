@@ -9,6 +9,7 @@ function Task(props: {
   column: IColumnResponse;
   task: ITask;
   key: number;
+  taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
@@ -102,7 +103,7 @@ function Task(props: {
       </Grid>
       <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
         <DeleteModal
-          message="Are you sure, you want to delete this task?"
+          message={props.taskTranslation.taskDeleteMessage}
           submit={deleteThisTask}
           deleteButton={DeleteTaskButton}
         />

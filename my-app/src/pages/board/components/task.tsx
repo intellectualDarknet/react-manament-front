@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEvent, SetStateAction } from 'react';
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
 import { Button, ButtonGroup, Grid, Paper, Typography } from '@mui/material';
 import DeleteModal from 'components/deleteModal';
 import DeleteTaskButton from './DeleteTaskButton';
@@ -19,10 +19,13 @@ function Task(props: {
     taskDeleteMessage: string;
   };
   isChosenTask: boolean;
+  currentTaskContent: { title: string; description: string };
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   setClickedEditTaskId: Dispatch<SetStateAction<string>>;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
+  changeTaskContentState: (inputValues: { title: string; description: string }) => void;
+  changeTaskContent: (task: ITask) => void;
 }): JSX.Element {
   const deleteThisTask = () => {
     props.deleteTaskByButtonPress({ boardId: props.board._id, columnId: props.column._id, taskId: props.task._id });
@@ -78,17 +81,34 @@ function Task(props: {
     }
   };
 
-  const clickHandler = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     const clickPath = event.nativeEvent.composedPath() as HTMLElement[];
     const task = clickPath.find((elem): boolean => !!elem.dataset.taskId);
     if (task) {
+      props.changeTaskContentState({ title: props.task.title, description: props.task.description });
       props.setClickedEditTaskId(task.dataset.taskId);
     }
   };
 
-  const handleCloseTaskInput = () => {
+  const handleCloseTaskInput = (): void => {
+    props.changeTaskContentState({ title: '', description: '' });
     props.setClickedEditTaskId('');
+  };
+
+  const handleTaskTitleInputChange = (event: FormEvent<HTMLFormElement>) => {
+    const newValue = { ...props.currentTaskContent, title: (event.target as HTMLInputElement).value };
+    props.changeTaskContentState(newValue);
+  };
+
+  const handleTaskDescriptionInputChange = (event: FormEvent<HTMLFormElement>) => {
+    const newValue = { ...props.currentTaskContent, description: (event.target as HTMLInputElement).value };
+    props.changeTaskContentState(newValue);
+  };
+
+  const handleTaskContentInputSubmit = (event: FormEvent<Element>): void => {
+    event.stopPropagation();
+    props.changeTaskContent(props.task);
   };
 
   return (
@@ -118,14 +138,10 @@ function Task(props: {
     >
       {props.isChosenTask ? (
         <Grid container item className="column__title-form-conteiner">
-          <ValidatorForm
-            className="column__title-form"
-            // onChange={onColumnTitleInputChange}
-            onSubmit={() => {}}
-            noValidate
-          >
+          <ValidatorForm className="column__title-form" onSubmit={handleTaskContentInputSubmit} noValidate>
             <TextValidator
               className="task__title-input"
+              onChange={handleTaskTitleInputChange}
               // onBlur={handleColumnTitleInputClose}
               autoComplete="off"
               variant="outlined"
@@ -137,12 +153,13 @@ function Task(props: {
               label={props.taskTranslation.taskNewTitle}
               name="task-title"
               autoFocus
-              value={'props.currentColumnTitle'}
+              value={props.currentTaskContent.title}
               validators={['required']}
               errorMessages={['this field is required', 'task title is not valid']}
             />
             <TextValidator
               className="task__description-input"
+              onChange={handleTaskDescriptionInputChange}
               // onBlur={handleColumnTitleInputClose}
               autoComplete="off"
               variant="outlined"
@@ -154,7 +171,7 @@ function Task(props: {
               label={props.taskTranslation.taskNewDescription}
               name="task-description"
               autoFocus
-              value={'props.currentColumnTitle'}
+              value={props.currentTaskContent.description}
               validators={['required']}
               errorMessages={['this field is required', 'task description is not valid']}
             />
@@ -175,7 +192,7 @@ function Task(props: {
         </Grid>
       ) : (
         <>
-          <Grid container item className="task__description-conteiner" onClick={clickHandler} xl={10} xs={10}>
+          <Grid container item className="task__description-conteiner" onClick={handleClick} xl={10} xs={10}>
             <Typography className="task__description" variant="h6">
               {props.task.title}
             </Typography>

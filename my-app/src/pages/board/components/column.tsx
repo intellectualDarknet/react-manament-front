@@ -33,6 +33,7 @@ function Column(props: {
   columnIsLoading: boolean;
   tasksIsLoading: boolean;
   clickedEditTaskId: string;
+  currentTaskContent: { title: string; description: string };
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
@@ -44,7 +45,9 @@ function Column(props: {
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
   changeColumnTitleState: (inputValue: string) => void;
+  changeTaskContentState: (inputValues: { title: string; description: string }) => void;
   changeColumnTitle: (column: IColumnResponse) => void;
+  changeTaskContent: (task: ITask) => void;
 }): JSX.Element {
   const filterTask = (tasks: ITask[]): ITask[] => {
     const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
@@ -69,11 +72,11 @@ function Column(props: {
     props.showColumnTitleInput(props.column._id);
   };
 
-  const onColumnTitleInputChange = (event: FormEvent<HTMLFormElement>): void => {
+  const handleColumnTitleInputChange = (event: FormEvent<HTMLFormElement>): void => {
     props.changeColumnTitleState((event.target as HTMLInputElement).value);
   };
 
-  const onColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
+  const handleColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
     event.stopPropagation();
     props.changeColumnTitle(props.column);
   };
@@ -173,8 +176,8 @@ function Column(props: {
             <ValidatorForm
               className="column__title-form"
               onError={(errors) => console.log(errors)}
-              onChange={onColumnTitleInputChange}
-              onSubmit={onColumnTitleInputSubmit}
+              onChange={handleColumnTitleInputChange}
+              onSubmit={handleColumnTitleInputSubmit}
               noValidate
             >
               <TextValidator
@@ -230,10 +233,13 @@ function Column(props: {
               key: task._id,
               taskTranslation: props.taskTranslation,
               isChosenTask,
+              currentTaskContent: props.currentTaskContent,
               setDragItem: props.setDragItem,
               setDropTask: props.setDropTask,
               setClickedEditTaskId: props.setClickedEditTaskId,
               deleteTaskByButtonPress: props.deleteTaskByButtonPress,
+              changeTaskContentState: props.changeTaskContentState,
+              changeTaskContent: props.changeTaskContent,
             });
           })
         )}

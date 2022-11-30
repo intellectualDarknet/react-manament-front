@@ -167,7 +167,7 @@ const Board = (): JSX.Element => {
         columnId: task.columnId,
         boardId: task.boardId,
         taskId: task._id,
-        userId: 0, // Здесь ошибка в бекенде, должна быть string
+        userId: 0, // Здесь ошибка в бекенде - должна быть string
         users: task.users,
       })
     );

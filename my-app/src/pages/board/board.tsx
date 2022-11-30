@@ -51,6 +51,9 @@ const Board = (): JSX.Element => {
   };
   const taskTranslation = {
     addTaskBtnTitle: t('board.addTask'),
+    changeTaskBtnTitle: t('board.changeTask'),
+    taskNewTitle: t('board.taskNewTitle'),
+    taskNewDescription: t('board.taskNewDescription'),
     taskDeleteMessage: t('board.deleteMessage', { item: 'task', itemRu: 'задачу' }),
   };
   const dispatch = useDispatch<typeof store.dispatch>();

@@ -1,15 +1,23 @@
 import React, { Dispatch, DragEvent, SetStateAction } from 'react';
-import { Grid, Paper, Typography } from '@mui/material';
+import { Button, ButtonGroup, Grid, Paper, Typography } from '@mui/material';
 import DeleteModal from 'components/deleteModal';
 import DeleteTaskButton from './DeleteTaskButton';
 import { DragItemType, IDragItemState, ITaskState } from '../board';
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Task(props: {
   board: IBoardResponse;
   column: IColumnResponse;
   task: ITask;
   key: string;
-  taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
+  taskTranslation: {
+    taskNewTitle: string;
+    taskNewDescription: string;
+    changeTaskBtnTitle: string;
+    addTaskBtnTitle: string;
+    taskDeleteMessage: string;
+  };
   isChosenTask: boolean;
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
@@ -73,23 +81,20 @@ function Task(props: {
   const clickHandler = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     const clickPath = event.nativeEvent.composedPath() as HTMLElement[];
-    const isBtn = clickPath.find((elem): boolean => {
-      if (elem.classList) {
-        return elem.classList.contains('task__delete-btn');
-      }
-      return false;
-    });
-    if (!isBtn) {
-      props.setClickedEditTaskId(event.currentTarget.dataset.taskId);
+    const task = clickPath.find((elem): boolean => !!elem.dataset.taskId);
+    if (task) {
+      props.setClickedEditTaskId(task.dataset.taskId);
     }
-  }; // TODO: Если нажать кнопку удаления, потом отменить удаление, таск выбирается
-  // Нужно это устранить
+  };
+
+  const handleCloseTaskInput = () => {
+    props.setClickedEditTaskId('');
+  };
 
   return (
     <Paper
       className="column__task"
       key={props.key}
-      onClick={clickHandler}
       elevation={2}
       draggable={true}
       data-column-id={props.column._id}
@@ -112,10 +117,65 @@ function Task(props: {
       }}
     >
       {props.isChosenTask ? (
-        <p>Task was chosen</p>
+        <Grid container item className="column__title-form-conteiner">
+          <ValidatorForm
+            className="column__title-form"
+            // onChange={onColumnTitleInputChange}
+            onSubmit={() => {}}
+            noValidate
+          >
+            <TextValidator
+              className="task__title-input"
+              // onBlur={handleColumnTitleInputClose}
+              autoComplete="off"
+              variant="outlined"
+              size="small"
+              margin="normal"
+              required
+              fullWidth
+              id="task-title"
+              label={props.taskTranslation.taskNewTitle}
+              name="task-title"
+              autoFocus
+              value={'props.currentColumnTitle'}
+              validators={['required']}
+              errorMessages={['this field is required', 'task title is not valid']}
+            />
+            <TextValidator
+              className="task__description-input"
+              // onBlur={handleColumnTitleInputClose}
+              autoComplete="off"
+              variant="outlined"
+              size="small"
+              margin="normal"
+              required
+              fullWidth
+              id="task-description"
+              label={props.taskTranslation.taskNewDescription}
+              name="task-description"
+              autoFocus
+              value={'props.currentColumnTitle'}
+              validators={['required']}
+              errorMessages={['this field is required', 'task description is not valid']}
+            />
+            <ButtonGroup className="title-form__btn-group">
+              <Button variant="contained" color="primary" type="submit">
+                {props.taskTranslation.changeTaskBtnTitle}
+              </Button>
+              <Button
+                className="task__close-input-btn"
+                onClick={handleCloseTaskInput}
+                variant="contained"
+                color="error"
+              >
+                <CloseIcon />
+              </Button>
+            </ButtonGroup>
+          </ValidatorForm>{' '}
+        </Grid>
       ) : (
         <>
-          <Grid container item className="task__description-conteiner" xl={10} xs={10}>
+          <Grid container item className="task__description-conteiner" onClick={clickHandler} xl={10} xs={10}>
             <Typography className="task__description" variant="h6">
               {props.task.title}
             </Typography>

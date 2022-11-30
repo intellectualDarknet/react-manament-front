@@ -23,7 +23,13 @@ function Column(props: {
     changeTitle: string;
     columnDeleteMessage: string;
   };
-  taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
+  taskTranslation: {
+    taskNewTitle: string;
+    taskNewDescription: string;
+    changeTaskBtnTitle: string;
+    addTaskBtnTitle: string;
+    taskDeleteMessage: string;
+  };
   columnIsLoading: boolean;
   tasksIsLoading: boolean;
   clickedEditTaskId: string;
@@ -192,7 +198,7 @@ function Column(props: {
                   {props.columnTranslation.changeTitle}
                 </Button>
                 <Button
-                  className="column__close-title-btn"
+                  className="column__close-input-btn"
                   onClick={handleColumnTitleInputClose}
                   variant="contained"
                   color="error"

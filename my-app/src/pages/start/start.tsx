@@ -88,6 +88,7 @@ const Start = () => {
                         margin: '5px',
                         backgroundColor: theme.palette.secondary.main,
                         color: theme.palette.primary.main,
+                        borderRadius: '32px',
                       },
                       (theme) => ({
                         '&:hover': {
@@ -108,6 +109,7 @@ const Start = () => {
                         margin: '5px',
                         backgroundColor: theme.palette.secondary.main,
                         color: theme.palette.primary.main,
+                        borderRadius: '32px',
                       },
                       (theme) => ({
                         '&:hover': {
@@ -131,6 +133,7 @@ const Start = () => {
                         margin: '5px',
                         backgroundColor: theme.palette.secondary.main,
                         color: theme.palette.primary.main,
+                        borderRadius: '32px',
                       },
                       (theme) => ({
                         '&:hover': {

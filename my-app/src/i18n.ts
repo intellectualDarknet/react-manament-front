@@ -29,6 +29,7 @@ i18next
             signIn: 'Sign in',
             signUp: 'Sign up',
             logOut: 'Log out',
+            LOGOUT: 'LOG OUT',
             boards: 'Boards',
             team: 'Our team:',
             veronika: 'Veronika',
@@ -48,7 +49,7 @@ i18next
           header: {
             boards: 'BOARDS',
             edit: 'EDIT PROFILE',
-            toMain: 'Go to Main Page',
+            toMain: 'GO TO MAIN',
           },
           notFound: 'The page not found',
 
@@ -91,7 +92,7 @@ i18next
           auth: {
             signIn: 'Sign In',
             signUp: 'Sign Up',
-            backToMain: 'Back to main page',
+            backToMain: 'Back to',
             main: 'Main page',
             register: 'Register',
             notRegistered: 'Not registered?',
@@ -125,6 +126,7 @@ i18next
             signIn: 'Войти',
             signUp: 'Зарегистрироваться',
             logOut: 'Выйти',
+            LOGOUT: 'ВЫЙТИ',
             boards: 'Доски',
             team: 'Наша команда:',
             ivan: 'Иван',
@@ -145,7 +147,7 @@ i18next
           header: {
             boards: 'ДОСКИ',
             edit: 'РЕДАКТИРОВАТЬ ПРОФИЛЬ',
-            toMain: 'Перейти на главную',
+            toMain: 'НА ГЛАВНУЮ',
           },
           notFound: 'Страница не найдена',
 
@@ -188,7 +190,7 @@ i18next
           auth: {
             signIn: 'Войти',
             signUp: 'Регистрация',
-            backToMain: 'Назад на главную',
+            backToMain: 'Назад',
             main: 'Главная страница',
             register: 'Зарегистрироваться',
             notRegistered: 'Не зарегистрированы?',

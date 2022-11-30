@@ -14,7 +14,6 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Link } from 'react-router-dom';
 import { useAppSelector, RootState, useAppDispatch } from 'store/store';
-import { Button } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useTranslation, Trans } from 'react-i18next';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
@@ -58,7 +57,9 @@ function Header() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AssessmentIcon sx={{ display: 'flex', mr: 1 }} />
+          <Link to="/">
+            <AssessmentIcon sx={{ display: 'flex', mr: 1, color: theme.palette.secondary.main }} />
+          </Link>
           <Typography
             variant="h6"
             noWrap
@@ -90,7 +91,7 @@ function Header() {
             {userId ? (
               <Box
                 sx={{
-                  width: '190px',
+                  width: '220px',
                   display: { xs: 'none', sm: 'flex' },
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -98,28 +99,47 @@ function Header() {
               >
                 <Link to="/boards">
                   <Typography
-                    sx={{
-                      fontFamily: 'monospace',
-                      fontWeight: 700,
-                      display: 'flex',
-                      color: theme.palette.secondary.main,
-                      textDecoration: 'none',
-                    }}
+                    textAlign="center"
+                    sx={[
+                      {
+                        fontFamily: 'monospace',
+                        fontWeight: 700,
+                        width: '100px',
+                        fontSize: '15px',
+                        color: theme.palette.secondary.main,
+                        textDecoration: 'none',
+                        transition: '.5s',
+                      },
+                      (theme) => ({
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }),
+                    ]}
                   >
-                    <Trans i18nKey="header.boards"></Trans>
+                    <Trans i18nKey="header.toMain"></Trans>
                   </Typography>
                 </Link>
                 <Link to="/user-page">
                   <Typography
-                    sx={{
-                      mr: 2,
-                      width: '80px',
-                      display: 'flex',
-                      fontFamily: 'monospace',
-                      fontWeight: 700,
-                      color: theme.palette.secondary.main,
-                      textDecoration: 'none',
-                    }}
+                    textAlign="center"
+                    sx={[
+                      {
+                        width: '110px',
+                        fontFamily: 'monospace',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        color: theme.palette.secondary.main,
+                        textDecoration: 'none',
+                        transition: '.5s',
+                      },
+                      ,
+                      (theme) => ({
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }),
+                    ]}
                   >
                     <Trans i18nKey="header.edit"></Trans>
                   </Typography>
@@ -135,8 +155,8 @@ function Header() {
               sx={{
                 flexGrow: 0,
                 display: { xs: 'none', sm: 'flex' },
-                width: '150px',
-                justifyContent: 'space-between',
+                width: '30px',
+                justifyContent: 'center',
                 margin: '5px',
                 alignItems: 'center',
               }}
@@ -144,25 +164,6 @@ function Header() {
               <Tooltip title={t('main.logOut')}>
                 <LogoutIcon onClick={() => dispatch(logout())} />
               </Tooltip>
-              <Link to="/">
-                <Typography
-                  sx={{
-                    mr: 2,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    margin: 0,
-                    width: '100px',
-                    justifyContent: 'end',
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.03rem',
-                    color: theme.palette.secondary.main,
-                    textDecoration: 'none',
-                  }}
-                >
-                  <Trans i18nKey="header.toMain"></Trans>
-                </Typography>
-              </Link>
             </Box>
           ) : (
             <Box
@@ -211,7 +212,7 @@ function Header() {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem>
-                  <Button
+                  <Typography
                     sx={{
                       textAlign: 'center',
                       textDecoration: 'none',
@@ -220,21 +221,8 @@ function Header() {
                     }}
                     onClick={() => dispatch(logout())}
                   >
-                    {t('main.logOut')}
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Link to="/">
-                    <Typography
-                      sx={{
-                        textAlign: 'center',
-                        textDecoration: 'none',
-                        color: theme.palette.secondary.main,
-                      }}
-                    >
-                      <Trans i18nKey="header.toMain"></Trans>
-                    </Typography>
-                  </Link>
+                    {t('main.LOGOUT')}
+                  </Typography>
                 </MenuItem>
                 <MenuItem>
                   <Link to="/boards">
@@ -245,7 +233,7 @@ function Header() {
                         color: theme.palette.secondary.main,
                       }}
                     >
-                      <Trans i18nKey="header.boards"></Trans>
+                      <Trans i18nKey="header.toMain"></Trans>
                     </Typography>
                   </Link>
                 </MenuItem>

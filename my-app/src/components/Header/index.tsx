@@ -40,6 +40,13 @@ function Header() {
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     setAlignment(newAlignment);
   };
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   return (
     <AppBar
@@ -51,7 +58,7 @@ function Header() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AssessmentIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AssessmentIcon sx={{ display: 'flex', mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -62,27 +69,7 @@ function Header() {
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            PROJECT MANAGMENT APP
-          </Typography>
-          <AssessmentIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.2rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
@@ -93,73 +80,194 @@ function Header() {
             sx={{
               flexGrow: 1,
               display: 'flex',
-              justifyContent: 'space-evenly',
+              justifyContent: 'center',
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.03rem',
               textDecoration: 'none',
             }}
           >
             {userId ? (
-              <Link to="/boards">
-                <Typography
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: theme.palette.secondary.main,
-                    textDecoration: 'none',
-                  }}
-                >
-                  <Trans i18nKey="header.boards"></Trans>
-                </Typography>
-              </Link>
-            ) : (
-              <></>
-            )}
-            {userId ? (
-              <Link to="/user-page">
-                <Typography
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: theme.palette.secondary.main,
-                    textDecoration: 'none',
-                  }}
-                >
-                  <Trans i18nKey="header.edit"></Trans>
-                </Typography>
-              </Link>
+              <Box
+                sx={{
+                  width: '190px',
+                  display: { xs: 'none', sm: 'flex' },
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Link to="/boards">
+                  <Typography
+                    sx={{
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      display: 'flex',
+                      color: theme.palette.secondary.main,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Trans i18nKey="header.boards"></Trans>
+                  </Typography>
+                </Link>
+                <Link to="/user-page">
+                  <Typography
+                    sx={{
+                      mr: 2,
+                      width: '80px',
+                      display: 'flex',
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      color: theme.palette.secondary.main,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Trans i18nKey="header.edit"></Trans>
+                  </Typography>
+                </Link>
+              </Box>
             ) : (
               <></>
             )}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            {userId ? (
+          {userId ? (
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: { xs: 'none', sm: 'flex' },
+                width: '150px',
+                justifyContent: 'space-between',
+                margin: '5px',
+                alignItems: 'center',
+              }}
+            >
               <Tooltip title={t('main.logOut')}>
                 <LogoutIcon onClick={() => dispatch(logout())} />
               </Tooltip>
-            ) : (
-              <>
-                <Tooltip title={t('main.signIn')}>
-                  <Link to="sign-in">
-                    <PersonIcon fontSize="large" color="secondary" />
+              <Link to="/">
+                <Typography
+                  sx={{
+                    mr: 2,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    margin: 0,
+                    width: '100px',
+                    justifyContent: 'end',
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.03rem',
+                    color: theme.palette.secondary.main,
+                    textDecoration: 'none',
+                  }}
+                >
+                  <Trans i18nKey="header.toMain"></Trans>
+                </Typography>
+              </Link>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: 'flex',
+                width: '80px',
+                justifyContent: 'space-between',
+                margin: '5px',
+                alignItems: 'center',
+              }}
+            >
+              <Tooltip title={t('main.signIn')}>
+                <Link to="sign-in">
+                  <PersonIcon fontSize="large" color="secondary" />
+                </Link>
+              </Tooltip>
+              <Tooltip title={t('main.signUp')}>
+                <Link to="sign-up">
+                  <PersonAddAlt1Icon fontSize="large" color="secondary" />
+                </Link>
+              </Tooltip>
+            </Box>
+          )}
+          {userId ? (
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', sm: 'none' } }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <PersonIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem>
+                  <Button
+                    sx={{
+                      textAlign: 'center',
+                      textDecoration: 'none',
+                      color: theme.palette.secondary.main,
+                      padding: 0,
+                    }}
+                    onClick={() => dispatch(logout())}
+                  >
+                    {t('main.logOut')}
+                  </Button>
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/">
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: theme.palette.secondary.main,
+                      }}
+                    >
+                      <Trans i18nKey="header.toMain"></Trans>
+                    </Typography>
                   </Link>
-                </Tooltip>
-                <Tooltip title={t('main.signUp')}>
-                  <Link to="sign-up">
-                    <PersonAddAlt1Icon fontSize="large" color="secondary" />
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/boards">
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: theme.palette.secondary.main,
+                      }}
+                    >
+                      <Trans i18nKey="header.boards"></Trans>
+                    </Typography>
                   </Link>
-                </Tooltip>
-              </>
-            )}
-          </Box>
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/user-page">
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: theme.palette.secondary.main,
+                      }}
+                    >
+                      <Trans i18nKey="header.edit"></Trans>
+                    </Typography>
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            <></>
+          )}
+
           <ToggleButtonGroup
             color="secondary"
             size="small"

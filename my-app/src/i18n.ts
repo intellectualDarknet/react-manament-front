@@ -22,7 +22,8 @@ i18next
           loading: 'Loading...',
           main: {
             heading: 'PROJECT MANAGER APPLICATION',
-            text: `is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. You can
+            text: `is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. `,
+            medium: `You can
             automate and customize your workflow and avoid unnecessary meetings as communicating to your team members are
             easier with project manager application.`,
             signIn: 'Sign in',
@@ -47,6 +48,7 @@ i18next
           header: {
             boards: 'BOARDS',
             edit: 'EDIT PROFILE',
+            toMain: 'Go to Main Page',
           },
           notFound: 'The page not found',
 
@@ -118,7 +120,8 @@ i18next
           loading: 'Загрузка...',
           main: {
             heading: 'МЕНЕДЖЕР ПРОЕКТОВ',
-            text: `это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу. Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,
+            text: `это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу.`,
+            medium: `Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,
             signIn: 'Войти',
             signUp: 'Зарегистрироваться',
             logOut: 'Выйти',
@@ -140,6 +143,7 @@ i18next
           header: {
             boards: 'ДОСКИ',
             edit: 'РЕДАКТИРОВАТЬ ПРОФИЛЬ',
+            toMain: 'Перейти на главную',
           },
           notFound: 'Страница не найдена',
 

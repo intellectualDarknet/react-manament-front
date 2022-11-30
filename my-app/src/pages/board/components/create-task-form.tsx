@@ -1,11 +1,9 @@
+import { FormEvent, useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import React, { FormEvent, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
-import { IAuthState } from 'store/auth/auth-slice';
-import { createColumn } from 'store/columns/columns-thunks';
 import { createTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
 import { useTranslation } from 'react-i18next';
 

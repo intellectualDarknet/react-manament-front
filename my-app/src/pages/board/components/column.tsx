@@ -15,28 +15,39 @@ function Column(props: {
   board: IBoardResponse;
   column: IColumnResponse;
   tasks: Map<string, ITask[]>;
-  key: number;
+  key: string;
   isChosenColumnTitle: boolean;
+  currentColumnTitle: string;
   columnTranslation: {
     columnNewTitle: string;
     changeTitle: string;
     columnDeleteMessage: string;
   };
-  taskTranslation: { addTaskBtnTitle: string; taskDeleteMessage: string };
+  taskTranslation: {
+    taskNewTitle: string;
+    taskNewDescription: string;
+    changeTaskBtnTitle: string;
+    addTaskBtnTitle: string;
+    taskDeleteMessage: string;
+  };
   columnIsLoading: boolean;
   tasksIsLoading: boolean;
+  clickedEditTaskId: string;
+  currentTaskContent: { title: string; description: string };
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
+  setClickedEditTaskId: Dispatch<SetStateAction<string>>;
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropColumn: Dispatch<SetStateAction<IColumnState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
-  currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
+  changeTaskContentState: (inputValues: { title: string; description: string }) => void;
   changeColumnTitle: (column: IColumnResponse) => void;
+  changeTaskContent: (task: ITask) => void;
 }): JSX.Element {
   const filterTask = (tasks: ITask[]): ITask[] => {
     const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
@@ -61,11 +72,11 @@ function Column(props: {
     props.showColumnTitleInput(props.column._id);
   };
 
-  const onColumnTitleInputChange = (event: FormEvent<HTMLFormElement>): void => {
+  const handleColumnTitleInputChange = (event: FormEvent<HTMLFormElement>): void => {
     props.changeColumnTitleState((event.target as HTMLInputElement).value);
   };
 
-  const onColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
+  const handleColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
     event.stopPropagation();
     props.changeColumnTitle(props.column);
   };
@@ -165,8 +176,8 @@ function Column(props: {
             <ValidatorForm
               className="column__title-form"
               onError={(errors) => console.log(errors)}
-              onChange={onColumnTitleInputChange}
-              onSubmit={onColumnTitleInputSubmit}
+              onChange={handleColumnTitleInputChange}
+              onSubmit={handleColumnTitleInputSubmit}
               noValidate
             >
               <TextValidator
@@ -190,7 +201,7 @@ function Column(props: {
                   {props.columnTranslation.changeTitle}
                 </Button>
                 <Button
-                  className="column__close-title-btn"
+                  className="column__close-input-btn"
                   onClick={handleColumnTitleInputClose}
                   variant="contained"
                   color="error"
@@ -210,16 +221,25 @@ function Column(props: {
             <CircularProgress color="secondary" />
           </Grid>
         ) : (
-          tasksOfCurrentColumn.map((elem, index) => {
+          tasksOfCurrentColumn.map((task, index) => {
+            let isChosenTask = false;
+            if (props.clickedEditTaskId === task._id) {
+              isChosenTask = true;
+            }
             return Task({
               board: props.board,
               column: props.column,
-              task: elem,
-              key: index,
+              task: task,
+              key: task._id,
               taskTranslation: props.taskTranslation,
+              isChosenTask,
+              currentTaskContent: props.currentTaskContent,
               setDragItem: props.setDragItem,
               setDropTask: props.setDropTask,
+              setClickedEditTaskId: props.setClickedEditTaskId,
               deleteTaskByButtonPress: props.deleteTaskByButtonPress,
+              changeTaskContentState: props.changeTaskContentState,
+              changeTaskContent: props.changeTaskContent,
             });
           })
         )}

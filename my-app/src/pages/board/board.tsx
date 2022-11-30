@@ -6,7 +6,7 @@ import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
 import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
-import { getTasksByBoardId, deleteTask } from 'store/tasks/tasks-thunk';
+import { getTasksByBoardId, deleteTask, updateTaskById } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -51,6 +51,9 @@ const Board = (): JSX.Element => {
   };
   const taskTranslation = {
     addTaskBtnTitle: t('board.addTask'),
+    changeTaskBtnTitle: t('board.changeTask'),
+    taskNewTitle: t('board.taskNewTitle'),
+    taskNewDescription: t('board.taskNewDescription'),
     taskDeleteMessage: t('board.deleteMessage', { item: 'task', itemRu: 'задачу' }),
   };
   const dispatch = useDispatch<typeof store.dispatch>();
@@ -93,7 +96,9 @@ const Board = (): JSX.Element => {
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
+  const [clickedEditTaskId, setClickedEditTaskId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
+  const [currentTaskContent, setCurrentTaskContent] = useState({ title: '', description: '' });
   const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
   const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
   const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
@@ -134,6 +139,12 @@ const Board = (): JSX.Element => {
     });
   };
 
+  const changeTaskContentState = (inputValues: { title: string; description: string }): void => {
+    setCurrentTaskContent((): { title: string; description: string } => {
+      return inputValues;
+    });
+  };
+
   const changeColumnTitle = async (column: IColumnResponse): Promise<void> => {
     await dispatch(
       updateColumnById({
@@ -145,6 +156,24 @@ const Board = (): JSX.Element => {
     );
     changeColumnTitleState('');
     showColumnTitleInput('');
+  };
+
+  const changeTaskContent = async (task: ITask): Promise<void> => {
+    await dispatch(
+      updateTaskById({
+        title: currentTaskContent.title,
+        order: task.order,
+        description: currentTaskContent.description,
+        columnId: task.columnId,
+        boardId: task.boardId,
+        taskId: task._id,
+        userId: 0, // Здесь ошибка в бекенде - должна быть string
+        users: task.users,
+      })
+    );
+    changeTaskContentState({ title: '', description: '' });
+    setClickedEditTaskId('');
+    await dispatch(getTasksByBoardId(currentBoard._id));
   };
 
   const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
@@ -180,24 +209,29 @@ const Board = (): JSX.Element => {
         board: currentBoard,
         column,
         tasks: sortedTasks,
-        key: index,
+        key: column._id,
         isChosenColumnTitle,
         currentColumnTitle,
         columnTranslation,
         taskTranslation,
         columnIsLoading,
         tasksIsLoading,
+        clickedEditTaskId,
+        currentTaskContent,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
         setTaskIsChosen,
         setClickedAddTaskColumnId,
+        setClickedEditTaskId,
         setDragItem,
         setDropColumn,
         setDropTask,
         showColumnTitleInput,
         changeColumnTitleState,
+        changeTaskContentState,
         changeColumnTitle,
+        changeTaskContent,
       });
     });
 

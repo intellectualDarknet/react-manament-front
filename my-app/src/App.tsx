@@ -15,9 +15,20 @@ import UserBoards from 'pages/boards/userBoards';
 import { RootState, useAppSelector } from 'store/store';
 import User from 'pages/userPage';
 import SnackBar from 'components/snackbar/snackbar';
+import { parseJwt } from 'utils/parseJwt';
+import { logout, testTokenForExp } from 'store/auth/auth-slice';
+import { useDispatch } from 'react-redux';
 
 function App(): JSX.Element {
+  const dispatch = useDispatch();
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const token: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.token);
+  if (token) {
+    const { exp } = parseJwt(token);
+    if (!testTokenForExp(exp)) {
+      dispatch(logout());
+    }
+  }
 
   return (
     <BrowserRouter>

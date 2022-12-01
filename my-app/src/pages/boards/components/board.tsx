@@ -70,7 +70,7 @@ const Board = (props: { title: string; id: string }) => {
         }}
       >
         <Button
-          sx={{ m: '10px', p: '10px', borderRadius: '32px', transition: '.5s' }}
+          sx={{ margin: '10px', padding: '10px 20px', borderRadius: '32px' }}
           variant="contained"
           onClick={handleClose}
         >

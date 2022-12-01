@@ -9,7 +9,7 @@ function DeleteButton(handleToggleModal: () => void): JSX.Element {
       fullWidth
       variant="contained"
       color="secondary"
-      sx={{ m: '10px', borderRadius: '32px' }}
+      sx={{ m: '10px', p: '0', borderRadius: '32px', width: '100px' }}
     >
       {t('boards.delete')}
     </Button>

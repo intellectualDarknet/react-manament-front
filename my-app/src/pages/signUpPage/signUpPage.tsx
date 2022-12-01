@@ -59,13 +59,7 @@ const SignUpPage = () => {
         component={Paper}
         square
       >
-        <ValidatorForm
-          onError={(errors) => console.log(errors)}
-          onSubmit={onSignUpSubmit}
-          onChange={onFormChange}
-          noValidate
-          sx={{ width: '80%' }}
-        >
+        <ValidatorForm onSubmit={onSignUpSubmit} onChange={onFormChange} noValidate sx={{ width: '80%' }}>
           <Typography variant="h5" component="h2">
             {t('auth.signUp')}
           </Typography>

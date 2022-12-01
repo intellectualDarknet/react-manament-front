@@ -68,7 +68,7 @@ const CreateTaskForm = (props: {
       }}
     >
       <ValidatorForm
-        onError={(errors) => console.log(errors)}
+        onError={(errors) => console.log(errors)} // TODO: Заменить на вывод ошибки в тостере
         onSubmit={onColumnTitleSubmit}
         onChange={onFormChange}
         noValidate

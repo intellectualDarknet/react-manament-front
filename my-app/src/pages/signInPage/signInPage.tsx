@@ -50,7 +50,7 @@ const SignInPage = () => {
       className="signin"
     >
       <ValidatorForm
-        onError={(errors) => console.log(errors)}
+        onError={(errors) => console.log(errors)} // TODO: Заменить на вывод ошибки в тостере
         onSubmit={onSigninSubmit}
         onChange={onFormChange}
         noValidate

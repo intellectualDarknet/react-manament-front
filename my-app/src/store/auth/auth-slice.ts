@@ -40,7 +40,6 @@ export const authSlice = createSlice({
   name: 'auth',
   reducers: {
     logout: () => {
-      console.log('Logout!');
       localStorage.removeItem('token');
       return initialState;
     },

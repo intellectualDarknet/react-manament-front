@@ -62,7 +62,7 @@ const SignInPage = () => {
           onSubmit={onSigninSubmit}
           onChange={onFormChange}
           noValidate
-          sx={{ width: '80%', display: 'flex', justifyContent: 'center' }}
+          sx={{ width: { xs: '240px', md: '400px' }, display: 'flex', justifyContent: 'center' }}
         >
           <Typography textAlign="center" variant="h5" component="h2" sx={{ fontFamily: 'monospace' }}>
             {t('auth.signIn')}

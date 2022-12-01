@@ -59,170 +59,209 @@ const User = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          width: '500px',
-          minWidth: '400px',
+          width: { sm: '500px', xs: '300px' },
+          minWidth: { sm: '500px', xs: '300px' },
           padding: '20px',
         }}
         component={Paper}
         square
       >
-        <Typography variant="h5" component="h2">
+        <Typography variant="h4" component="h2" sx={{ alignSelf: 'center', fontFamily: 'monospace' }}>
           {t('user.data')}
         </Typography>
         {userState.userById ? (
           <>
-            <Typography variant="h5" component="h4">
-              {t('user.name')} {userState.userById.name}
-            </Typography>
-
-            <Typography variant="h5" component="h4">
-              {t('user.login')} {userState.userById.login}
-            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+              }}
+            >
+              <Typography variant="h6" sx={{ mr: '10px', fontFamily: 'monospace' }}>
+                {t('user.name')}
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{ fontSize: { xs: '17px', sm: 'inherit' }, display: 'flex', alignItems: 'center' }}
+              >
+                {' '}
+                {userState.userById.name}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+              }}
+            >
+              <Typography variant="h6" component="h5" sx={{ mr: '10px', fontFamily: 'monospace' }}>
+                {t('user.login')}
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{ fontSize: { xs: '17px', sm: 'inherit' }, display: 'flex', alignItems: 'center' }}
+              >
+                {' '}
+                {userState.userById.login}
+              </Typography>
+            </Box>
           </>
         ) : (
           <></>
         )}
-
-        <Typography variant="h5" component="h4">
-          Id: {userId}
-        </Typography>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          sx={{ marginBottom: '10px' }}
-          onClick={handleClose}
+        <Box
+          sx={{
+            display: 'flex',
+          }}
         >
-          {t('user.edit')}
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>{t('header.edit')}</DialogTitle>
-          <DialogContent>
-            <ValidatorForm
-              className="userPage__form"
-              onError={(errors) => console.log(errors)}
-              onSubmit={onSigninSubmit}
-              noValidate
-            >
-              <TextValidator
-                variant="outlined"
-                sx={{ width: '100%' }}
-                margin="normal"
-                required
-                fullWidth
-                id="name"
-                label={t('user.name')}
-                name="name"
-                autoComplete={t('user.name')}
-                autoFocus
-                value={user.name}
-                validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
-                errorMessages={[
-                  t('user.errorRequired'),
-                  t('user.errorLength', {
-                    itemRu: 'Имя',
-                    item: 'Name',
-                    should: 'should',
-                    shouldRu: 'должно',
-                    minCount: '2',
-                    maxCount: '13',
-                  }),
-                  t('user.errorLength', {
-                    itemRu: 'Имя',
-                    item: 'Name',
-                    should: 'should',
-                    shouldRu: 'должно',
-                    minCount: '2',
-                    maxCount: '13',
-                  }),
-                  t('user.errorLetters'),
-                ]}
-                onChange={(e: FormEvent<HTMLFormElement>) => {
-                  SetUser({ ...user, name: (e.target as HTMLInputElement).value });
-                }}
-              />
-              <TextValidator
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="login"
-                label={t('user.login')}
-                name="login"
-                autoComplete={t('user.login')}
-                autoFocus
-                value={user.login}
-                validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
-                errorMessages={[
-                  t('user.errorRequired'),
-                  t('user.errorLength', {
-                    itemRu: 'Логин',
-                    item: 'Login',
-                    should: 'should',
-                    shouldRu: 'должен',
-                    minCount: '2',
-                    maxCount: '13',
-                  }),
-                  t('user.errorLength', {
-                    itemRu: 'Логин',
-                    item: 'Login',
-                    should: 'should',
-                    shouldRu: 'должен',
-                    minCount: '2',
-                    maxCount: '13',
-                  }),
-                  t('user.errorLetters'),
-                ]}
-                onChange={(e: FormEvent<HTMLFormElement>) => {
-                  SetUser({ ...user, login: (e.target as HTMLInputElement).value });
-                }}
-              />
-              <TextValidator
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={t('user.password')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={user.password}
-                validators={['required', 'minStringLength:8', 'maxStringLength:15']}
-                errorMessages={[
-                  t('user.errorRequired'),
-                  t('user.errorLength', {
-                    itemRu: 'Пароль',
-                    item: 'Password',
-                    should: 'should',
-                    shouldRu: 'должен',
-                    minCount: '7',
-                    maxCount: '16',
-                  }),
-                  t('user.errorLength', {
-                    itemRu: 'Пароль',
-                    item: 'Password',
-                    should: 'should',
-                    shouldRu: 'должен',
-                    minCount: '7',
-                    maxCount: '16',
-                  }),
-                ]}
-                onChange={(e: FormEvent<HTMLFormElement>) => {
-                  SetUser({ ...user, password: (e.target as HTMLInputElement).value });
-                }}
-              />
-              <Button sx={{ color: 'black' }} onClick={handleClose}>
-                {t('boards.cancel')}
-              </Button>
-              <Button sx={{ color: 'black' }} type="submit">
-                {t('user.submit')}
-              </Button>
-            </ValidatorForm>
-          </DialogContent>
-        </Dialog>
-        <DeleteModal message={t('user.message')} submit={deleteUser} deleteButton={DeleteButton} />
+          <Typography variant="h6" sx={{ mr: '10px', fontFamily: 'monospace' }}>
+            Id:
+          </Typography>
+          <Typography
+            variant="h5"
+            sx={{ fontSize: { xs: '17px', sm: 'inherit' }, display: 'flex', alignItems: 'center' }}
+          >
+            {' '}
+            {userId}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignSelf: 'center' }}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ margin: '10px', borderRadius: '32px', width: '100px' }}
+            onClick={handleClose}
+          >
+            {t('user.edit')}
+          </Button>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>{t('header.edit')}</DialogTitle>
+            <DialogContent>
+              <ValidatorForm
+                className="userPage__form"
+                onError={(errors) => console.log(errors)}
+                onSubmit={onSigninSubmit}
+                noValidate
+              >
+                <TextValidator
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="name"
+                  label={t('user.name')}
+                  name="name"
+                  autoComplete={t('user.name')}
+                  autoFocus
+                  value={user.name}
+                  validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+                  errorMessages={[
+                    t('user.errorRequired'),
+                    t('user.errorLength', {
+                      itemRu: 'Имя',
+                      item: 'Name',
+                      should: 'should',
+                      shouldRu: 'должно',
+                      minCount: '2',
+                      maxCount: '13',
+                    }),
+                    t('user.errorLength', {
+                      itemRu: 'Имя',
+                      item: 'Name',
+                      should: 'should',
+                      shouldRu: 'должно',
+                      minCount: '2',
+                      maxCount: '13',
+                    }),
+                    t('user.errorLetters'),
+                  ]}
+                  onChange={(e: FormEvent<HTMLFormElement>) => {
+                    SetUser({ ...user, name: (e.target as HTMLInputElement).value });
+                  }}
+                />
+                <TextValidator
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="login"
+                  label={t('user.login')}
+                  name="login"
+                  autoComplete={t('user.login')}
+                  autoFocus
+                  value={user.login}
+                  validators={['required', 'minStringLength:3', 'maxStringLength:12', 'matchRegexp:^[a-zA-Zа-яА-Я]+$']}
+                  errorMessages={[
+                    t('user.errorRequired'),
+                    t('user.errorLength', {
+                      itemRu: 'Логин',
+                      item: 'Login',
+                      should: 'should',
+                      shouldRu: 'должен',
+                      minCount: '2',
+                      maxCount: '13',
+                    }),
+                    t('user.errorLength', {
+                      itemRu: 'Логин',
+                      item: 'Login',
+                      should: 'should',
+                      shouldRu: 'должен',
+                      minCount: '2',
+                      maxCount: '13',
+                    }),
+                    t('user.errorLetters'),
+                  ]}
+                  onChange={(e: FormEvent<HTMLFormElement>) => {
+                    SetUser({ ...user, login: (e.target as HTMLInputElement).value });
+                  }}
+                />
+                <TextValidator
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label={t('user.password')}
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={user.password}
+                  validators={['required', 'minStringLength:8', 'maxStringLength:15']}
+                  errorMessages={[
+                    t('user.errorRequired'),
+                    t('user.errorLength', {
+                      itemRu: 'Пароль',
+                      item: 'Password',
+                      should: 'should',
+                      shouldRu: 'должен',
+                      minCount: '7',
+                      maxCount: '16',
+                    }),
+                    t('user.errorLength', {
+                      itemRu: 'Пароль',
+                      item: 'Password',
+                      should: 'should',
+                      shouldRu: 'должен',
+                      minCount: '7',
+                      maxCount: '16',
+                    }),
+                  ]}
+                  onChange={(e: FormEvent<HTMLFormElement>) => {
+                    SetUser({ ...user, password: (e.target as HTMLInputElement).value });
+                  }}
+                />
+                <Button sx={{ color: 'black' }} onClick={handleClose}>
+                  {t('boards.cancel')}
+                </Button>
+                <Button sx={{ color: 'black' }} type="submit">
+                  {t('user.submit')}
+                </Button>
+              </ValidatorForm>
+            </DialogContent>
+          </Dialog>
+          <DeleteModal message={t('user.message')} submit={deleteUser} deleteButton={DeleteButton} />
+        </Box>
       </Grid>
     </Box>
   );

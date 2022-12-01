@@ -1,12 +1,11 @@
+import { FormEvent, useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import React, { FormEvent, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { RootState, useAppDispatch, useAppSelector } from 'store/store';
-import { IAuthState } from 'store/auth/auth-slice';
-import { createColumn } from 'store/columns/columns-thunks';
 import { createTask, getTasksByBoardId } from 'store/tasks/tasks-thunk';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskState {
   title: string;
@@ -15,12 +14,13 @@ interface ITaskState {
 
 const CreateTaskForm = (props: {
   userId: string;
-  columnId: string;
   board: IGetBoardResponse;
+  columnId: string;
+  sortedTasks: Map<string, ITask[]>;
   toggleForm: () => void;
 }): JSX.Element => {
-  // const auth: IAuthState = useAppSelector((state: RootState) => state.rootReducer.authReducer);
-  // TODO: Заменить на переменную загрузки таска
+  const taskIsCreating = useAppSelector((state: RootState) => state.rootReducer.tasksReducer.createTaskLoading);
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [taskState, setTaskState] = useState<ITaskState>({ title: '', description: '' });
   const onColumnTitleSubmit = async () => {
@@ -29,9 +29,9 @@ const CreateTaskForm = (props: {
         boardId: props.board._id,
         columnId: props.columnId,
         title: taskState.title,
-        order: 0, // TODO: Добавить определение порядка
+        order: props.sortedTasks.get(props.columnId).length,
         description: taskState.description,
-        userId: 0,
+        userId: 0, // Здесь ошибка типа на бэкенде
         users: [props.userId],
       })
     );
@@ -75,7 +75,7 @@ const CreateTaskForm = (props: {
         sx={{ width: '80%' }}
       >
         <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
-          Enter new task title
+          {t('board.newTask')}
         </Typography>
         <TextValidator
           autoComplete="off"
@@ -84,7 +84,7 @@ const CreateTaskForm = (props: {
           required
           fullWidth
           id="title"
-          label="taskTitle"
+          label={t('board.createNewTaskTitlePlaceholder')}
           name="task-title"
           autoFocus
           value={taskState.title}
@@ -98,7 +98,7 @@ const CreateTaskForm = (props: {
           required
           fullWidth
           id="description"
-          label="taskDescription"
+          label={t('board.createNewTaskDescriptionPlaceholder')}
           name="task-Description"
           value={taskState.description}
           validators={['required']}
@@ -111,11 +111,11 @@ const CreateTaskForm = (props: {
           color="secondary"
           sx={{ marginBottom: '10px' }}
           type="submit"
-          // disabled={auth.signInLoading}
-          // loading={auth.signInLoading}
+          disabled={taskIsCreating}
+          loading={taskIsCreating}
           loadingPosition="center"
         >
-          Create task
+          {t('board.createTask')}
         </LoadingButton>
       </ValidatorForm>{' '}
     </Grid>

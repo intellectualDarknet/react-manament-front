@@ -1,4 +1,4 @@
-import react, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import store, { RootState } from 'store/store';
@@ -6,22 +6,67 @@ import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
 import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
-import { getTasksByBoardId, createTask, deleteTask } from 'store/tasks/tasks-thunk';
+import { getTasksByBoardId, deleteTask, updateTaskById } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
+import useResortColumnArr from './functions/use-resort-column-arr';
+import { useTranslation } from 'react-i18next';
+import sortTasks from './functions/sort-tasks';
+import useResortTasksArr from './functions/use-resort-tasks-arr';
+import useMoveTask from './functions/use-move-task';
+import CircularProgress from '@mui/material/CircularProgress';
+
+export interface ITaskState {
+  columnId: string;
+  taskId: string;
+  taskOrder: string;
+}
+
+export interface IColumnState {
+  columnId: string;
+  columnOrder: string;
+}
+
+export enum DragItemType {
+  COLUMN = 'column',
+  TASK = 'task',
+  NONE = '',
+}
+
+export interface IDragItemState {
+  type: DragItemType;
+  columnId: string;
+  taskId: string;
+  order: string;
+}
 
 const Board = (): JSX.Element => {
+  const { t } = useTranslation();
+  const columnTranslation = {
+    columnNewTitle: t('board.columnNewTitle'),
+    changeTitle: t('board.changeTitle'),
+    columnDeleteMessage: t('board.deleteMessage', { item: 'column', itemRu: 'колонку' }),
+  };
+  const taskTranslation = {
+    addTaskBtnTitle: t('board.addTask'),
+    changeTaskBtnTitle: t('board.changeTask'),
+    taskNewTitle: t('board.taskNewTitle'),
+    taskNewDescription: t('board.taskNewDescription'),
+    taskDeleteMessage: t('board.deleteMessage', { item: 'task', itemRu: 'задачу' }),
+  };
   const dispatch = useDispatch<typeof store.dispatch>();
 
   async function getData() {
-    const boardId = store.getState().rootReducer.boardsReducer.boardById._id;
-    await dispatch(getColumnsInBoard(boardId));
-    await dispatch(getTasksByBoardId(boardId));
+    const boardId = store.getState().rootReducer.boardsReducer.boardById?._id;
+    if (boardId) {
+      await dispatch(getColumnsInBoard(boardId));
+      await dispatch(getTasksByBoardId(boardId));
+    }
   }
 
-  useEffect(() => {
+  useEffect((): void => {
     getData();
   }, []);
 
@@ -30,14 +75,35 @@ const Board = (): JSX.Element => {
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
-
-  // TODO: Сделать перераспределение порядка после удаления колонки
+  useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
+  const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
+  const allColumnsIsGetting = useSelector((state: RootState) => state.rootReducer.columnsReducer.columnsLoading);
+  const allColumnsIsUpdating = useSelector(
+    (state: RootState) => state.rootReducer.columnsReducer.updateSetOfColumnsLoading
+  );
+  const oneColumnIsUpdating = useSelector(
+    (state: RootState) => state.rootReducer.columnsReducer.updateColumnByIdLoading
+  );
+  const oneColumnIsDeleting = useSelector((state: RootState) => state.rootReducer.columnsReducer.deleteColumnLoading);
+  const allTasksIsGetting = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardIdLoading);
+  const allTasksIsUpdating = useSelector((state: RootState) => state.rootReducer.tasksReducer.updateTasksByIdsLoading);
+  const oneTaskIsDeleting = useSelector((state: RootState) => state.rootReducer.tasksReducer.deleteTasksLoading);
+  const columnsIsLoading = allColumnsIsGetting || allColumnsIsUpdating || oneColumnIsDeleting;
+  const columnIsLoading = oneColumnIsUpdating;
+  const tasksIsLoading = allTasksIsGetting || allTasksIsUpdating || oneTaskIsDeleting;
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
   const [clickedEditTitleColumnId, setClickedEditTitleColumnId] = useState('');
+  const [clickedEditTaskId, setClickedEditTaskId] = useState('');
   const [currentColumnTitle, setCurrentColumnTitle] = useState('');
+  const [currentTaskContent, setCurrentTaskContent] = useState({ title: '', description: '' });
+  const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+  const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
+  const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
+
+  useMoveTask(currentBoard, dragItem, dropTask, dropColumn, setDragItem, setDropColumn, setDropTask, currentBoardTasks);
 
   const deleteColumnByButtonPress = (columnId: string): void => {
     dispatch(deleteColumn({ boardId: currentBoard._id, columnId }));
@@ -73,6 +139,12 @@ const Board = (): JSX.Element => {
     });
   };
 
+  const changeTaskContentState = (inputValues: { title: string; description: string }): void => {
+    setCurrentTaskContent((): { title: string; description: string } => {
+      return inputValues;
+    });
+  };
+
   const changeColumnTitle = async (column: IColumnResponse): Promise<void> => {
     await dispatch(
       updateColumnById({
@@ -86,8 +158,48 @@ const Board = (): JSX.Element => {
     showColumnTitleInput('');
   };
 
-  const renderAllColumns = (): JSX.Element[] =>
-    currentBoardColumns.map((column, index): JSX.Element => {
+  const changeTaskContent = async (task: ITask): Promise<void> => {
+    await dispatch(
+      updateTaskById({
+        title: currentTaskContent.title,
+        order: task.order,
+        description: currentTaskContent.description,
+        columnId: task.columnId,
+        boardId: task.boardId,
+        taskId: task._id,
+        userId: 0, // Здесь ошибка в бекенде - должна быть string
+        users: task.users,
+      })
+    );
+    changeTaskContentState({ title: '', description: '' });
+    setClickedEditTaskId('');
+    await dispatch(getTasksByBoardId(currentBoard._id));
+  };
+
+  const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
+    let newOrder = [];
+    for (let i = 0; i < currentBoardColumnsCount; i += 1) {
+      newOrder.push(i);
+    }
+    if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
+      newOrder = newOrder.map((elem, index) => {
+        if (index === +dragItem.order) {
+          return +dropColumn.columnOrder;
+        } else if (index === +dropColumn.columnOrder) {
+          return +dragItem.order;
+        }
+        return index;
+      });
+      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+      setDropColumn({ columnId: '', columnOrder: '' });
+    }
+    return newOrder;
+  };
+
+  useResortColumnArr(currentBoardColumns, getNewOrder(dragItem, dropColumn));
+
+  const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
+    boardColumns.map((column, index): JSX.Element => {
       let isChosenColumnTitle = false;
       if (clickedEditTitleColumnId === column._id) {
         isChosenColumnTitle = true;
@@ -96,18 +208,30 @@ const Board = (): JSX.Element => {
         userId,
         board: currentBoard,
         column,
-        tasks: currentBoardTasks,
-        key: index,
+        tasks: sortedTasks,
+        key: column._id,
         isChosenColumnTitle,
         currentColumnTitle,
+        columnTranslation,
+        taskTranslation,
+        columnIsLoading,
+        tasksIsLoading,
+        clickedEditTaskId,
+        currentTaskContent,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,
         setTaskIsChosen,
         setClickedAddTaskColumnId,
+        setClickedEditTaskId,
+        setDragItem,
+        setDropColumn,
+        setDropTask,
         showColumnTitleInput,
         changeColumnTitleState,
+        changeTaskContentState,
         changeColumnTitle,
+        changeTaskContent,
       });
     });
 
@@ -116,7 +240,7 @@ const Board = (): JSX.Element => {
       <Grid item className="board__btn-conteiner" xl={0.8} xs={0.8}>
         <Link to="/boards">
           <Button className="board__back-btn" variant="contained" color="primary" startIcon={<ArrowBackIosIcon />}>
-            Back
+            {t('board.back')}
           </Button>
         </Link>
         <Button
@@ -126,7 +250,7 @@ const Board = (): JSX.Element => {
           color="secondary"
           startIcon={<AddIcon />}
         >
-          Add column
+          {t('board.addColumn')}
         </Button>
       </Grid>
       <Grid container item className="column-conteiner" xl={11} xs={11}>
@@ -148,8 +272,9 @@ const Board = (): JSX.Element => {
           {taskIsChosen ? (
             <CreateTaskForm
               userId={userId}
-              columnId={clickedAddTaskColumnId}
               board={currentBoard}
+              columnId={clickedAddTaskColumnId}
+              sortedTasks={sortedTasks}
               toggleForm={toggleForm}
             />
           ) : (
@@ -161,10 +286,19 @@ const Board = (): JSX.Element => {
           )}
         </Grid>
         <Typography className="board__title" variant="h4">
-          {currentBoard ? currentBoard.title : 'No board chosen'}
+          {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
         <Grid container className="board__columns-layout">
-          {renderAllColumns()}
+          {columnsIsLoading ? (
+            <Grid container className="board__loading">
+              <CircularProgress color="primary" />
+              <Typography className="board__loading-title" variant="h4">
+                {t('loading')}
+              </Typography>
+            </Grid>
+          ) : (
+            renderAllColumns(currentBoardColumns)
+          )}
         </Grid>
       </Grid>
     </Grid>

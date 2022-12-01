@@ -9,7 +9,7 @@ export const signIn = createAsyncThunk<ISignInResponse, ISignInRequest>(
       const data: AxiosResponse<ISignInResponse> = await api.post('auth/signin', request);
       return data.data;
     } catch (e: unknown) {
-      return rejectWithValue(e as IResponseError);
+      return rejectWithValue({});
     }
   }
 );

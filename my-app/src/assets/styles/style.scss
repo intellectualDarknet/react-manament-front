@@ -1,3 +1,4 @@
+@import './constants.scss';
 a,
 button,
 a:visited,
@@ -7,9 +8,11 @@ a:hover {
   padding: 0;
 }
 main {
-  padding-top: 1px;
-  height: calc(100vh - 129px);
+  margin-top: 65px;
   display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
   justify-content: center;
   align-items: center;
+  min-height: $minFullWidth;
 }

@@ -1,45 +1,60 @@
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
+import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import Task from './task';
-import React, { Dispatch, FormEvent, SetStateAction } from 'react';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DeleteModal from 'components/deleteModal';
 import DeleteColumnButton from './DeleteColumnButton';
+import { DragItemType, IColumnState, IDragItemState, ITaskState } from '../board';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Column(props: {
   userId: string;
   board: IBoardResponse;
   column: IColumnResponse;
-  tasks: ITask[];
-  key: number;
+  tasks: Map<string, ITask[]>;
+  key: string;
   isChosenColumnTitle: boolean;
+  currentColumnTitle: string;
+  columnTranslation: {
+    columnNewTitle: string;
+    changeTitle: string;
+    columnDeleteMessage: string;
+  };
+  taskTranslation: {
+    taskNewTitle: string;
+    taskNewDescription: string;
+    changeTaskBtnTitle: string;
+    addTaskBtnTitle: string;
+    taskDeleteMessage: string;
+  };
+  columnIsLoading: boolean;
+  tasksIsLoading: boolean;
+  clickedEditTaskId: string;
+  currentTaskContent: { title: string; description: string };
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
   setTaskIsChosen: Dispatch<SetStateAction<boolean>>;
   setClickedAddTaskColumnId: Dispatch<SetStateAction<string>>;
+  setClickedEditTaskId: Dispatch<SetStateAction<string>>;
+  setDragItem: Dispatch<SetStateAction<IDragItemState>>;
+  setDropColumn: Dispatch<SetStateAction<IColumnState>>;
+  setDropTask: Dispatch<SetStateAction<ITaskState>>;
   showColumnTitleInput: (columnId: string) => void;
-  currentColumnTitle: string;
   changeColumnTitleState: (inputValue: string) => void;
+  changeTaskContentState: (inputValues: { title: string; description: string }) => void;
   changeColumnTitle: (column: IColumnResponse) => void;
+  changeTaskContent: (task: ITask) => void;
 }): JSX.Element {
-  // TODO: Вернуть эту функцию, если в ней появится необходимость. Пока она вызывает ошибку
-  // const sortTask = (tasks: ITask[]): ITask[] => {
-  //   const sortedTasks = tasks.sort((a, b) => b.order - a.order);
-  //   return sortedTasks;
-  // };
-
-  // const sortedTasks = sortTask(props.tasks);
-
   const filterTask = (tasks: ITask[]): ITask[] => {
-    const filteredTasks = tasks.filter((elem) => elem.columnId === props.column._id);
-    return filteredTasks;
+    const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
+    return tasksOfCurrentColumn;
   };
 
-  const filteredTasks = filterTask(props.tasks);
+  const tasksOfCurrentColumn = filterTask(props.tasks.get(props.column._id));
 
   const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);
@@ -57,11 +72,11 @@ function Column(props: {
     props.showColumnTitleInput(props.column._id);
   };
 
-  const onColumnTitleInputChange = (event: FormEvent<HTMLFormElement>): void => {
+  const handleColumnTitleInputChange = (event: FormEvent<HTMLFormElement>): void => {
     props.changeColumnTitleState((event.target as HTMLInputElement).value);
   };
 
-  const onColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
+  const handleColumnTitleInputSubmit = (event: FormEvent<Element>): void => {
     event.stopPropagation();
     props.changeColumnTitle(props.column);
   };
@@ -71,16 +86,98 @@ function Column(props: {
     props.showColumnTitleInput('');
   };
 
+  const dragStartHandler = (event: DragEvent<HTMLElement>) => {
+    props.setDragItem({
+      type: DragItemType.COLUMN,
+      columnId: (event.target as HTMLElement).dataset.columnId,
+      taskId: '',
+      order: (event.target as HTMLElement).dataset.columnOrder,
+    });
+    (event.target as HTMLElement).classList.add('board__column_dragged');
+  };
+
+  const dragEndHandler = (event: DragEvent<HTMLElement>) => {
+    (event.target as HTMLElement).classList.remove('board__column_dragged');
+  };
+
+  const dragOverHandler = (event: DragEvent<HTMLElement>) => {
+    event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (!dropColumn.classList.contains('board__column_dragged')) {
+      dropColumn.classList.add('board__column_hovered');
+    }
+  };
+
+  const dragLeaveHandler = (event: DragEvent<HTMLElement>) => {
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (!dropColumn.classList.contains('board__column_dragged')) {
+      dropColumn.classList.remove('board__column_hovered');
+    }
+  };
+
+  const dropHandler = (event: DragEvent<HTMLElement>) => {
+    event.preventDefault();
+    const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
+    if (dropColumn) {
+      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
+      dropColumn.classList.remove('board__column_hovered');
+    }
+  };
+
+  const showColumnTitle = (columnIsLoading: boolean): JSX.Element => {
+    if (columnIsLoading) {
+      return (
+        <Grid container className="column__title-loading">
+          <CircularProgress color="secondary" />
+        </Grid>
+      );
+    } else {
+      return (
+        <Typography variant="h5" className="column__title" onClick={handleTitleClick}>
+          {props.column.title}
+        </Typography>
+      );
+    }
+  };
+
   return (
-    <Grid container item className="board__column" xl={3} xs={3} key={props.key}>
+    <Grid
+      container
+      item
+      className="board__column"
+      xl={3}
+      xs={3}
+      key={props.key}
+      data-column-id={props.column._id}
+      data-column-order={props.column.order}
+      draggable={true}
+      onDragStart={(event: DragEvent<HTMLElement>) => {
+        dragStartHandler(event);
+      }}
+      onDragEnd={(event: DragEvent<HTMLElement>) => {
+        dragEndHandler(event);
+      }}
+      onDragOver={(event: DragEvent<HTMLElement>) => {
+        dragOverHandler(event);
+      }}
+      onDragLeave={(event: DragEvent<HTMLElement>) => {
+        dragLeaveHandler(event);
+      }}
+      onDrop={(event: DragEvent<HTMLElement>) => {
+        dropHandler(event);
+      }}
+    >
       <Grid container item className="column__title-conteiner">
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">
             <ValidatorForm
               className="column__title-form"
               onError={(errors) => console.log(errors)}
-              onChange={onColumnTitleInputChange}
-              onSubmit={onColumnTitleInputSubmit}
+              onChange={handleColumnTitleInputChange}
+              onSubmit={handleColumnTitleInputSubmit}
               noValidate
             >
               <TextValidator
@@ -92,7 +189,7 @@ function Column(props: {
                 required
                 fullWidth
                 id="column-title"
-                label="columnTitle"
+                label={props.columnTranslation.columnNewTitle}
                 name="column-title"
                 autoFocus
                 value={props.currentColumnTitle}
@@ -100,18 +197,11 @@ function Column(props: {
                 errorMessages={['this field is required', 'column title is not valid']}
               />
               <ButtonGroup className="title-form__btn-group">
-                <LoadingButton
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  // disabled={auth.signInLoading}
-                  // loading={auth.signInLoading}
-                  loadingPosition="center"
-                >
-                  Change title
-                </LoadingButton>
+                <Button variant="contained" color="primary" type="submit">
+                  {props.columnTranslation.changeTitle}
+                </Button>
                 <Button
-                  className="column__close-title-btn"
+                  className="column__close-input-btn"
                   onClick={handleColumnTitleInputClose}
                   variant="contained"
                   color="error"
@@ -122,19 +212,35 @@ function Column(props: {
             </ValidatorForm>{' '}
           </Grid>
         ) : (
-          <Typography variant="h5" className="column__title" onClick={handleTitleClick}>
-            {props.column.title}
-          </Typography>
+          showColumnTitle(props.columnIsLoading)
         )}
       </Grid>
       <Grid container className="column__tasks-conteiner">
-        {filteredTasks.map((elem, index) =>
-          Task({
-            board: props.board,
-            column: props.column,
-            task: elem,
-            key: index,
-            deleteTaskByButtonPress: props.deleteTaskByButtonPress,
+        {props.tasksIsLoading ? (
+          <Grid container className="column__tasks-loading">
+            <CircularProgress color="secondary" />
+          </Grid>
+        ) : (
+          tasksOfCurrentColumn.map((task, index) => {
+            let isChosenTask = false;
+            if (props.clickedEditTaskId === task._id) {
+              isChosenTask = true;
+            }
+            return Task({
+              board: props.board,
+              column: props.column,
+              task: task,
+              key: task._id,
+              taskTranslation: props.taskTranslation,
+              isChosenTask,
+              currentTaskContent: props.currentTaskContent,
+              setDragItem: props.setDragItem,
+              setDropTask: props.setDropTask,
+              setClickedEditTaskId: props.setClickedEditTaskId,
+              deleteTaskByButtonPress: props.deleteTaskByButtonPress,
+              changeTaskContentState: props.changeTaskContentState,
+              changeTaskContent: props.changeTaskContent,
+            });
           })
         )}
         <Button
@@ -144,11 +250,11 @@ function Column(props: {
           color="secondary"
           endIcon={<AddIcon />}
         >
-          Add task
+          {props.taskTranslation.addTaskBtnTitle}
         </Button>
       </Grid>
       <DeleteModal
-        message="Are you sure, you want to delete this column?"
+        message={props.columnTranslation.columnDeleteMessage}
         submit={deleteThisColumn}
         deleteButton={DeleteColumnButton}
       />

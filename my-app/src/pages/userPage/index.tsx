@@ -129,7 +129,7 @@ const User = () => {
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ margin: '10px', padding: '10px 20px', borderRadius: '32px' }}
+            sx={{ margin: '10px', padding: '10px', borderRadius: '32px', width: 'auto' }}
             onClick={handleClose}
           >
             {t('user.edit')}

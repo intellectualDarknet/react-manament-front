@@ -70,8 +70,9 @@ const Board = (props: { title: string; id: string }) => {
         }}
       >
         <Button
-          sx={{ margin: '10px', padding: '10px 20px', borderRadius: '32px' }}
+          sx={{ margin: '10px', padding: '10px', borderRadius: '32px', width: 'auto' }}
           variant="contained"
+          fullWidth
           onClick={handleClose}
         >
           {t('boards.edit')}

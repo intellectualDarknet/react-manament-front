@@ -26,7 +26,7 @@ const SignInPage = () => {
     dispatch(signIn(formValues))
       .unwrap()
       .then(() => {
-        navigate('/', { replace: true });
+        navigate('/boards', { replace: true });
       });
   };
 

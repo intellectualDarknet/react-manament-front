@@ -77,7 +77,7 @@ i18next
             unchoisen: '☚ Choose a bord there and come back!',
           },
           boards: {
-            edit: 'Edit board name',
+            edit: 'Edit',
             renameBoard: 'Rename board',
             enterName: 'Enter new name',
             cancel: 'Cancel',
@@ -175,7 +175,7 @@ i18next
             unchoisen: '☚ Выберите доску там и возвращайтесь!',
           },
           boards: {
-            edit: 'Редактировать доску',
+            edit: 'Редактировать',
             renameBoard: 'Переименовать доску',
             enterName: 'Введите новое имя',
             cancel: 'Отмена',

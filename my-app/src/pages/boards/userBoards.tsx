@@ -17,8 +17,8 @@ import theme from 'components/Theme';
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   backgroundColor: theme.palette.secondary.main,
-  padding: theme.spacing(2),
-  margin: theme.spacing(2),
+  padding: theme.spacing(1),
+  margin: theme.spacing(1.2),
   textAlign: 'center',
   color: theme.palette.primary.main,
 }));
@@ -49,51 +49,61 @@ const UserBoards = () => {
     handleClose();
   };
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        margin: '30px 0 0 30px',
-      }}
-    >
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0 0 10px' }}>
         <Link to="/user-boards">
           <Button
-            sx={{
-              color: theme.palette.primary.main,
-              backgroundColor: theme.palette.secondary.dark,
-              width: '200px',
-              margin: '20px',
-            }}
+            sx={[
+              {
+                color: theme.palette.primary.main,
+                backgroundColor: theme.palette.secondary.main,
+                width: { sm: '150px', xs: '120px' },
+                margin: '20px',
+                padding: '10px',
+                borderRadius: '32px',
+                transition: '.5s',
+              },
+              (theme) => ({
+                '&:hover': {
+                  backgroundColor: theme.palette.secondary.dark,
+                },
+              }),
+            ]}
           >
             {t('boards.myBoards')}
           </Button>
         </Link>
         <Link to="/boards">
           <Button
-            sx={{
-              color: theme.palette.primary.main,
-              backgroundColor: theme.palette.secondary.dark,
-              width: '200px',
-              margin: '20px',
-            }}
+            sx={[
+              {
+                color: theme.palette.primary.main,
+                backgroundColor: theme.palette.secondary.main,
+                width: { sm: '150px', xs: '120px' },
+                margin: '20px',
+                padding: '10px',
+                borderRadius: '32px',
+                transition: '.5s',
+              },
+              (theme) => ({
+                '&:hover': {
+                  backgroundColor: theme.palette.secondary.dark,
+                },
+              }),
+            ]}
           >
             {t('boards.allBoards')}
           </Button>
         </Link>
       </Box>
-      <Grid container sx={{ flexGrow: 1, justifyContent: 'start' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
+      <Grid container sx={{ flexGrow: 1, justifyContent: 'center' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
         {boardsResp.userBoard
           ? boardsResp.userBoard.map((board, index) => <Board key={index} title={board.title} id={board._id} />)
           : []}
         <div>
           <Item
             sx={{
-              width: '300px',
+              width: { sm: '300px', xs: '270px' },
               height: '150px',
               display: 'flex',
               justifyContent: 'center',
@@ -131,7 +141,7 @@ const UserBoards = () => {
           </Dialog>
         </div>
       </Grid>
-    </Box>
+    </>
   );
 };
 

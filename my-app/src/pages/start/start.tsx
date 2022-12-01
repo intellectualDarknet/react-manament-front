@@ -31,7 +31,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.secondary.main,
   lineHeight: '60px',
   opacity: '0.9',
-  padding: '15px',
+  p: { sm: '15px', xs: '0' },
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

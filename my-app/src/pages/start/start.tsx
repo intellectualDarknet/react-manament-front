@@ -74,7 +74,12 @@ const Start = () => {
             <Typography variant="h4" gutterBottom sx={{ fontFamily: 'monospace' }}>
               {t('main.heading')}
             </Typography>
-            <Typography variant="h6" textAlign="left" gutterBottom sx={{ fontFamily: 'monospace' }}>
+            <Typography
+              variant="h6"
+              textAlign="left"
+              gutterBottom
+              sx={{ fontFamily: 'monospace', p: { sm: '10px', xs: '0' } }}
+            >
               {t('main.text')}
             </Typography>
 
@@ -176,7 +181,12 @@ const Start = () => {
           }}
         >
           <Item elevation={24}>
-            <Typography variant="h6" textAlign="justify" gutterBottom sx={{ fontFamily: 'monospace' }}>
+            <Typography
+              variant="h6"
+              textAlign="justify"
+              gutterBottom
+              sx={{ fontFamily: 'monospace', p: { sm: '10px', xs: '0' } }}
+            >
               {t('main.medium')}
             </Typography>
           </Item>

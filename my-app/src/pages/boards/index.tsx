@@ -68,7 +68,7 @@ const Boards = () => {
     } else {
       return (
         <>
-          <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0 0 10px' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', margin: { xs: '10px 10px 0 0', sm: '10px 0 0 0' } }}>
             <Link to="/boards">
               <Button
                 sx={[

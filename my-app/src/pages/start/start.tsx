@@ -226,13 +226,11 @@ const Start = () => {
             >
               <Trans
                 i18nKey="main.rsschool"
-                components={{
-                  a: (
-                    <a target="_blank" rel="noreferrer noopener" href="https://rs.school/">
-                      Rolling Scopes School
-                    </a>
-                  ),
-                }}
+                components={[
+                  <a key="1" target="_blank" rel="noreferrer noopener" href="https://rs.school/react/">
+                    React
+                  </a>,
+                ]}
               />
             </Typography>
           </Item>

@@ -67,13 +67,7 @@ const CreateTaskForm = (props: {
         borderRadius: '0 20px 20px 0',
       }}
     >
-      <ValidatorForm
-        onError={(errors) => console.log(errors)}
-        onSubmit={onColumnTitleSubmit}
-        onChange={onFormChange}
-        noValidate
-        sx={{ width: '80%' }}
-      >
+      <ValidatorForm onSubmit={onColumnTitleSubmit} onChange={onFormChange} noValidate sx={{ width: '80%' }}>
         <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
           {t('board.newTask')}
         </Typography>

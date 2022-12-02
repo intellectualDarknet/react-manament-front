@@ -12,12 +12,34 @@ import Board from 'pages/board/board';
 import SignUpPage from 'pages/signUpPage/signUpPage';
 import SignInPage from 'pages/signInPage/signInPage';
 import UserBoards from 'pages/boards/userBoards';
-import { RootState, useAppSelector } from 'store/store';
+import store, { RootState, useAppSelector } from 'store/store';
 import User from 'pages/userPage';
 import SnackBar from 'components/snackbar/snackbar';
+import { parseJwt } from 'utils/parseJwt';
+import { logout, testTokenForExp } from 'store/auth/auth-slice';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { authInterceptor } from 'api/auth-interceptor';
 
 function App(): JSX.Element {
+  const { t } = useTranslation();
+  const translation = {
+    success: t('auth.success'),
+    error401: t('auth.error401'),
+    error403: t('auth.error403'),
+    error409: t('auth.error409'),
+  };
+  authInterceptor(store, translation);
+
+  const dispatch = useDispatch();
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
+  const token: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.token);
+  if (token) {
+    const { exp } = parseJwt(token);
+    if (!testTokenForExp(exp)) {
+      dispatch(logout());
+    }
+  }
 
   return (
     <BrowserRouter>
@@ -29,8 +51,8 @@ function App(): JSX.Element {
           <main>
             <Routes>
               <Route path="/" element={<Start />} />
-              <Route path="sign-up" element={!userId ? <SignUpPage /> : <Navigate to="/" replace />} />
-              <Route path="sign-in" element={!userId ? <SignInPage /> : <Navigate to="/" replace />} />
+              <Route path="sign-up" element={!userId ? <SignUpPage /> : <Navigate to="/boards" replace />} />
+              <Route path="sign-in" element={!userId ? <SignInPage /> : <Navigate to="/boards" replace />} />
               <Route path="boards" element={userId ? <Boards /> : <Navigate to="/" replace />} />
               <Route path="board" element={userId ? <Board /> : <Navigate to="/" replace />} />
               <Route path="user-page" element={userId ? <User /> : <Navigate to="/" replace />} />

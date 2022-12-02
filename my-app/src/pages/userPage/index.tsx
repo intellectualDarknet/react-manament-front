@@ -15,12 +15,15 @@ import { useNavigate } from 'react-router';
 import DeleteModal from './../../components/deleteModal';
 import DeleteButton from 'pages/boards/DeleteButton';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import CircularProgress from '@mui/material/CircularProgress';
 
 type User = {
   name: string;
   password: string;
   login: string;
 };
+
 const User = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -29,19 +32,27 @@ const User = () => {
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const userState: IUsersState = useAppSelector((state: RootState) => state.rootReducer.usersReducer);
   const dispatch = useAppDispatch();
-  const onSigninSubmit = () => {
-    dispatch(updateUserById({ userId, ...user }));
+  const onSigninSubmit = async (): Promise<void> => {
     handleClose();
     SetUser({ name: '', login: '', password: '' });
+    await dispatch(updateUserById({ userId, ...user }));
+    await dispatch(getUserById(userId));
   };
   const handleClose = () => {
     setOpen((open) => !open);
   };
 
+  const oneUserIsUpdating = useSelector((state: RootState) => state.rootReducer.usersReducer.updateUserLoading);
+  const oneUserIsGetting = useSelector((state: RootState) => state.rootReducer.usersReducer.userByIdLoading);
+  const oneUserIsDeleting = useSelector((state: RootState) => state.rootReducer.usersReducer.deleteUserLoading);
+  const allUsersIsGetting = useSelector((state: RootState) => state.rootReducer.usersReducer.usersLoading);
+  const userIsLoading = oneUserIsUpdating || oneUserIsGetting || oneUserIsDeleting || allUsersIsGetting;
+
   useEffect(() => {
     dispatch(getUsers());
     dispatch(getUserById(userId));
-  }, [dispatch, userId, userState.userById]);
+  }, [dispatch, userId]);
+
   function deleteUser() {
     (async () => {
       dispatch(deleteUserById(userId));
@@ -66,7 +77,17 @@ const User = () => {
         component={Paper}
         square
       >
-        <Typography variant="h4" component="h2" sx={{ alignSelf: 'center', fontFamily: 'monospace' }}>
+        {' '}
+        {userIsLoading ? (
+          <Grid container className="board__loading">
+            <CircularProgress color="primary" />
+            <Typography className="board__loading-title" variant="h4">
+              {t('loading')}
+            </Typography>
+          </Grid>
+        ) : (
+        
+          <Typography variant="h4" component="h2" sx={{ alignSelf: 'center', fontFamily: 'monospace' }}>
           {t('user.data')}
         </Typography>
         {userState.userById ? (

@@ -29,6 +29,12 @@ const actualState: IAuthState = {
   signUpError: void 0,
 };
 
+export const testTokenForExp = (exp: number): boolean => {
+  const expInMs = exp * 1000;
+  const dateNowInMs = new Date().getTime();
+  return dateNowInMs < expInMs;
+};
+
 export const authSlice = createSlice({
   initialState: actualState,
   name: 'auth',

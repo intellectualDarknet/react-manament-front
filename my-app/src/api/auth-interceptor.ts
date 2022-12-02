@@ -3,7 +3,15 @@ import { hideMessage, showMessage } from 'store/snackbar/snackbar-slice';
 import { StoreType } from 'store/store';
 import api from './api';
 
-export const authInterceptor = (store: StoreType) => {
+export const authInterceptor = (
+  store: StoreType,
+  translation: {
+    success: string;
+    error401: string;
+    error403: string;
+    error409: string;
+  }
+) => {
   api.interceptors.request.use(
     (conf) => {
       store.dispatch(hideMessage());
@@ -18,7 +26,7 @@ export const authInterceptor = (store: StoreType) => {
   );
   api.interceptors.response.use(
     (next) => {
-      store.dispatch(showMessage({ open: true, message: next.statusText || 'Выполнено!', severity: 'success' }));
+      store.dispatch(showMessage({ open: true, message: next.statusText || translation.success, severity: 'success' }));
       setTimeout(() => {
         store.dispatch(hideMessage());
       }, 5000);
@@ -27,13 +35,13 @@ export const authInterceptor = (store: StoreType) => {
     (error) => {
       let message = error?.response.data.message || error.message;
       if (error.response.status === 401) {
-        message = 'Имя пользователя или пароль введены неверно. Попробуйте еще раз!';
+        message = translation.error401;
       }
       if (error.response.status === 403) {
-        message = 'Неправильный токен. Возможно, истек срок его действия. Авторизируйтесь заново!';
+        message = translation.error403;
       }
       if (error.response.status === 409) {
-        message = 'Такой пользователь уже существует. Придумайте другой логин!';
+        message = translation.error409;
       }
       store.dispatch(showMessage({ open: true, message, severity: 'error' }));
       setTimeout(() => {

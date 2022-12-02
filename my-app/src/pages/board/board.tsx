@@ -199,7 +199,7 @@ const Board = (): JSX.Element => {
   useResortColumnArr(currentBoardColumns, getNewOrder(dragItem, dropColumn));
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
-    boardColumns.map((column, index): JSX.Element => {
+    boardColumns.map((column): JSX.Element => {
       let isChosenColumnTitle = false;
       if (clickedEditTitleColumnId === column._id) {
         isChosenColumnTitle = true;

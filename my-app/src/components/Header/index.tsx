@@ -127,7 +127,7 @@ function Header() {
                       {
                         width: '110px',
                         fontFamily: 'monospace',
-                        fontSize: '14px',
+                        fontSize: '15px',
                         fontWeight: 700,
                         color: theme.palette.secondary.main,
                         textDecoration: 'none',

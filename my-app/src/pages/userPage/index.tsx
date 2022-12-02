@@ -120,12 +120,7 @@ const User = () => {
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>{t('header.edit')}</DialogTitle>
               <DialogContent>
-                <ValidatorForm
-                  className="userPage__form"
-                  onError={(errors) => console.log(errors)}
-                  onSubmit={onSigninSubmit}
-                  noValidate
-                >
+                <ValidatorForm className="userPage__form" onSubmit={onSigninSubmit} noValidate>
                   <TextValidator
                     variant="outlined"
                     sx={{ width: '100%' }}

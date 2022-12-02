@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from '@mui/material';
 import { ISnackBarState } from 'store/snackbar/snackbar-slice';
-import { useAppSelector, RootState, useAppDispatch } from 'store/store';
+import { useAppSelector, RootState } from 'store/store';
 import './snackbar.scss';
 
 const SnackBar = () => {

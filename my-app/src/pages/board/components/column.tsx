@@ -221,7 +221,7 @@ function Column(props: {
             <CircularProgress color="secondary" />
           </Grid>
         ) : (
-          tasksOfCurrentColumn.map((task, index) => {
+          tasksOfCurrentColumn.map((task) => {
             let isChosenTask = false;
             if (props.clickedEditTaskId === task._id) {
               isChosenTask = true;

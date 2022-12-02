@@ -236,15 +236,34 @@ const Board = (): JSX.Element => {
     });
 
   return (
-    <Grid container className="board__conteiner">
-      <Grid item className="board__btn-conteiner" xl={0.8} xs={0.8}>
+    <Grid container className="board__conteiner" sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+      <Grid
+        item
+        className="board__btn-conteiner"
+        sx={{ width: { xs: '500px', md: '100px' }, flexDirection: { xs: 'row', md: 'column' } }}
+        xl={0.8}
+        xs={12}
+        md={0.8}
+      >
         <Link to="/boards">
-          <Button className="board__back-btn" variant="contained" color="primary" startIcon={<ArrowBackIosIcon />}>
+          <Button
+            className="board__back-btn"
+            sx={{ fontSize: '11px', width: { xs: '100px', md: '70px' }, height: '40px' }}
+            variant="contained"
+            color="primary"
+            startIcon={<ArrowBackIosIcon />}
+          >
             {t('board.back')}
           </Button>
         </Link>
         <Button
           className="board__create-board-btn"
+          sx={{
+            fontSize: '11px',
+            width: { xs: '150px', md: '70px' },
+            height: { xs: '40px', md: '50%' },
+            flexDirection: { xs: 'row', md: 'column' },
+          }}
           onClick={handleAddColumn}
           variant="contained"
           color="secondary"
@@ -285,10 +304,10 @@ const Board = (): JSX.Element => {
             />
           )}
         </Grid>
-        <Typography className="board__title" variant="h4">
+        <Typography className="board__title" variant="h4" sx={{ fontFamily: 'monospace' }}>
           {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
-        <Grid container className="board__columns-layout">
+        <Grid container className="board__columns-layout" sx={{ matginLeft: '5px' }}>
           {columnsIsLoading ? (
             <Grid container className="board__loading">
               <CircularProgress color="primary" />

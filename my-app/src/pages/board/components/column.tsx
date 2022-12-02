@@ -136,7 +136,7 @@ function Column(props: {
       );
     } else {
       return (
-        <Typography variant="h5" className="column__title" onClick={handleTitleClick}>
+        <Typography variant="h5" className="column__title" sx={{ fontFamily: 'monospace' }} onClick={handleTitleClick}>
           {props.column.title}
         </Typography>
       );
@@ -149,7 +149,8 @@ function Column(props: {
       item
       className="board__column"
       xl={3}
-      xs={3}
+      xs={2}
+      sm={3}
       key={props.key}
       data-column-id={props.column._id}
       data-column-order={props.column.order}

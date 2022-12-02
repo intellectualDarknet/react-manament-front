@@ -3,7 +3,7 @@ import { hideMessage, showMessage } from 'store/snackbar/snackbar-slice';
 import { StoreType } from 'store/store';
 import api from './api';
 
-export const authInterceptor = (store: StoreType) => {
+export const authInterceptor = (store: StoreType): void => {
   api.interceptors.request.use(
     (conf) => {
       store.dispatch(hideMessage());

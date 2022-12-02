@@ -12,14 +12,25 @@ import Board from 'pages/board/board';
 import SignUpPage from 'pages/signUpPage/signUpPage';
 import SignInPage from 'pages/signInPage/signInPage';
 import UserBoards from 'pages/boards/userBoards';
-import { RootState, useAppSelector } from 'store/store';
+import store, { RootState, useAppSelector } from 'store/store';
 import User from 'pages/userPage';
 import SnackBar from 'components/snackbar/snackbar';
 import { parseJwt } from 'utils/parseJwt';
 import { logout, testTokenForExp } from 'store/auth/auth-slice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { authInterceptor } from 'api/auth-interceptor';
 
 function App(): JSX.Element {
+  const { t } = useTranslation();
+  const translation = {
+    success: t('auth.success'),
+    error401: t('auth.error401'),
+    error403: t('auth.error403'),
+    error409: t('auth.error409'),
+  };
+  authInterceptor(store, translation);
+
   const dispatch = useDispatch();
   const userId: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.userId);
   const token: string = useAppSelector((state: RootState) => state.rootReducer.authReducer.token);

@@ -69,6 +69,28 @@ const Boards = () => {
       return (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0 0 10px' }}>
+            <Link to="/boards">
+              <Button
+                sx={[
+                  {
+                    color: theme.palette.primary.main,
+                    backgroundColor: theme.palette.secondary.light,
+                    width: { sm: '150px', xs: '120px' },
+                    margin: '20px',
+                    padding: '10px',
+                    borderRadius: '32px',
+                    transition: '.5s',
+                  },
+                  (theme) => ({
+                    '&:hover': {
+                      backgroundColor: theme.palette.secondary.dark,
+                    },
+                  }),
+                ]}
+              >
+                {t('boards.allBoards')}
+              </Button>
+            </Link>
             <Link to="/user-boards">
               <Button
                 sx={[
@@ -89,28 +111,6 @@ const Boards = () => {
                 ]}
               >
                 {t('boards.myBoards')}
-              </Button>
-            </Link>
-            <Link to="/boards">
-              <Button
-                sx={[
-                  {
-                    color: theme.palette.primary.main,
-                    backgroundColor: theme.palette.secondary.main,
-                    width: { sm: '150px', xs: '120px' },
-                    margin: '20px',
-                    padding: '10px',
-                    borderRadius: '32px',
-                    transition: '.5s',
-                  },
-                  (theme) => ({
-                    '&:hover': {
-                      backgroundColor: theme.palette.secondary.dark,
-                    },
-                  }),
-                ]}
-              >
-                {t('boards.allBoards')}
               </Button>
             </Link>
           </Box>
@@ -148,14 +148,19 @@ const Boards = () => {
                     onChange={(e) => {
                       setInput(e.target.value);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.code === 'Enter') {
+                        addBoard();
+                      }
+                    }}
                   />
                 </DialogContent>
                 <DialogActions>
+                  <Button sx={{ color: 'black' }} type="submit" onClick={addBoard}>
+                    {t('boards.add')}
+                  </Button>
                   <Button sx={{ color: 'black' }} onClick={handleClose}>
                     {t('boards.cancel')}
-                  </Button>
-                  <Button sx={{ color: 'black' }} onClick={addBoard}>
-                    {t('boards.add')}
                   </Button>
                 </DialogActions>
               </Dialog>

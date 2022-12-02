@@ -116,10 +116,6 @@ const SignInPage = () => {
             <Link className="signin__bottom-link" to="/sign-up">
               {t('auth.signUp')}
             </Link>
-            <div className="signin__bottom-reg">{t('auth.backToMain')}</div>
-            <Link className="signin__bottom-link" to="/">
-              {t('auth.main')}
-            </Link>
           </div>
         </ValidatorForm>{' '}
       </Grid>

@@ -50,29 +50,7 @@ const UserBoards = () => {
   };
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0 0 10px' }}>
-        <Link to="/user-boards">
-          <Button
-            sx={[
-              {
-                color: theme.palette.primary.main,
-                backgroundColor: theme.palette.secondary.main,
-                width: { sm: '150px', xs: '120px' },
-                margin: '20px',
-                padding: '10px',
-                borderRadius: '32px',
-                transition: '.5s',
-              },
-              (theme) => ({
-                '&:hover': {
-                  backgroundColor: theme.palette.secondary.dark,
-                },
-              }),
-            ]}
-          >
-            {t('boards.myBoards')}
-          </Button>
-        </Link>
+      <Box sx={{ display: 'flex', justifyContent: 'center', margin: { xs: '10px 10px 0 0', sm: '10px 0 0 10px' } }}>
         <Link to="/boards">
           <Button
             sx={[
@@ -93,6 +71,28 @@ const UserBoards = () => {
             ]}
           >
             {t('boards.allBoards')}
+          </Button>
+        </Link>
+        <Link to="/user-boards">
+          <Button
+            sx={[
+              {
+                color: theme.palette.primary.main,
+                backgroundColor: theme.palette.secondary.light,
+                width: { sm: '150px', xs: '120px' },
+                margin: '20px',
+                padding: '10px',
+                borderRadius: '32px',
+                transition: '.5s',
+              },
+              (theme) => ({
+                '&:hover': {
+                  backgroundColor: theme.palette.secondary.dark,
+                },
+              }),
+            ]}
+          >
+            {t('boards.myBoards')}
           </Button>
         </Link>
       </Box>
@@ -131,11 +131,11 @@ const UserBoards = () => {
               />
             </DialogContent>
             <DialogActions>
-              <Button sx={{ color: 'black' }} onClick={handleClose}>
-                {t('boards.cancel')}
-              </Button>
               <Button sx={{ color: 'black' }} onClick={addBoard}>
                 {t('boards.add')}
+              </Button>
+              <Button sx={{ color: 'black' }} onClick={handleClose}>
+                {t('boards.cancel')}
               </Button>
             </DialogActions>
           </Dialog>

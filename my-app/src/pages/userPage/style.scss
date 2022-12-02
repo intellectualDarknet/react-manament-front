@@ -9,6 +9,6 @@
     max-height: $mediumHeight;
   }
   @media screen and (max-width: 600px) {
-    max-height: $mobileHeight;
+    min-height: $mobileHeight;
   }
 }

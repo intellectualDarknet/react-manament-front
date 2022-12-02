@@ -77,7 +77,6 @@ const Board = (props: { title: string; id: string }) => {
         >
           {t('boards.edit')}
         </Button>
-        <DeleteModal message={t('deleteModal.message')} submit={deleteCard} deleteButton={DeleteButton} />
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>{t('boards.rename')}</DialogTitle>
           <DialogContent>
@@ -93,14 +92,15 @@ const Board = (props: { title: string; id: string }) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button sx={{ color: 'black' }} onClick={handleClose}>
-              {t('boards.cancel')}
-            </Button>
             <Button sx={{ color: 'black' }} onClick={handleRename}>
               {t('boards.rename')}
             </Button>
+            <Button sx={{ color: 'black' }} onClick={handleClose}>
+              {t('boards.cancel')}
+            </Button>
           </DialogActions>
         </Dialog>
+        <DeleteModal message={t('deleteModal.message')} submit={deleteCard} deleteButton={DeleteButton} />
       </Box>
     </Item>
   );

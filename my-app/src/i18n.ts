@@ -22,10 +22,11 @@ i18next
           loading: 'Loading...',
           main: {
             heading: 'PROJECT MANAGER APPLICATION',
-            text: `is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. `,
+            text: `This is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. `,
             medium: `You can
             automate and customize your workflow and avoid unnecessary meetings as communicating to your team members are
             easier with project manager application.`,
+            rsschool: `This project was developed as a part of the <a>Rolling Scopes School</a> React course. The following technologies were involved: React, Axios, Material Ui, React Router, Redux, l18next, TypeScript.`,
             signIn: 'Sign in',
             signUp: 'Sign up',
             logOut: 'Log out',
@@ -48,7 +49,7 @@ i18next
           },
           header: {
             boards: 'BOARDS',
-            edit: 'EDIT PROFILE',
+            edit: 'PROFILE',
             toMain: 'GO TO MAIN',
           },
           notFound: 'The page not found',
@@ -84,7 +85,7 @@ i18next
             rename: 'Rename',
             delete: 'Delete',
             addBoard: 'Add new board',
-            name: 'Please enter name of the board.',
+            name: 'Please enter name of the board',
             add: 'Add',
             myBoards: 'My boards',
             allBoards: 'All boards',
@@ -121,8 +122,9 @@ i18next
           loading: 'Загрузка...',
           main: {
             heading: 'МЕНЕДЖЕР ПРОЕКТОВ',
-            text: `это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу.`,
+            text: `Это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу.`,
             medium: `Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,
+            rsschool: `Этот проект был разработан в рамках курса по React от <a>Rolling Scopes School</a>. Были задействованы следующие технологии: React, Axios, Material Ui, React Router, Redux, l18next, TypeScript.`,
             signIn: 'Войти',
             signUp: 'Зарегистрироваться',
             logOut: 'Выйти',
@@ -146,7 +148,7 @@ i18next
           },
           header: {
             boards: 'ДОСКИ',
-            edit: 'РЕДАКТИРОВАТЬ ПРОФИЛЬ',
+            edit: 'ПРОФИЛЬ',
             toMain: 'НА ГЛАВНУЮ',
           },
           notFound: 'Страница не найдена',
@@ -182,7 +184,7 @@ i18next
             rename: 'Переименовать',
             delete: 'Удалить',
             addBoard: 'Добавить новую доску',
-            name: 'Пожалуйста, введите имя доски.',
+            name: 'Пожалуйста, введите название доски',
             add: 'Добавить',
             myBoards: 'Мои доски',
             allBoards: 'Все доски',

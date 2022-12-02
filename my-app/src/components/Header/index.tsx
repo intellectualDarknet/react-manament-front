@@ -162,7 +162,16 @@ function Header() {
               }}
             >
               <Tooltip title={t('main.logOut')}>
-                <LogoutIcon onClick={() => dispatch(logout())} />
+                <LogoutIcon
+                  sx={[
+                    (theme) => ({
+                      '&:hover': {
+                        cursor: 'pointer',
+                      },
+                    }),
+                  ]}
+                  onClick={() => dispatch(logout())}
+                />
               </Tooltip>
             </Box>
           ) : (
@@ -269,6 +278,13 @@ function Header() {
           >
             {Object.keys(lngs).map((lng) => (
               <ToggleButton
+                sx={[
+                  (theme) => ({
+                    '&:disabled': {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }),
+                ]}
                 value={lng}
                 type="submit"
                 key={lng}

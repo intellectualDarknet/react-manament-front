@@ -24,7 +24,7 @@ const Footer = () => {
             </Typography>
           </a>
         </Box>
-        <Box sx={{ flexGrow: 1, display: { md: 'flex' }, justifyContent: 'space-between' }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between' }}>
           {pictures.map((pict) => (
             <a href={pict.link} target="_blank" rel="noreferrer" key={pictures.indexOf(pict)}>
               <Avatar alt="Remy Sharp" src={pict.picture} />

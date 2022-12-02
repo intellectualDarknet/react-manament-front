@@ -7,7 +7,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import './start.scss';
 import { Link } from 'react-router-dom';
 import { RootState, useAppSelector } from 'store/store';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -31,7 +31,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.secondary.main,
   lineHeight: '60px',
   opacity: '0.9',
-  p: { sm: '15px', xs: '0' },
+  padding: '15px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -64,10 +64,9 @@ const Start = () => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            width: { sm: '500px', xs: '300px' },
-            height: { sm: '300px' },
+            width: { sm: '530px', xs: '300px' },
+            height: { sm: '300px', xs: '370px' },
             marginLeft: { sm: '10%', xs: 0 },
-            padding: 0,
           }}
         >
           <Item elevation={24}>
@@ -78,7 +77,7 @@ const Start = () => {
               variant="h6"
               textAlign="left"
               gutterBottom
-              sx={{ fontFamily: 'monospace', p: { sm: '10px', xs: '0' } }}
+              sx={{ fontFamily: 'monospace', p: { sm: '10px', xs: '5px' } }}
             >
               {t('main.text')}
             </Typography>
@@ -94,6 +93,7 @@ const Start = () => {
                         backgroundColor: theme.palette.secondary.main,
                         color: theme.palette.primary.main,
                         borderRadius: '32px',
+                        fontSize: { xs: '0.7rem', sm: 'inherit' },
                       },
                       (theme) => ({
                         '&:hover': {
@@ -115,6 +115,7 @@ const Start = () => {
                         backgroundColor: theme.palette.secondary.main,
                         color: theme.palette.primary.main,
                         borderRadius: '32px',
+                        fontSize: { xs: '0.7rem', sm: 'inherit' },
                       },
                       (theme) => ({
                         '&:hover': {
@@ -147,7 +148,7 @@ const Start = () => {
                       }),
                     ]}
                   >
-                    {t('main.boards')}
+                    {t('header.toMain')}
                   </Button>
                 </Link>
               </Box>
@@ -183,11 +184,56 @@ const Start = () => {
           <Item elevation={24}>
             <Typography
               variant="h6"
+              gutterBottom
+              sx={{ fontFamily: 'monospace', p: { sm: '10px', xs: '0' }, textAlign: { xs: 'center', sm: 'justify' } }}
+            >
+              {t('main.medium')}
+            </Typography>
+          </Item>
+        </Box>
+      </Grid>
+      <Grid
+        className="rsschool-block"
+        container
+        spacing={5}
+        columns={15}
+        sx={{
+          display: 'flex',
+          justifyContent: { sm: 'flex-start', xs: 'center' },
+          width: '100%',
+          margin: 0,
+          minHeight: '90vh',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            width: { sm: '500px', xs: '300px' },
+            height: { sm: '300px' },
+            marginTop: '5%',
+            padding: 0,
+            justifyContent: 'center',
+            marginLeft: { sm: '10%', xs: 0 },
+          }}
+        >
+          <Item elevation={24}>
+            <Typography
+              variant="h6"
               textAlign="justify"
               gutterBottom
               sx={{ fontFamily: 'monospace', p: { sm: '10px', xs: '0' } }}
             >
-              {t('main.medium')}
+              <Trans
+                i18nKey="main.rsschool"
+                components={{
+                  a: (
+                    <a target="_blank" rel="noreferrer noopener" href="https://rs.school/">
+                      Rolling Scopes School
+                    </a>
+                  ),
+                }}
+              />
             </Typography>
           </Item>
         </Box>
@@ -209,7 +255,14 @@ const Start = () => {
           {team.map((el) => (
             <Card
               onClick={() => proceedLink(el.link)}
-              sx={{ maxWidth: '300px', height: '350px', margin: '10px', display: 'flex' }}
+              sx={{
+                maxWidth: '300px',
+                height: 'auto',
+                paddingBottom: '10px',
+                margin: '10px',
+                display: 'flex',
+                borderRadius: '20px',
+              }}
               key={el.name}
             >
               <CardActionArea>

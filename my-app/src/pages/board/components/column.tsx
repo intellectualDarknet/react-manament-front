@@ -175,7 +175,6 @@ function Column(props: {
           <Grid container item className="column__title-form-conteiner">
             <ValidatorForm
               className="column__title-form"
-              onError={(errors) => console.log(errors)} // TODO: Заменить на вывод ошибки в тостере
               onChange={handleColumnTitleInputChange}
               onSubmit={handleColumnTitleInputSubmit}
               noValidate

@@ -98,6 +98,10 @@ i18next
             notRegistered: 'Not registered?',
             alreadyRegistered: 'Already registered?',
             mismatch: 'password mismatch',
+            success: 'Complete!',
+            error401: 'Wrong Login or password inserted. Try again!',
+            error403: "Wrong token. Maybe it's expired. Authorize again!",
+            error409: 'That user is already exist. Come up with another login!',
           },
           user: {
             data: 'User data:',
@@ -196,6 +200,10 @@ i18next
             notRegistered: 'Не зарегистрированы?',
             alreadyRegistered: 'Уже зарегистрированы?',
             mismatch: 'пароль не совпадает',
+            success: 'Выполнено!',
+            error401: 'Логин или пароль введены неверно. Попробуйте еще раз!',
+            error403: 'Неправильный токен. Возможно, истек срок его действия. Авторизируйтесь заново!',
+            error409: 'Такой пользователь уже существует. Придумайте другой логин!',
           },
           user: {
             data: 'Данные пользователя:',

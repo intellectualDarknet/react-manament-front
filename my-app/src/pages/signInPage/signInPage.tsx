@@ -49,13 +49,7 @@ const SignInPage = () => {
       square
       className="signin"
     >
-      <ValidatorForm
-        onError={(errors) => console.log(errors)} // TODO: Заменить на вывод ошибки в тостере
-        onSubmit={onSigninSubmit}
-        onChange={onFormChange}
-        noValidate
-        sx={{ width: '80%' }}
-      >
+      <ValidatorForm onSubmit={onSigninSubmit} onChange={onFormChange} noValidate sx={{ width: '80%' }}>
         <Typography variant="h5" component="h2">
           {t('auth.signIn')}
         </Typography>

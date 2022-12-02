@@ -22,12 +22,15 @@ i18next
           loading: 'Loading...',
           main: {
             heading: 'PROJECT MANAGER APPLICATION',
-            text: `is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. You can
+            text: `This is an easy and user-friendly platform that helps to organize your complex work easily and flexibly. `,
+            medium: `You can
             automate and customize your workflow and avoid unnecessary meetings as communicating to your team members are
             easier with project manager application.`,
+            rsschool: `This project was developed as a part of the Rolling Scopes School <0>React</0> course. The following technologies were involved: React, Axios, Material Ui, React Router, Redux, l18next, TypeScript.`,
             signIn: 'Sign in',
             signUp: 'Sign up',
             logOut: 'Log out',
+            LOGOUT: 'LOG OUT',
             boards: 'Boards',
             team: 'Our team:',
             veronika: 'Veronika',
@@ -46,7 +49,8 @@ i18next
           },
           header: {
             boards: 'BOARDS',
-            edit: 'EDIT PROFILE',
+            edit: 'PROFILE',
+            toMain: 'GO TO MAIN',
           },
           notFound: 'The page not found',
 
@@ -77,14 +81,14 @@ i18next
             unchoisen: '☚ Choose a bord there and come back!',
           },
           boards: {
-            edit: 'Edit board name',
+            edit: 'Edit',
             renameBoard: 'Rename board',
             enterName: 'Enter new name',
             cancel: 'Cancel',
             rename: 'Rename',
             delete: 'Delete',
             addBoard: 'Add new board',
-            name: 'Please enter name of the board.',
+            name: 'Please enter name of the board',
             add: 'Add',
             myBoards: 'My boards',
             allBoards: 'All boards',
@@ -92,7 +96,7 @@ i18next
           auth: {
             signIn: 'Sign In',
             signUp: 'Sign Up',
-            backToMain: 'Back to main page',
+            backToMain: 'Back to',
             main: 'Main page',
             register: 'Register',
             notRegistered: 'Not registered?',
@@ -125,10 +129,13 @@ i18next
           loading: 'Загрузка...',
           main: {
             heading: 'МЕНЕДЖЕР ПРОЕКТОВ',
-            text: `это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу. Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,
+            text: `Это простая и удобная платформа, которая помогает легко и гибко организовать вашу сложную работу.`,
+            medium: `Вы можете автоматизировать и настроить свой рабочий процесс и избежать ненужных встреч, поскольку общение с членами вашей команды станет легче с приложением менеджер проектов.`,
+            rsschool: `Этот проект был разработан в рамках курса по <0>React</0> от Rolling Scopes School. Были задействованы следующие технологии: React, Axios, Material Ui, React Router, Redux, l18next, TypeScript.`,
             signIn: 'Войти',
             signUp: 'Зарегистрироваться',
             logOut: 'Выйти',
+            LOGOUT: 'ВЫЙТИ',
             boards: 'Доски',
             team: 'Наша команда:',
             ivan: 'Иван',
@@ -148,7 +155,8 @@ i18next
           },
           header: {
             boards: 'ДОСКИ',
-            edit: 'РЕДАКТИРОВАТЬ ПРОФИЛЬ',
+            edit: 'ПРОФИЛЬ',
+            toMain: 'НА ГЛАВНУЮ',
           },
           notFound: 'Страница не найдена',
 
@@ -179,14 +187,14 @@ i18next
             unchoisen: '☚ Выберите доску там и возвращайтесь!',
           },
           boards: {
-            edit: 'Редактировать доску',
+            edit: 'Редактировать',
             renameBoard: 'Переименовать доску',
             enterName: 'Введите новое имя',
             cancel: 'Отмена',
             rename: 'Переименовать',
             delete: 'Удалить',
             addBoard: 'Добавить новую доску',
-            name: 'Пожалуйста, введите имя доски.',
+            name: 'Пожалуйста, введите название доски',
             add: 'Добавить',
             myBoards: 'Мои доски',
             allBoards: 'Все доски',
@@ -194,7 +202,7 @@ i18next
           auth: {
             signIn: 'Войти',
             signUp: 'Регистрация',
-            backToMain: 'Назад на главную',
+            backToMain: 'Назад',
             main: 'Главная страница',
             register: 'Зарегистрироваться',
             notRegistered: 'Не зарегистрированы?',

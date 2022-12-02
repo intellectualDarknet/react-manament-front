@@ -50,7 +50,7 @@ const Board = (props: { title: string; id: string }) => {
     <Item
       sx={{
         height: '150px',
-        width: '300px',
+        width: { sm: '300px', xs: '270px' },
         display: 'flex',
         justifyContent: 'space-between',
         flexDirection: 'column',
@@ -69,8 +69,12 @@ const Board = (props: { title: string; id: string }) => {
           e.stopPropagation();
         }}
       >
-        <DeleteModal message={t('deleteModal.message')} submit={deleteCard} deleteButton={DeleteButton} />
-        <Button sx={{ width: '150px', height: '30px', fontSize: '10px' }} variant="contained" onClick={handleClose}>
+        <Button
+          sx={{ margin: '10px', padding: '10px', borderRadius: '32px', width: 'auto' }}
+          variant="contained"
+          fullWidth
+          onClick={handleClose}
+        >
           {t('boards.edit')}
         </Button>
         <Dialog open={open} onClose={handleClose}>
@@ -88,14 +92,15 @@ const Board = (props: { title: string; id: string }) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button sx={{ color: 'black' }} onClick={handleClose}>
-              {t('boards.cancel')}
-            </Button>
             <Button sx={{ color: 'black' }} onClick={handleRename}>
               {t('boards.rename')}
             </Button>
+            <Button sx={{ color: 'black' }} onClick={handleClose}>
+              {t('boards.cancel')}
+            </Button>
           </DialogActions>
         </Dialog>
+        <DeleteModal message={t('deleteModal.message')} submit={deleteCard} deleteButton={DeleteButton} />
       </Box>
     </Item>
   );

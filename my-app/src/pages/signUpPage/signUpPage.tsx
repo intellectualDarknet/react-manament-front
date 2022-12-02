@@ -10,6 +10,7 @@ import './signUpPage.scss';
 import { IAuthState } from './../../store/auth/auth-slice';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
+import { Box } from '@mui/material';
 
 interface ISignUpForm {
   name: string;
@@ -51,19 +52,33 @@ const SignUpPage = () => {
     return true;
   });
   return (
-    <>
+    <Box className="signup-container">
       <Grid
         className="signup"
         item
-        sx={{ display: 'flex', justifyContent: 'center', width: '40%', padding: '20px' }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: { xs: '300px', md: '500px' },
+          height: { xs: '460px', md: '470px' },
+          padding: '20px',
+          margin: '10px 0',
+        }}
         component={Paper}
         square
       >
-        <ValidatorForm onSubmit={onSignUpSubmit} onChange={onFormChange} noValidate sx={{ width: '80%' }}>
+        <ValidatorForm
+          onError={(errors) => console.log(errors)}
+          onSubmit={onSignUpSubmit}
+          onChange={onFormChange}
+          noValidate
+          sx={{ width: { xs: '300px', md: '430px' }, display: 'flex', justifyContent: 'center' }}
+        >
           <Typography variant="h5" component="h2">
             {t('auth.signUp')}
           </Typography>
           <TextValidator
+            sx={{ width: { xs: '240px', md: '400px' }, height: '50px' }}
             autoComplete="off"
             variant="outlined"
             margin="normal"
@@ -98,6 +113,7 @@ const SignUpPage = () => {
             disabled={auth.signUpLoading}
           />
           <TextValidator
+            sx={{ width: { xs: '240px', md: '400px' }, height: '50px' }}
             autoComplete="off"
             variant="outlined"
             margin="normal"
@@ -132,6 +148,7 @@ const SignUpPage = () => {
             disabled={auth.signUpLoading}
           />
           <TextValidator
+            sx={{ width: { xs: '240px', md: '400px' }, height: '50px' }}
             autoComplete="off"
             variant="outlined"
             margin="normal"
@@ -165,6 +182,7 @@ const SignUpPage = () => {
             disabled={auth.signUpLoading}
           />
           <TextValidator
+            sx={{ width: { xs: '240px', md: '400px' }, height: '50px' }}
             autoComplete="off"
             variant="outlined"
             margin="normal"
@@ -184,7 +202,7 @@ const SignUpPage = () => {
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ marginBottom: '10px' }}
+            sx={{ margin: { xs: '10px 0', md: '20px 0' }, width: { xs: '240px', md: '400px' } }}
             type="submit"
             // endIcon={<SendIcon />}
             disabled={auth.signUpLoading}
@@ -199,14 +217,10 @@ const SignUpPage = () => {
             <Link className="signup__bottom-link" to="/sign-in">
               {t('auth.signIn')}
             </Link>
-            <div className="signin__bottom-reg">{t('auth.backToMain')}</div>
-            <Link className="signin__bottom-link" to="/">
-              {t('auth.main')}
-            </Link>
           </div>
         </ValidatorForm>
       </Grid>
-    </>
+    </Box>
   );
 };
 

@@ -18,9 +18,6 @@ const DeleteModal = (props: {
       <Dialog open={openDeleteMessage} onClose={handleToggleModal}>
         <DialogTitle>{props.message}</DialogTitle>
         <DialogActions>
-          <Button sx={{ color: 'black' }} onClick={handleToggleModal}>
-            {t('deleteModal.no')}
-          </Button>
           <Button
             sx={{ color: 'black' }}
             onClick={() => {
@@ -29,6 +26,9 @@ const DeleteModal = (props: {
             }}
           >
             {t('deleteModal.yes')}
+          </Button>
+          <Button sx={{ color: 'black' }} onClick={handleToggleModal}>
+            {t('deleteModal.no')}
           </Button>
         </DialogActions>
       </Dialog>

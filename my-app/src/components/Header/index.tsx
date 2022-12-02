@@ -14,16 +14,13 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Link } from 'react-router-dom';
 import { useAppSelector, RootState, useAppDispatch } from 'store/store';
-import { Button } from '@mui/material';
 import { logout } from 'store/auth/auth-slice';
 import { useTranslation, Trans } from 'react-i18next';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import theme from 'components/Theme';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-const settings = [
-  { name: 'main.signIn', link: 'sign-in' },
-  { name: 'main.signUp', link: 'sign-up' },
-];
 const lngs = {
   en: { nativeName: 'English' },
   ru: { nativeName: 'Russia' },
@@ -42,7 +39,6 @@ function Header() {
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     setAlignment(newAlignment);
   };
-
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -61,7 +57,9 @@ function Header() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AssessmentIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Link to="/">
+            <AssessmentIcon sx={{ display: 'flex', mr: 1, color: theme.palette.secondary.main }} />
+          </Link>
           <Typography
             variant="h6"
             noWrap
@@ -72,27 +70,7 @@ function Header() {
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            PROJECT MANAGMENT APP
-          </Typography>
-          <AssessmentIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.2rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
@@ -103,90 +81,190 @@ function Header() {
             sx={{
               flexGrow: 1,
               display: 'flex',
-              justifyContent: 'space-evenly',
+              justifyContent: 'center',
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.03rem',
               textDecoration: 'none',
             }}
           >
             {userId ? (
-              <Link to="/boards">
-                <Typography
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: theme.palette.secondary.main,
-                    textDecoration: 'none',
-                  }}
-                >
-                  <Trans i18nKey="header.boards"></Trans>
-                </Typography>
-              </Link>
-            ) : (
-              <></>
-            )}
-            {userId ? (
-              <Link to="/user-page">
-                <Typography
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: theme.palette.secondary.main,
-                    textDecoration: 'none',
-                  }}
-                >
-                  <Trans i18nKey="header.edit"></Trans>
-                </Typography>
-              </Link>
+              <Box
+                sx={{
+                  width: '220px',
+                  display: { xs: 'none', sm: 'flex' },
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Link to="/boards">
+                  <Typography
+                    textAlign="center"
+                    sx={[
+                      {
+                        fontFamily: 'monospace',
+                        fontWeight: 700,
+                        width: '100px',
+                        fontSize: '15px',
+                        color: theme.palette.secondary.main,
+                        textDecoration: 'none',
+                        transition: '.5s',
+                      },
+                      (theme) => ({
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }),
+                    ]}
+                  >
+                    <Trans i18nKey="header.toMain"></Trans>
+                  </Typography>
+                </Link>
+                <Link to="/user-page">
+                  <Typography
+                    textAlign="center"
+                    sx={[
+                      {
+                        width: '110px',
+                        fontFamily: 'monospace',
+                        fontSize: '15px',
+                        fontWeight: 700,
+                        color: theme.palette.secondary.main,
+                        textDecoration: 'none',
+                        transition: '.5s',
+                      },
+                      ,
+                      (theme) => ({
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }),
+                    ]}
+                  >
+                    <Trans i18nKey="header.edit"></Trans>
+                  </Typography>
+                </Link>
+              </Box>
             ) : (
               <></>
             )}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <PersonIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+          {userId ? (
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: { xs: 'none', sm: 'flex' },
+                width: '30px',
+                justifyContent: 'center',
+                margin: '5px',
+                alignItems: 'center',
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
-              {userId ? (
-                <Button onClick={() => dispatch(logout())}>{t('main.logOut')}</Button>
-              ) : (
-                settings.map((setting) => (
-                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                    <Link to={setting.link}>
-                      <Typography textAlign="center">
-                        <Trans i18nKey={setting.name}></Trans>
-                      </Typography>
-                    </Link>
-                  </MenuItem>
-                ))
-              )}
-            </Menu>
-          </Box>
+              <Tooltip title={t('main.logOut')}>
+                <LogoutIcon
+                  sx={[
+                    (theme) => ({
+                      '&:hover': {
+                        cursor: 'pointer',
+                      },
+                    }),
+                  ]}
+                  onClick={() => dispatch(logout())}
+                />
+              </Tooltip>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: 'flex',
+                width: '80px',
+                justifyContent: 'space-between',
+                margin: '5px',
+                alignItems: 'center',
+              }}
+            >
+              <Tooltip title={t('main.signIn')}>
+                <Link to="sign-in">
+                  <PersonIcon fontSize="large" color="secondary" />
+                </Link>
+              </Tooltip>
+              <Tooltip title={t('main.signUp')}>
+                <Link to="sign-up">
+                  <PersonAddAlt1Icon fontSize="large" color="secondary" />
+                </Link>
+              </Tooltip>
+            </Box>
+          )}
+          {userId ? (
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', sm: 'none' } }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <PersonIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem>
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                      textDecoration: 'none',
+                      color: theme.palette.secondary.main,
+                      padding: 0,
+                    }}
+                    onClick={() => dispatch(logout())}
+                  >
+                    {t('main.LOGOUT')}
+                  </Typography>
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/boards">
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: theme.palette.secondary.main,
+                      }}
+                    >
+                      <Trans i18nKey="header.toMain"></Trans>
+                    </Typography>
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/user-page">
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        color: theme.palette.secondary.main,
+                      }}
+                    >
+                      <Trans i18nKey="header.edit"></Trans>
+                    </Typography>
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            <></>
+          )}
+
           <ToggleButtonGroup
             color="secondary"
             size="small"
@@ -200,6 +278,13 @@ function Header() {
           >
             {Object.keys(lngs).map((lng) => (
               <ToggleButton
+                sx={[
+                  (theme) => ({
+                    '&:disabled': {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }),
+                ]}
                 value={lng}
                 type="submit"
                 key={lng}

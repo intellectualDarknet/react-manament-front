@@ -68,7 +68,7 @@ const CreateTaskForm = (props: {
       }}
     >
       <ValidatorForm onSubmit={onColumnTitleSubmit} onChange={onFormChange} noValidate sx={{ width: '80%' }}>
-        <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
+        <Typography variant="h5" component="h2" sx={{ fontSize: { xs: '1.3rem', sm: '1.5rem' }, textAlign: 'center' }}>
           {t('board.newTask')}
         </Typography>
         <TextValidator

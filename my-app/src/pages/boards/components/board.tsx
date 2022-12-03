@@ -11,7 +11,6 @@ import DeleteModal from 'components/deleteModal';
 import DeleteButton from '../DeleteButton';
 import { useTranslation } from 'react-i18next';
 import CircularProgress from '@mui/material/CircularProgress';
-import { idText } from 'typescript';
 import background from 'assets/img/bg-title.png';
 import theme from 'components/Theme';
 
@@ -70,6 +69,7 @@ const Board = (props: { title: string; id: string }) => {
         display: 'flex',
         justifyContent: 'space-between',
         flexDirection: 'column',
+        cursor: 'pointer',
       }}
       onClick={async () => {
         await dispatch(getBoardById(props.id));

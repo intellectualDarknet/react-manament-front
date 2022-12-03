@@ -17,6 +17,7 @@ import sortTasks from './functions/sort-tasks';
 import useResortTasksArr from './functions/use-resort-tasks-arr';
 import useMoveTask from './functions/use-move-task';
 import CircularProgress from '@mui/material/CircularProgress';
+import sortArr from './functions/sort-arr';
 
 export interface ITaskState {
   columnId: string;
@@ -74,6 +75,7 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
+  const sortedCurrentBoardColumns = sortArr(currentBoardColumns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
   useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
@@ -101,6 +103,7 @@ const Board = (): JSX.Element => {
   const [currentTaskContent, setCurrentTaskContent] = useState({ title: '', description: '' });
   const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
   const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
+  const [newColumnOrder, setNewColumnOrder] = useState([]);
   const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
 
   useMoveTask(currentBoard, dragItem, dropTask, dropColumn, setDragItem, setDropColumn, setDropTask, currentBoardTasks);
@@ -196,7 +199,10 @@ const Board = (): JSX.Element => {
     return newOrder;
   };
 
-  useResortColumnArr(currentBoardColumns, getNewOrder(dragItem, dropColumn));
+  useResortColumnArr(sortedCurrentBoardColumns, getNewOrder(dragItem, dropColumn));
+  // TODO: Выполнять это только при событии onDrop колонки
+  // Вынести диспатч наружу, выполнять его только если в newColumnOrder не пустой массив
+  // Устанавливать newColumnOrder в колонке и очищать после сортировки
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column): JSX.Element => {
@@ -227,6 +233,7 @@ const Board = (): JSX.Element => {
         setDragItem,
         setDropColumn,
         setDropTask,
+        setNewColumnOrder,
         showColumnTitleInput,
         changeColumnTitleState,
         changeTaskContentState,
@@ -316,7 +323,7 @@ const Board = (): JSX.Element => {
               </Typography>
             </Grid>
           ) : (
-            renderAllColumns(currentBoardColumns)
+            renderAllColumns(sortedCurrentBoardColumns)
           )}
         </Grid>
       </Grid>

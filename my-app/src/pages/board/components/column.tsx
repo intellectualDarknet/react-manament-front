@@ -43,6 +43,7 @@ function Column(props: {
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropColumn: Dispatch<SetStateAction<IColumnState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
+  setNewColumnOrder: Dispatch<SetStateAction<IColumnRequest[]>>;
   showColumnTitleInput: (columnId: string) => void;
   changeColumnTitleState: (inputValue: string) => void;
   changeTaskContentState: (inputValues: { title: string; description: string }) => void;

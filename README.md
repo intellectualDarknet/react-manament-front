@@ -14,6 +14,8 @@ This project was developed as a part of the Rolling Scopes School React course. 
 
 ====================
 
+[Task](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/react/project-management-system-EN.md/)
+
 [Deploy](https://legat14-project-management-app.netlify.app/)
 
 [Source](https://github.com/Legat14/project-management-app/tree/develop/)

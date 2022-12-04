@@ -283,6 +283,7 @@ const Board = (): JSX.Element => {
             width: { xs: '150px', md: '70px' },
             height: { xs: '40px', md: '50%' },
             flexDirection: { xs: 'row', md: 'column' },
+            marginTop: { xs: '0', md: '12vh', xl: '12vh' },
           }}
           onClick={handleAddColumn}
           variant="contained"
@@ -292,7 +293,7 @@ const Board = (): JSX.Element => {
           {t('board.addColumn')}
         </Button>
       </Grid>
-      <Grid container item className="column-conteiner" xl={11} xs={11}>
+      <Grid container item className="column-conteiner" xl={11.1} md={11.05} xs={12}>
         <Grid
           container
           item
@@ -327,7 +328,7 @@ const Board = (): JSX.Element => {
         <Typography className="board__title" variant="h4" sx={{ fontFamily: 'monospace' }}>
           {currentBoard ? currentBoard.title : t('board.unchoisen')}
         </Typography>
-        <Grid container className="board__columns-layout" sx={{ matginLeft: '5px' }}>
+        <Grid container className="board__columns-layout">
           {columnsIsLoading ? (
             <Grid container className="board__loading">
               <CircularProgress color="primary" />

@@ -6,7 +6,7 @@ import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
 import { deleteColumn, getColumnsInBoard, updateColumnById, updateSetOfColumns } from 'store/columns/columns-thunks';
-import { getTasksByBoardId, deleteTask, updateTaskById } from 'store/tasks/tasks-thunk';
+import { getTasksByBoardId, deleteTask, updateTaskById, updateSetOfTasks } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -14,7 +14,7 @@ import Paper from '@mui/material/Paper';
 import resortColumnArr from './functions/resort-column-arr';
 import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
-import useResortTasksArr from './functions/use-resort-tasks-arr';
+import resortTasksArr from './functions/resort-tasks-arr';
 import useMoveTask from './functions/use-move-task';
 import CircularProgress from '@mui/material/CircularProgress';
 import sortArr from './functions/sort-arr';
@@ -77,7 +77,6 @@ const Board = (): JSX.Element => {
   const currentBoardColumnsCount = currentBoardColumns.length;
   const sortedCurrentBoardColumns = sortArr(currentBoardColumns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
-  useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
   const allColumnsIsGetting = useSelector((state: RootState) => state.rootReducer.columnsReducer.columnsLoading);
   const allColumnsIsUpdating = useSelector(
@@ -93,6 +92,15 @@ const Board = (): JSX.Element => {
   const columnsIsLoading = allColumnsIsGetting || allColumnsIsUpdating || oneColumnIsDeleting;
   const columnIsLoading = oneColumnIsUpdating;
   const tasksIsLoading = allTasksIsGetting || allTasksIsUpdating || oneTaskIsDeleting;
+
+  useEffect(() => {
+    const newOrder = resortTasksArr(currentBoardColumns, currentBoardTasks);
+
+    if (newOrder) {
+      dispatch(updateSetOfTasks(newOrder));
+      dispatch(getTasksByBoardId(currentBoard._id));
+    }
+  }, [dispatch, currentBoard._id, currentBoardColumns, currentBoardTasks]);
 
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);

@@ -114,7 +114,13 @@ const Boards = () => {
               </Button>
             </Link>
           </Box>
-          <Grid container sx={{ flexGrow: 1, justifyContent: 'center' }} spacing={2} columns={{ xs: 4, sm: 3 }}>
+          <Grid
+            id="board-item__container"
+            container
+            sx={{ flexGrow: 1, justifyContent: 'center' }}
+            spacing={2}
+            columns={{ xs: 4, sm: 3 }}
+          >
             {boardsResp.boards
               ? boardsResp.boards.map(
                   (board, index): JSX.Element => <Board key={index} title={board.title} id={board._id} />

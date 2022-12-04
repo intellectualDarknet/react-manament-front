@@ -58,7 +58,6 @@ const SignInPage = () => {
         className="signin"
       >
         <ValidatorForm
-          onError={(errors) => console.log(errors)}
           onSubmit={onSigninSubmit}
           onChange={onFormChange}
           noValidate

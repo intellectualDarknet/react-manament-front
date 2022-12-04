@@ -65,7 +65,7 @@ const Start = () => {
             display: 'flex',
             justifyContent: 'center',
             width: { sm: '530px', xs: '300px' },
-            height: { sm: '300px', xs: '370px' },
+            height: { sm: '300px', xs: '400px' },
             marginLeft: { sm: '10%', xs: 0 },
           }}
         >

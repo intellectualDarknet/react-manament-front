@@ -5,13 +5,13 @@ import store, { RootState } from 'store/store';
 import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
-import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
+import { deleteColumn, getColumnsInBoard, updateColumnById, updateSetOfColumns } from 'store/columns/columns-thunks';
 import { getTasksByBoardId, deleteTask, updateTaskById } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
-import useResortColumnArr from './functions/use-resort-column-arr';
+import resortColumnArr from './functions/resort-column-arr';
 import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
 import useResortTasksArr from './functions/use-resort-tasks-arr';
@@ -103,7 +103,7 @@ const Board = (): JSX.Element => {
   const [currentTaskContent, setCurrentTaskContent] = useState({ title: '', description: '' });
   const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
   const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
-  const [newColumnOrder, setNewColumnOrder] = useState([]);
+  const [newColumnsOrder, setNewColumnsOrder] = useState(null);
   const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
 
   useMoveTask(currentBoard, dragItem, dropTask, dropColumn, setDragItem, setDropColumn, setDropTask, currentBoardTasks);
@@ -179,30 +179,36 @@ const Board = (): JSX.Element => {
     await dispatch(getTasksByBoardId(currentBoard._id));
   };
 
-  const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
-    let newOrder = [];
-    for (let i = 0; i < currentBoardColumnsCount; i += 1) {
-      newOrder.push(i);
-    }
-    if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
-      newOrder = newOrder.map((elem, index) => {
-        if (index === +dragItem.order) {
-          return +dropColumn.columnOrder;
-        } else if (index === +dropColumn.columnOrder) {
-          return +dragItem.order;
-        }
-        return index;
-      });
-      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
-      setDropColumn({ columnId: '', columnOrder: '' });
-    }
-    return newOrder;
-  };
+  useEffect(() => {
+    const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
+      let newOrder = [];
+      for (let i = 0; i < currentBoardColumnsCount; i += 1) {
+        newOrder.push(i);
+      }
+      if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
+        newOrder = newOrder.map((elem, index) => {
+          if (index === +dragItem.order) {
+            return +dropColumn.columnOrder;
+          } else if (index === +dropColumn.columnOrder) {
+            return +dragItem.order;
+          }
+          return index;
+        });
+        setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+        setDropColumn({ columnId: '', columnOrder: '' });
+      }
+      return newOrder;
+    };
 
-  useResortColumnArr(sortedCurrentBoardColumns, getNewOrder(dragItem, dropColumn));
-  // TODO: Выполнять это только при событии onDrop колонки
-  // Вынести диспатч наружу, выполнять его только если в newColumnOrder не пустой массив
-  // Устанавливать newColumnOrder в колонке и очищать после сортировки
+    if (dragItem.columnId && dropColumn.columnId && dragItem.type === DragItemType.COLUMN) {
+      setNewColumnsOrder(resortColumnArr(sortedCurrentBoardColumns, getNewOrder(dragItem, dropColumn)));
+    }
+
+    if (newColumnsOrder) {
+      dispatch(updateSetOfColumns(newColumnsOrder));
+      setNewColumnsOrder(null);
+    }
+  }, [dispatch, dragItem, dropColumn, newColumnsOrder, sortedCurrentBoardColumns, currentBoardColumnsCount]);
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column): JSX.Element => {
@@ -233,7 +239,6 @@ const Board = (): JSX.Element => {
         setDragItem,
         setDropColumn,
         setDropTask,
-        setNewColumnOrder,
         showColumnTitleInput,
         changeColumnTitleState,
         changeTaskContentState,

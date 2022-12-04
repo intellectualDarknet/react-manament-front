@@ -1,9 +1,4 @@
-import { useDispatch } from 'react-redux';
-import { updateSetOfColumns } from 'store/columns/columns-thunks';
-import store from 'store/store';
-
-async function useResortColumnArr(columnArrToResort: IColumnResponse[], newOrder?: number[]): Promise<void> {
-  const dispatch = useDispatch<typeof store.dispatch>();
+function resortColumnArr(columnArrToResort: IColumnResponse[], newOrder?: number[]): IColumnRequest[] | null {
   if (columnArrToResort) {
     const newColumnsOrder: IColumnRequest[] = [];
     columnArrToResort.forEach((column, index) => {
@@ -25,9 +20,10 @@ async function useResortColumnArr(columnArrToResort: IColumnResponse[], newOrder
     });
 
     if (isChanged) {
-      await dispatch(updateSetOfColumns(newColumnsOrder));
+      return newColumnsOrder;
     }
+    return null;
   }
 }
 
-export default useResortColumnArr;
+export default resortColumnArr;

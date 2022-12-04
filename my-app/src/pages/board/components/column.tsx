@@ -49,12 +49,7 @@ function Column(props: {
   changeColumnTitle: (column: IColumnResponse) => void;
   changeTaskContent: (task: ITask) => void;
 }): JSX.Element {
-  const filterTask = (tasks: ITask[]): ITask[] => {
-    const tasksOfCurrentColumn = tasks.filter((elem) => elem.columnId === props.column._id);
-    return tasksOfCurrentColumn;
-  };
-
-  const tasksOfCurrentColumn = filterTask(props.tasks.get(props.column._id));
+  const tasksOfCurrentColumn = props.tasks.get(props.column._id);
 
   const deleteThisColumn = (): void => {
     props.deleteColumnByButtonPress(props.column._id);

@@ -5,18 +5,19 @@ import store, { RootState } from 'store/store';
 import Column from './components/column';
 import CreateColumnForm from './components/create-column-form';
 import CreateTaskForm from './components/create-task-form';
-import { deleteColumn, getColumnsInBoard, updateColumnById } from 'store/columns/columns-thunks';
-import { getTasksByBoardId, deleteTask, updateTaskById } from 'store/tasks/tasks-thunk';
+import { deleteColumn, getColumnsInBoard, updateColumnById, updateSetOfColumns } from 'store/columns/columns-thunks';
+import { getTasksByBoardId, deleteTask, updateTaskById, updateSetOfTasks } from 'store/tasks/tasks-thunk';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon, ArrowBackIos as ArrowBackIosIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
-import useResortColumnArr from './functions/use-resort-column-arr';
+import resortColumnArr from './functions/resort-column-arr';
 import { useTranslation } from 'react-i18next';
 import sortTasks from './functions/sort-tasks';
-import useResortTasksArr from './functions/use-resort-tasks-arr';
+import resortTasksArr from './functions/resort-tasks-arr';
 import useMoveTask from './functions/use-move-task';
 import CircularProgress from '@mui/material/CircularProgress';
+import sortArr from './functions/sort-arr';
 
 export interface ITaskState {
   columnId: string;
@@ -74,8 +75,8 @@ const Board = (): JSX.Element => {
   const currentBoard = useSelector((state: RootState) => state.rootReducer.boardsReducer.boardById);
   const currentBoardColumns = useSelector((state: RootState) => state.rootReducer.columnsReducer.columns);
   const currentBoardColumnsCount = currentBoardColumns.length;
+  const sortedCurrentBoardColumns = sortArr(currentBoardColumns);
   const currentBoardTasks = useSelector((state: RootState) => state.rootReducer.tasksReducer.getTasksByBoardId);
-  useResortTasksArr(currentBoard, currentBoardColumns, currentBoardTasks);
   const sortedTasks = sortTasks(currentBoardColumns, currentBoardTasks);
   const allColumnsIsGetting = useSelector((state: RootState) => state.rootReducer.columnsReducer.columnsLoading);
   const allColumnsIsUpdating = useSelector(
@@ -92,6 +93,15 @@ const Board = (): JSX.Element => {
   const columnIsLoading = oneColumnIsUpdating;
   const tasksIsLoading = allTasksIsGetting || allTasksIsUpdating || oneTaskIsDeleting;
 
+  useEffect(() => {
+    const newOrder = resortTasksArr(currentBoardColumns, currentBoardTasks);
+
+    if (newOrder) {
+      dispatch(updateSetOfTasks(newOrder));
+      dispatch(getTasksByBoardId(currentBoard._id));
+    }
+  }, [dispatch, currentBoard._id, currentBoardColumns, currentBoardTasks]);
+
   const [formIsShown, setFormIsShown] = useState(false);
   const [taskIsChosen, setTaskIsChosen] = useState(false);
   const [clickedAddTaskColumnId, setClickedAddTaskColumnId] = useState('');
@@ -101,6 +111,7 @@ const Board = (): JSX.Element => {
   const [currentTaskContent, setCurrentTaskContent] = useState({ title: '', description: '' });
   const [dragItem, setDragItem] = useState({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
   const [dropColumn, setDropColumn] = useState({ columnId: '', columnOrder: '' });
+  const [newColumnsOrder, setNewColumnsOrder] = useState(null);
   const [dropTask, setDropTask] = useState({ columnId: '', taskId: '', taskOrder: '' });
 
   useMoveTask(currentBoard, dragItem, dropTask, dropColumn, setDragItem, setDropColumn, setDropTask, currentBoardTasks);
@@ -176,27 +187,36 @@ const Board = (): JSX.Element => {
     await dispatch(getTasksByBoardId(currentBoard._id));
   };
 
-  const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
-    let newOrder = [];
-    for (let i = 0; i < currentBoardColumnsCount; i += 1) {
-      newOrder.push(i);
-    }
-    if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
-      newOrder = newOrder.map((elem, index) => {
-        if (index === +dragItem.order) {
-          return +dropColumn.columnOrder;
-        } else if (index === +dropColumn.columnOrder) {
-          return +dragItem.order;
-        }
-        return index;
-      });
-      setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
-      setDropColumn({ columnId: '', columnOrder: '' });
-    }
-    return newOrder;
-  };
+  useEffect(() => {
+    const getNewOrder = (dragItem: IDragItemState, dropColumn: IColumnState): number[] => {
+      let newOrder = [];
+      for (let i = 0; i < currentBoardColumnsCount; i += 1) {
+        newOrder.push(i);
+      }
+      if (dragItem.type === DragItemType.COLUMN && dropColumn.columnOrder) {
+        newOrder = newOrder.map((elem, index) => {
+          if (index === +dragItem.order) {
+            return +dropColumn.columnOrder;
+          } else if (index === +dropColumn.columnOrder) {
+            return +dragItem.order;
+          }
+          return index;
+        });
+        setDragItem({ type: DragItemType.NONE, columnId: '', taskId: '', order: '' });
+        setDropColumn({ columnId: '', columnOrder: '' });
+      }
+      return newOrder;
+    };
 
-  useResortColumnArr(currentBoardColumns, getNewOrder(dragItem, dropColumn));
+    if (dragItem.columnId && dropColumn.columnId && dragItem.type === DragItemType.COLUMN) {
+      setNewColumnsOrder(resortColumnArr(sortedCurrentBoardColumns, getNewOrder(dragItem, dropColumn)));
+    }
+
+    if (newColumnsOrder) {
+      dispatch(updateSetOfColumns(newColumnsOrder));
+      setNewColumnsOrder(null);
+    }
+  }, [dispatch, dragItem, dropColumn, newColumnsOrder, sortedCurrentBoardColumns, currentBoardColumnsCount]);
 
   const renderAllColumns = (boardColumns: IColumnResponse[]): JSX.Element[] =>
     boardColumns.map((column): JSX.Element => {
@@ -317,7 +337,7 @@ const Board = (): JSX.Element => {
               </Typography>
             </Grid>
           ) : (
-            renderAllColumns(currentBoardColumns)
+            renderAllColumns(sortedCurrentBoardColumns)
           )}
         </Grid>
       </Grid>

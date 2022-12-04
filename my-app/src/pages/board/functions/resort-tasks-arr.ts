@@ -1,11 +1,7 @@
 import sortTasks from './sort-tasks';
 import sortArr from './sort-arr';
-import store from 'store/store';
-import { useDispatch } from 'react-redux';
-import { getTasksByBoardId, updateSetOfTasks } from 'store/tasks/tasks-thunk';
 
-async function useResortTasksArr(board: IBoardResponse, columns: IColumnResponse[], tasks: ITask[]): Promise<void> {
-  const dispatch = useDispatch<typeof store.dispatch>();
+function resortTasksArr(columns: IColumnResponse[], tasks: ITask[]): IUpdateSetTasksRequest[] | null {
   const sortedTasks = sortTasks(columns, tasks);
   const newOrder: IUpdateSetTasksRequest[] = [];
   let orderHasChanged = false;
@@ -24,9 +20,9 @@ async function useResortTasksArr(board: IBoardResponse, columns: IColumnResponse
     });
   });
   if (newOrder && orderHasChanged) {
-    await dispatch(updateSetOfTasks(newOrder));
-    await dispatch(getTasksByBoardId(board._id));
+    return newOrder;
   }
+  return null;
 }
 
-export default useResortTasksArr;
+export default resortTasksArr;

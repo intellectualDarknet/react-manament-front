@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, DragEvent, TouchEvent, FormEvent, SetStateAction } from 'react';
 import Task from './task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
@@ -34,6 +34,7 @@ function Column(props: {
   tasksIsLoading: boolean;
   clickedEditTaskId: string;
   currentTaskContent: { title: string; description: string };
+  dragItem: { type: DragItemType; columnId: string; taskId: string; order: string };
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
@@ -82,13 +83,53 @@ function Column(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
-    props.setDragItem({
-      type: DragItemType.COLUMN,
-      columnId: (event.target as HTMLElement).dataset.columnId,
-      taskId: '',
-      order: (event.target as HTMLElement).dataset.columnOrder,
-    });
+    const columnId = (event.target as HTMLElement).dataset.columnId;
+    const order = (event.target as HTMLElement).dataset.columnOrder;
+    setDragItem(DragItemType.COLUMN, columnId, order);
     (event.target as HTMLElement).classList.add('board__column_dragged');
+  };
+
+  const handleTouch = (event: TouchEvent<HTMLDivElement>) => {
+    const touchPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const touchColumn = touchPath.find((elem) => elem.dataset.columnId);
+    const touchTaskCreateBtn = touchPath.find((elem) => {
+      if (elem.classList) {
+        return elem.classList.contains('task__create-btn');
+      }
+    });
+    const touchColumnDeleteBtn = touchPath.find((elem) => {
+      if (elem.classList) {
+        return elem.classList.contains('column__delete-btn');
+      }
+    });
+    if (!touchTaskCreateBtn && !touchColumnDeleteBtn) {
+      console.log('DragItemType: ', props.dragItem.type);
+      if (props.dragItem.type === DragItemType.NONE && !touchColumn.classList.contains('board__column_dragged')) {
+        const columnId = touchColumn.dataset.columnId;
+        const order = touchColumn.dataset.columnOrder;
+        setDragItem(DragItemType.COLUMN, columnId, order);
+        touchColumn.classList.add('board__column_dragged');
+      } else if (touchColumn.classList.contains('board__column_dragged')) {
+        setDragItem(DragItemType.NONE, '', '');
+        touchColumn.classList.remove('board__column_dragged');
+      } else if (
+        props.dragItem.type === DragItemType.COLUMN &&
+        !touchColumn.classList.contains('board__column_hovered')
+      ) {
+        touchColumn.classList.add('board__column_hovered');
+      } else if (touchColumn.classList.contains('board__column_hovered')) {
+        touchColumn.classList.remove('board__column_hovered');
+      }
+    }
+  };
+
+  const setDragItem = (type: DragItemType, columnId: string, order: string) => {
+    props.setDragItem({
+      type,
+      columnId,
+      taskId: '',
+      order,
+    });
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
@@ -165,8 +206,16 @@ function Column(props: {
       onDrop={(event: DragEvent<HTMLElement>) => {
         dropHandler(event);
       }}
+      onTouchEnd={(event: TouchEvent<HTMLDivElement>) => handleTouch(event)}
     >
-      <Grid container item className="column__title-conteiner">
+      <Grid
+        container
+        item
+        className="column__title-conteiner"
+        onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+          event.stopPropagation();
+        }}
+      >
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">
             <ValidatorForm

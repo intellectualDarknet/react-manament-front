@@ -238,6 +238,7 @@ const Board = (): JSX.Element => {
         tasksIsLoading,
         clickedEditTaskId,
         currentTaskContent,
+        dragItem,
         deleteColumnByButtonPress,
         deleteTaskByButtonPress,
         toggleForm,

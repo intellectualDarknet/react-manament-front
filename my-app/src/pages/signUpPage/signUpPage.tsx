@@ -68,7 +68,6 @@ const SignUpPage = () => {
         square
       >
         <ValidatorForm
-          onError={(errors) => console.log(errors)}
           onSubmit={onSignUpSubmit}
           onChange={onFormChange}
           noValidate

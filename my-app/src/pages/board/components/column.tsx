@@ -103,22 +103,16 @@ function Column(props: {
       }
     });
     if (!touchTaskCreateBtn && !touchColumnDeleteBtn) {
-      console.log('DragItemType: ', props.dragItem.type);
+      const columnId = touchColumn.dataset.columnId;
+      const columnOrder = touchColumn.dataset.columnOrder;
       if (props.dragItem.type === DragItemType.NONE && !touchColumn.classList.contains('board__column_dragged')) {
-        const columnId = touchColumn.dataset.columnId;
-        const order = touchColumn.dataset.columnOrder;
-        setDragItem(DragItemType.COLUMN, columnId, order);
+        setDragItem(DragItemType.COLUMN, columnId, columnOrder);
         touchColumn.classList.add('board__column_dragged');
       } else if (touchColumn.classList.contains('board__column_dragged')) {
         setDragItem(DragItemType.NONE, '', '');
         touchColumn.classList.remove('board__column_dragged');
-      } else if (
-        props.dragItem.type === DragItemType.COLUMN &&
-        !touchColumn.classList.contains('board__column_hovered')
-      ) {
-        touchColumn.classList.add('board__column_hovered');
-      } else if (touchColumn.classList.contains('board__column_hovered')) {
-        touchColumn.classList.remove('board__column_hovered');
+      } else if (props.dragItem.type === DragItemType.COLUMN) {
+        props.setDropColumn({ columnId, columnOrder });
       }
     }
   };
@@ -158,8 +152,8 @@ function Column(props: {
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
     if (dropColumn) {
-      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
       dropColumn.classList.remove('board__column_hovered');
+      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
     }
   };
 

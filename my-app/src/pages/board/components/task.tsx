@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction, TouchEvent } from 'react';
 import { Button, ButtonGroup, Grid, Paper, Typography } from '@mui/material';
 import DeleteModal from 'components/deleteModal';
 import DeleteTaskButton from './DeleteTaskButton';
@@ -35,6 +35,13 @@ function Task(props: {
     event.stopPropagation();
     const dragTask = event.target as HTMLElement;
     dragTask.classList.add('column__task_dragged');
+  };
+
+  const handleTouch = (event: TouchEvent) => {
+    event.stopPropagation();
+    const touchPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const touchTask = touchPath.find((task) => task.dataset.taskOrder);
+    touchTask.classList.add('column__task_dragged');
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
@@ -135,9 +142,17 @@ function Task(props: {
       onDrop={(event: DragEvent<HTMLElement>) => {
         dropHandler(event);
       }}
+      onTouchEnd={(event: TouchEvent<HTMLDivElement>) => handleTouch(event)}
     >
       {props.isChosenTask ? (
-        <Grid container item className="column__title-form-conteiner">
+        <Grid
+          container
+          item
+          className="column__title-form-conteiner"
+          onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+            event.stopPropagation();
+          }}
+        >
           <ValidatorForm className="column__title-form" onSubmit={handleTaskContentInputSubmit} noValidate>
             <TextValidator
               className="task__title-input"
@@ -192,7 +207,17 @@ function Task(props: {
         </Grid>
       ) : (
         <>
-          <Grid container item className="task__description-conteiner" onClick={handleClick} xl={10} xs={10}>
+          <Grid
+            container
+            item
+            className="task__description-conteiner"
+            onClick={handleClick}
+            xl={10}
+            xs={10}
+            onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+              event.stopPropagation();
+            }}
+          >
             <Typography className="task__description" variant="h6">
               {props.task.title}
             </Typography>

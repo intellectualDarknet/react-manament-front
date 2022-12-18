@@ -105,13 +105,13 @@ function Column(props: {
     if (!touchTaskCreateBtn && !touchColumnDeleteBtn) {
       const columnId = touchColumn.dataset.columnId;
       const columnOrder = touchColumn.dataset.columnOrder;
-      if (props.dragItem.type === DragItemType.NONE && !touchColumn.classList.contains('board__column_dragged')) {
+      if (props.dragItem.type === DragItemType.NONE) {
         setDragItem(DragItemType.COLUMN, columnId, columnOrder);
         touchColumn.classList.add('board__column_dragged');
-      } else if (touchColumn.classList.contains('board__column_dragged')) {
+      } else if (props.dragItem.columnId === columnId) {
         setDragItem(DragItemType.NONE, '', '');
         touchColumn.classList.remove('board__column_dragged');
-      } else if (props.dragItem.type === DragItemType.COLUMN) {
+      } else {
         props.setDropColumn({ columnId, columnOrder });
       }
     }

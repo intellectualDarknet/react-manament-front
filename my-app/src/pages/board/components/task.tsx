@@ -32,15 +32,6 @@ function Task(props: {
     props.deleteTaskByButtonPress({ boardId: props.board._id, columnId: props.column._id, taskId: props.task._id });
   };
 
-  const setDragItem = (data: { type: DragItemType; columnId: string; taskId: string; order: string }) => {
-    props.setDragItem({
-      type: data.type,
-      columnId: data.columnId,
-      taskId: data.taskId,
-      order: data.order,
-    });
-  };
-
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
     event.stopPropagation();
     const dragTask = event.target as HTMLElement;
@@ -56,7 +47,7 @@ function Task(props: {
     const order = touchTask.dataset.taskOrder;
     if (props.dragItem.type === DragItemType.NONE) {
       touchTask.classList.add('column__task_touched');
-      setDragItem({
+      props.setDragItem({
         type: DragItemType.TASK,
         columnId: props.column._id,
         taskId,
@@ -71,7 +62,7 @@ function Task(props: {
       });
     } else {
       touchTask.classList.remove('column__task_touched');
-      setDragItem({
+      props.setDragItem({
         type: DragItemType.NONE,
         columnId: '',
         taskId: '',
@@ -82,7 +73,7 @@ function Task(props: {
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
     const dragTask = event.target as HTMLElement;
-    setDragItem({
+    props.setDragItem({
       type: DragItemType.TASK,
       columnId: dragTask.dataset.columnId,
       taskId: dragTask.dataset.taskId,

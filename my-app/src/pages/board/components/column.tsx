@@ -272,6 +272,7 @@ function Column(props: {
               taskTranslation: props.taskTranslation,
               isChosenTask,
               currentTaskContent: props.currentTaskContent,
+              dragItem: props.dragItem,
               setDragItem: props.setDragItem,
               setDropTask: props.setDropTask,
               setClickedEditTaskId: props.setClickedEditTaskId,

@@ -20,6 +20,7 @@ function Task(props: {
   };
   isChosenTask: boolean;
   currentTaskContent: { title: string; description: string };
+  dragItem: { type: DragItemType; columnId: string; taskId: string; order: string };
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   setClickedEditTaskId: Dispatch<SetStateAction<string>>;
@@ -29,6 +30,15 @@ function Task(props: {
 }): JSX.Element {
   const deleteThisTask = () => {
     props.deleteTaskByButtonPress({ boardId: props.board._id, columnId: props.column._id, taskId: props.task._id });
+  };
+
+  const setDragItem = (data: { type: DragItemType; columnId: string; taskId: string; order: string }) => {
+    props.setDragItem({
+      type: data.type,
+      columnId: data.columnId,
+      taskId: data.taskId,
+      order: data.order,
+    });
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
@@ -41,12 +51,38 @@ function Task(props: {
     event.stopPropagation();
     const touchPath = event.nativeEvent.composedPath() as HTMLElement[];
     const touchTask = touchPath.find((task) => task.dataset.taskOrder);
-    touchTask.classList.add('column__task_dragged');
+    const taskId = touchTask.dataset.taskId;
+    const columnId = touchTask.dataset.columnId;
+    const order = touchTask.dataset.taskOrder;
+    if (props.dragItem.type === DragItemType.NONE) {
+      touchTask.classList.add('column__task_touched');
+      setDragItem({
+        type: DragItemType.TASK,
+        columnId: props.column._id,
+        taskId,
+        order,
+      });
+    } else if (props.dragItem.type === DragItemType.TASK && props.dragItem.taskId !== taskId) {
+      touchTask.classList.add('column__task_hovered');
+      props.setDropTask({
+        columnId,
+        taskId,
+        taskOrder: order,
+      });
+    } else {
+      touchTask.classList.remove('column__task_touched');
+      setDragItem({
+        type: DragItemType.NONE,
+        columnId: '',
+        taskId: '',
+        order: '',
+      });
+    }
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
     const dragTask = event.target as HTMLElement;
-    props.setDragItem({
+    setDragItem({
       type: DragItemType.TASK,
       columnId: dragTask.dataset.columnId,
       taskId: dragTask.dataset.taskId,

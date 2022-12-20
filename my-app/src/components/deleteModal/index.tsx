@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, TouchEvent } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,13 @@ const DeleteModal = (props: {
   return (
     <>
       {props.deleteButton(handleToggleModal)}
-      <Dialog open={openDeleteMessage} onClose={handleToggleModal}>
+      <Dialog
+        open={openDeleteMessage}
+        onClose={handleToggleModal}
+        onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+          event.stopPropagation();
+        }}
+      >
         <DialogTitle>{props.message}</DialogTitle>
         <DialogActions>
           <Button

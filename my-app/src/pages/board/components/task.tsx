@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
+import React, { Dispatch, DragEvent, FormEvent, SetStateAction, TouchEvent } from 'react';
 import { Button, ButtonGroup, Grid, Paper, Typography } from '@mui/material';
 import DeleteModal from 'components/deleteModal';
 import DeleteTaskButton from './DeleteTaskButton';
@@ -20,6 +20,7 @@ function Task(props: {
   };
   isChosenTask: boolean;
   currentTaskContent: { title: string; description: string };
+  dragItem: { type: DragItemType; columnId: string; taskId: string; order: string };
   setDragItem: Dispatch<SetStateAction<IDragItemState>>;
   setDropTask: Dispatch<SetStateAction<ITaskState>>;
   setClickedEditTaskId: Dispatch<SetStateAction<string>>;
@@ -35,6 +36,39 @@ function Task(props: {
     event.stopPropagation();
     const dragTask = event.target as HTMLElement;
     dragTask.classList.add('column__task_dragged');
+  };
+
+  const handleTouch = (event: TouchEvent) => {
+    event.stopPropagation();
+    const touchPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const touchTask = touchPath.find((task) => task.dataset.taskOrder);
+    const taskId = touchTask.dataset.taskId;
+    const columnId = touchTask.dataset.columnId;
+    const order = touchTask.dataset.taskOrder;
+    if (props.dragItem.type === DragItemType.NONE) {
+      touchTask.classList.add('column__task_touched');
+      props.setDragItem({
+        type: DragItemType.TASK,
+        columnId: props.column._id,
+        taskId,
+        order,
+      });
+    } else if (props.dragItem.type === DragItemType.TASK && props.dragItem.taskId !== taskId) {
+      touchTask.classList.add('column__task_hovered');
+      props.setDropTask({
+        columnId,
+        taskId,
+        taskOrder: order,
+      });
+    } else {
+      touchTask.classList.remove('column__task_touched');
+      props.setDragItem({
+        type: DragItemType.NONE,
+        columnId: '',
+        taskId: '',
+        order: '',
+      });
+    }
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
@@ -135,64 +169,92 @@ function Task(props: {
       onDrop={(event: DragEvent<HTMLElement>) => {
         dropHandler(event);
       }}
+      onTouchEnd={(event: TouchEvent<HTMLDivElement>) => handleTouch(event)}
     >
       {props.isChosenTask ? (
-        <Grid container item className="column__title-form-conteiner">
-          <ValidatorForm className="column__title-form" onSubmit={handleTaskContentInputSubmit} noValidate>
-            <TextValidator
-              className="task__title-input"
-              onChange={handleTaskTitleInputChange}
-              // onBlur={handleColumnTitleInputClose}
-              autoComplete="off"
-              variant="outlined"
-              size="small"
-              margin="normal"
-              required
-              fullWidth
-              id="task-title"
-              label={props.taskTranslation.taskNewTitle}
-              name="task-title"
-              autoFocus
-              value={props.currentTaskContent.title}
-              validators={['required']}
-              errorMessages={['this field is required', 'task title is not valid']}
-            />
-            <TextValidator
-              className="task__description-input"
-              onChange={handleTaskDescriptionInputChange}
-              // onBlur={handleColumnTitleInputClose}
-              autoComplete="off"
-              variant="outlined"
-              size="small"
-              margin="normal"
-              required
-              fullWidth
-              id="task-description"
-              label={props.taskTranslation.taskNewDescription}
-              name="task-description"
-              autoFocus
-              value={props.currentTaskContent.description}
-              validators={['required']}
-              errorMessages={['this field is required', 'task description is not valid']}
-            />
-            <ButtonGroup className="title-form__btn-group">
-              <Button variant="contained" color="primary" type="submit">
-                {props.taskTranslation.changeTaskBtnTitle}
-              </Button>
-              <Button
-                className="task__close-input-btn"
-                onClick={handleCloseTaskInput}
-                variant="contained"
-                color="error"
-              >
-                <CloseIcon />
-              </Button>
-            </ButtonGroup>
-          </ValidatorForm>{' '}
-        </Grid>
+        <ValidatorForm className="task__form" onSubmit={handleTaskContentInputSubmit} noValidate>
+          <div className="task__form-conteiner">
+            <div className="task__form-label_opened"></div>
+            <Grid
+              container
+              item
+              className="task__input-conteiner"
+              onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+                event.stopPropagation();
+              }}
+            >
+              <TextValidator
+                className="task__title-input"
+                onChange={handleTaskTitleInputChange}
+                // onBlur={handleColumnTitleInputClose}
+                autoComplete="off"
+                variant="outlined"
+                size="small"
+                margin="normal"
+                required
+                fullWidth
+                id="task-title"
+                label={props.taskTranslation.taskNewTitle}
+                name="task-title"
+                autoFocus
+                value={props.currentTaskContent.title}
+                validators={['required']}
+                errorMessages={['this field is required', 'task title is not valid']}
+              />
+              <TextValidator
+                className="task__description-input"
+                onChange={handleTaskDescriptionInputChange}
+                // onBlur={handleColumnTitleInputClose}
+                autoComplete="off"
+                variant="outlined"
+                size="small"
+                margin="normal"
+                required
+                fullWidth
+                id="task-description"
+                label={props.taskTranslation.taskNewDescription}
+                name="task-description"
+                autoFocus
+                value={props.currentTaskContent.description}
+                validators={['required']}
+                errorMessages={['this field is required', 'task description is not valid']}
+              />
+            </Grid>
+          </div>{' '}
+          <ButtonGroup
+            className="title-form__btn-group"
+            onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+              event.stopPropagation();
+            }}
+          >
+            <Button
+              className="task__submit-input-btn"
+              variant="contained"
+              color="primary"
+              type="submit"
+              sx={{ width: '100%', padding: '6px !important', borderRadius: '24.5px 0 0 24.5px' }}
+            >
+              {props.taskTranslation.changeTaskBtnTitle}
+            </Button>
+            <Button className="task__close-input-btn" onClick={handleCloseTaskInput} variant="contained" color="error">
+              <CloseIcon />
+            </Button>
+          </ButtonGroup>
+        </ValidatorForm>
       ) : (
         <>
-          <Grid container item className="task__description-conteiner" onClick={handleClick} xl={10} xs={10}>
+          <Grid className="task__form-label_closed" item xl={1.8} xs={1.8}></Grid>
+          <Grid
+            container
+            item
+            className="task__description-conteiner"
+            onClick={handleClick}
+            xl={10}
+            xs={10}
+            onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+              event.stopPropagation();
+            }}
+          >
             <Typography className="task__description" variant="h6">
               {props.task.title}
             </Typography>
@@ -200,7 +262,15 @@ function Task(props: {
               {props.task.description}
             </Typography>
           </Grid>
-          <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
+          <Grid
+            className="task__btn-conteiner"
+            item
+            xl={1.8}
+            xs={1.8}
+            onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+              event.stopPropagation();
+            }}
+          >
             <DeleteModal
               message={props.taskTranslation.taskDeleteMessage}
               submit={deleteThisTask}

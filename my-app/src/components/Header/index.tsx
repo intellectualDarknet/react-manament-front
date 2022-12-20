@@ -164,7 +164,7 @@ function Header() {
               <Tooltip title={t('main.logOut')}>
                 <LogoutIcon
                   sx={[
-                    (theme) => ({
+                    () => ({
                       '&:hover': {
                         cursor: 'pointer',
                       },

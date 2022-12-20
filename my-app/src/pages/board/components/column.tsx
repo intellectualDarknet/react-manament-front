@@ -1,5 +1,5 @@
-import React, { Dispatch, DragEvent, FormEvent, SetStateAction } from 'react';
-import Task from './task';
+import React, { Dispatch, DragEvent, TouchEvent, FormEvent, SetStateAction } from 'react';
+import Task from './Task';
 import { Grid, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
@@ -34,6 +34,7 @@ function Column(props: {
   tasksIsLoading: boolean;
   clickedEditTaskId: string;
   currentTaskContent: { title: string; description: string };
+  dragItem: { type: DragItemType; columnId: string; taskId: string; order: string };
   deleteColumnByButtonPress: (columnId: string) => void;
   deleteTaskByButtonPress: (data: IGetTasksRequest) => void;
   toggleForm: () => void;
@@ -82,13 +83,51 @@ function Column(props: {
   };
 
   const dragStartHandler = (event: DragEvent<HTMLElement>) => {
-    props.setDragItem({
-      type: DragItemType.COLUMN,
-      columnId: (event.target as HTMLElement).dataset.columnId,
-      taskId: '',
-      order: (event.target as HTMLElement).dataset.columnOrder,
-    });
+    const columnId = (event.target as HTMLElement).dataset.columnId;
+    const order = (event.target as HTMLElement).dataset.columnOrder;
+    setDragItem(DragItemType.COLUMN, columnId, order);
     (event.target as HTMLElement).classList.add('board__column_dragged');
+  };
+
+  const handleTouch = (event: TouchEvent<HTMLDivElement>) => {
+    const touchPath = event.nativeEvent.composedPath() as HTMLElement[];
+    const touchColumn = touchPath.find((elem) => elem.dataset.columnId);
+    const touchTaskCreateBtn = touchPath.find((elem) => {
+      if (elem.classList) {
+        return elem.classList.contains('task__create-btn');
+      }
+    });
+    const touchColumnDeleteBtn = touchPath.find((elem) => {
+      if (elem.classList) {
+        return elem.classList.contains('column__delete-btn');
+      }
+    });
+    if (!touchTaskCreateBtn && !touchColumnDeleteBtn) {
+      const columnId = touchColumn.dataset.columnId;
+      const columnOrder = touchColumn.dataset.columnOrder;
+      if (props.dragItem.type === DragItemType.NONE) {
+        setDragItem(DragItemType.COLUMN, columnId, columnOrder);
+        touchColumn.classList.add('board__column_dragged');
+      } else if (props.dragItem.columnId === columnId) {
+        setDragItem(DragItemType.NONE, '', '');
+        touchColumn.classList.remove('board__column_dragged');
+      } else {
+        touchColumn.classList.add('board__column_dragged');
+        props.setDropColumn({ columnId, columnOrder });
+        setTimeout(() => {
+          touchColumn.classList.remove('board__column_dragged');
+        }, 1000);
+      }
+    }
+  };
+
+  const setDragItem = (type: DragItemType, columnId: string, order: string) => {
+    props.setDragItem({
+      type,
+      columnId,
+      taskId: '',
+      order,
+    });
   };
 
   const dragEndHandler = (event: DragEvent<HTMLElement>) => {
@@ -117,8 +156,8 @@ function Column(props: {
     const dropPath = event.nativeEvent.composedPath() as HTMLElement[];
     const dropColumn = dropPath.find((column) => column.dataset.columnOrder);
     if (dropColumn) {
-      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
       dropColumn.classList.remove('board__column_hovered');
+      props.setDropColumn({ columnId: dropColumn.dataset.columnId, columnOrder: dropColumn.dataset.columnOrder });
     }
   };
 
@@ -165,8 +204,16 @@ function Column(props: {
       onDrop={(event: DragEvent<HTMLElement>) => {
         dropHandler(event);
       }}
+      onTouchEnd={(event: TouchEvent<HTMLDivElement>) => handleTouch(event)}
     >
-      <Grid container item className="column__title-conteiner">
+      <Grid
+        container
+        item
+        className="column__title-conteiner"
+        onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+          event.stopPropagation();
+        }}
+      >
         {props.isChosenColumnTitle ? (
           <Grid container item className="column__title-form-conteiner">
             <ValidatorForm
@@ -192,7 +239,12 @@ function Column(props: {
                 errorMessages={['this field is required', 'column title is not valid']}
               />
               <ButtonGroup className="title-form__btn-group">
-                <Button variant="contained" color="primary" type="submit">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{ width: '100%', height: '50px', padding: '0 !important', borderRadius: '15px 0 0 15px' }}
+                >
                   {props.columnTranslation.changeTitle}
                 </Button>
                 <Button
@@ -200,6 +252,7 @@ function Column(props: {
                   onClick={handleColumnTitleInputClose}
                   variant="contained"
                   color="error"
+                  sx={{ height: '50px', padding: '0 10px !important', borderRadius: '0 15px 15px 0' }}
                 >
                   <CloseIcon />
                 </Button>
@@ -229,6 +282,7 @@ function Column(props: {
               taskTranslation: props.taskTranslation,
               isChosenTask,
               currentTaskContent: props.currentTaskContent,
+              dragItem: props.dragItem,
               setDragItem: props.setDragItem,
               setDropTask: props.setDropTask,
               setClickedEditTaskId: props.setClickedEditTaskId,

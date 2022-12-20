@@ -112,7 +112,11 @@ function Column(props: {
         setDragItem(DragItemType.NONE, '', '');
         touchColumn.classList.remove('board__column_dragged');
       } else {
+        touchColumn.classList.add('board__column_dragged');
         props.setDropColumn({ columnId, columnOrder });
+        setTimeout(() => {
+          touchColumn.classList.remove('board__column_dragged');
+        }, 1000);
       }
     }
   };
@@ -235,7 +239,12 @@ function Column(props: {
                 errorMessages={['this field is required', 'column title is not valid']}
               />
               <ButtonGroup className="title-form__btn-group">
-                <Button variant="contained" color="primary" type="submit">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{ width: '100%', height: '50px', padding: '0 !important', borderRadius: '15px 0 0 15px' }}
+                >
                   {props.columnTranslation.changeTitle}
                 </Button>
                 <Button
@@ -243,6 +252,7 @@ function Column(props: {
                   onClick={handleColumnTitleInputClose}
                   variant="contained"
                   color="error"
+                  sx={{ height: '50px', padding: '0 10px !important', borderRadius: '0 15px 15px 0' }}
                 >
                   <CloseIcon />
                 </Button>

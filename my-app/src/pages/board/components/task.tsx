@@ -172,68 +172,78 @@ function Task(props: {
       onTouchEnd={(event: TouchEvent<HTMLDivElement>) => handleTouch(event)}
     >
       {props.isChosenTask ? (
-        <Grid
-          container
-          item
-          className="column__title-form-conteiner"
-          onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
-            event.stopPropagation();
-          }}
-        >
-          <ValidatorForm className="column__title-form" onSubmit={handleTaskContentInputSubmit} noValidate>
-            <TextValidator
-              className="task__title-input"
-              onChange={handleTaskTitleInputChange}
-              // onBlur={handleColumnTitleInputClose}
-              autoComplete="off"
-              variant="outlined"
-              size="small"
-              margin="normal"
-              required
-              fullWidth
-              id="task-title"
-              label={props.taskTranslation.taskNewTitle}
-              name="task-title"
-              autoFocus
-              value={props.currentTaskContent.title}
-              validators={['required']}
-              errorMessages={['this field is required', 'task title is not valid']}
-            />
-            <TextValidator
-              className="task__description-input"
-              onChange={handleTaskDescriptionInputChange}
-              // onBlur={handleColumnTitleInputClose}
-              autoComplete="off"
-              variant="outlined"
-              size="small"
-              margin="normal"
-              required
-              fullWidth
-              id="task-description"
-              label={props.taskTranslation.taskNewDescription}
-              name="task-description"
-              autoFocus
-              value={props.currentTaskContent.description}
-              validators={['required']}
-              errorMessages={['this field is required', 'task description is not valid']}
-            />
-            <ButtonGroup className="title-form__btn-group">
-              <Button variant="contained" color="primary" type="submit">
-                {props.taskTranslation.changeTaskBtnTitle}
-              </Button>
-              <Button
-                className="task__close-input-btn"
-                onClick={handleCloseTaskInput}
-                variant="contained"
-                color="error"
-              >
-                <CloseIcon />
-              </Button>
-            </ButtonGroup>
-          </ValidatorForm>{' '}
-        </Grid>
+        <ValidatorForm className="task__form" onSubmit={handleTaskContentInputSubmit} noValidate>
+          <div className="task__form-conteiner">
+            <div className="task__form-label_opened"></div>
+            <Grid
+              container
+              item
+              className="task__input-conteiner"
+              onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+                event.stopPropagation();
+              }}
+            >
+              <TextValidator
+                className="task__title-input"
+                onChange={handleTaskTitleInputChange}
+                // onBlur={handleColumnTitleInputClose}
+                autoComplete="off"
+                variant="outlined"
+                size="small"
+                margin="normal"
+                required
+                fullWidth
+                id="task-title"
+                label={props.taskTranslation.taskNewTitle}
+                name="task-title"
+                autoFocus
+                value={props.currentTaskContent.title}
+                validators={['required']}
+                errorMessages={['this field is required', 'task title is not valid']}
+              />
+              <TextValidator
+                className="task__description-input"
+                onChange={handleTaskDescriptionInputChange}
+                // onBlur={handleColumnTitleInputClose}
+                autoComplete="off"
+                variant="outlined"
+                size="small"
+                margin="normal"
+                required
+                fullWidth
+                id="task-description"
+                label={props.taskTranslation.taskNewDescription}
+                name="task-description"
+                autoFocus
+                value={props.currentTaskContent.description}
+                validators={['required']}
+                errorMessages={['this field is required', 'task description is not valid']}
+              />
+            </Grid>
+          </div>{' '}
+          <ButtonGroup
+            className="title-form__btn-group"
+            onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+              event.stopPropagation();
+            }}
+          >
+            <Button
+              className="task__submit-input-btn"
+              variant="contained"
+              color="primary"
+              type="submit"
+              sx={{ width: '100%', padding: '6px !important', borderRadius: '24.5px 0 0 24.5px' }}
+            >
+              {props.taskTranslation.changeTaskBtnTitle}
+            </Button>
+            <Button className="task__close-input-btn" onClick={handleCloseTaskInput} variant="contained" color="error">
+              <CloseIcon />
+            </Button>
+          </ButtonGroup>
+        </ValidatorForm>
       ) : (
         <>
+          <Grid className="task__form-label_closed" item xl={1.8} xs={1.8}></Grid>
           <Grid
             container
             item
@@ -252,7 +262,15 @@ function Task(props: {
               {props.task.description}
             </Typography>
           </Grid>
-          <Grid className="task__btn-conteiner" item xl={1.8} xs={1.8}>
+          <Grid
+            className="task__btn-conteiner"
+            item
+            xl={1.8}
+            xs={1.8}
+            onTouchEnd={(event: TouchEvent<HTMLDivElement>) => {
+              event.stopPropagation();
+            }}
+          >
             <DeleteModal
               message={props.taskTranslation.taskDeleteMessage}
               submit={deleteThisTask}

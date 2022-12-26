@@ -52,7 +52,6 @@ const CreateColumnForm = (props: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: '0 20px 20px 0',
       }}
     >
       <ValidatorForm onSubmit={onColumnTitleSubmit} onChange={onFormChange} noValidate sx={{ width: '80%' }}>
@@ -78,7 +77,7 @@ const CreateColumnForm = (props: {
           fullWidth
           variant="contained"
           color="secondary"
-          sx={{ marginBottom: '10px' }}
+          sx={{ marginBottom: '10px', borderRadius: '18px' }}
           type="submit"
           disabled={columnIsCreating}
           loading={columnIsCreating}

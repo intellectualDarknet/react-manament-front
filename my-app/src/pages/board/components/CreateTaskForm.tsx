@@ -103,7 +103,7 @@ const CreateTaskForm = (props: {
           fullWidth
           variant="contained"
           color="secondary"
-          sx={{ marginBottom: '10px' }}
+          sx={{ marginBottom: '10px', borderRadius: '18px' }}
           type="submit"
           disabled={taskIsCreating}
           loading={taskIsCreating}

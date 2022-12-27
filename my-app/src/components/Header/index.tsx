@@ -75,7 +75,7 @@ function Header() {
               textDecoration: 'none',
             }}
           >
-            PROJECT MANAGMENT APP
+            PROJECT MANAGEMENT APP
           </Typography>
           <Box
             sx={{

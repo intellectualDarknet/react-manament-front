@@ -18,6 +18,6 @@ This project was developed as a part of the Rolling Scopes School React course. 
 
 [Deploy](https://legat14-project-management-app.netlify.app/)
 
-[Source](https://github.com/Legat14/project-management-app/tree/develop/)
+[Source](https://github.com/intellectualDarknet/react-manament-front)
 
 [Backend](https://react-final-task-backend.onrender.com/)
